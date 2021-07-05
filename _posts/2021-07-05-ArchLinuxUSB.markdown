@@ -8,7 +8,7 @@ Getting an ASUS USB-AC53 Nano working on Arch Linux
 
 Inspired by [Wayne Khan Post for Ubuntu](https://waynekhan.github.io/2020/05/30/asus-usb-ac53-nano-ubuntu.html)
 
-I found it difficult to initially get the external wifi card working properly following Khan's post.
+I found it difficult to initially get the external Wi-Fi card working properly following Khan's post.
 The major difference being that this arch AUR repo greatly simplified things.
 Just make sure you have the base-devel package installed.
 
@@ -25,7 +25,8 @@ sudo dkms install -m rtl88x2bu -v ${VER}
 sudo modprobe 88x2bu
 ```
 
-You should now have wifi access on a manchine that did not come with a wifi card builtin.
+You should now have Wi-Fi access on a manchine that did not come with a Wi-Fi card builtin.
 
 Important urls
-[Arch AUR git repo] (https://aur.archlinux.org/packages/rtl88x2bu-dkms-git/)
+
+[Arch AUR git repo](https://aur.archlinux.org/packages/rtl88x2bu-dkms-git/)
