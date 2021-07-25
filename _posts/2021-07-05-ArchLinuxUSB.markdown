@@ -16,7 +16,7 @@ Just make sure you have the base-devel package installed.
 yay install dkms
 git clone https://aur.archlinux.org/packages/rtl88x2bu-dkms-git/
 cd rtl88x2bu-dkms-git
-makeprg -si
+makepkg -si
 VER=$(sed -n 's/\PACKAGE_VERSION="\(.*\)"/\1/p' dkms.conf)
 sudo rsync -rvhP ./ /usr/src/rtl88x2bu-${VER}
 sudo dkms add -m rtl88x2bu -v ${VER}
@@ -25,8 +25,9 @@ sudo dkms install -m rtl88x2bu -v ${VER}
 sudo modprobe 88x2bu
 ```
 
-You should now have Wi-Fi access on a manchine that did not come with a Wi-Fi card builtin.
+You should now have Wi-Fi access on a machine that did not come with a Wi-Fi card builtin.
 
 Important urls
 
 [Arch AUR git repo](https://aur.archlinux.org/packages/rtl88x2bu-dkms-git/)
+[Khan's Setup on Ubuntu](https://waynekhan.github.io/2020/05/30/asus-usb-ac53-nano-ubuntu.html)
