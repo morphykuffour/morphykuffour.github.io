@@ -65,5 +65,4 @@ ls /proc/$(pgrep -f -n bash)    # My current line in the history lists
 # The man pages call these thing Event Designators.
 man history  # Event Designators is under the HISTORY EXPANSION section of the man page.
 
-
 ```
