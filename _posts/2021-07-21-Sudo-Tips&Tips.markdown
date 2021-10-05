@@ -59,7 +59,7 @@ sudo !-2                        # notice how this just evaluates to echo $SHELL
 # What I really wanted 
 sudo !ls
 
-ls /proc/$(pgrep -f -n bash)   # My current line in the history lists
+sudo ls /proc/$(pgrep -f -n bash)   # My current line in the history lists
 ^bash^tmux^                    # This evaluates previous line substituting bash for tmux.
 
 # The man page for history calls these clever things Event Designators.
