@@ -24,7 +24,8 @@ cat !$                                    #cat !$ := cat averylongnameIdonotwant
 
 
 # Caveat being that "!$" evaluates to the last string passed as an argument to the command in your 
-# history. !$ does not evaluate to all the strings following your previous command.
+# history. 
+# "!$" does not evaluate to all the strings following your previous command.
 
 # For example if I repeated the above mistake again with 2 files now 
 ls averylongnameIdonotwantoretype.c test.c             # oops meant to type cat
