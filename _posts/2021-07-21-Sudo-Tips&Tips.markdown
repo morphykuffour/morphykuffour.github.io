@@ -7,7 +7,8 @@ categories: linux
 Make Sudo suckless.
 
 ```bash
-# This one-liner will allow you to bypass inputting user defined password everything time you call sudo.
+# This one-liner will allow you to bypass inputting 
+# user defined password everything time you call sudo.
 echo "%${USER} ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee ' visudo --quiet --file=/etc/sudoers.d/passwordless-sudo
 ```
 
@@ -18,13 +19,13 @@ Less retyping
 whichever-command !$     
 
 # For example
-ls averylongnameIdonotwantoretype.c       # oops meant to type cat
+ls averylongnameIdonotwantoretype.c   # oops meant to type cat
 
-cat !$                                    #cat !$ := cat averylongnameIdonotwantoretype.c 
+cat !$                                #cat !$ := cat averylongnameIdonotwantoretype.c 
 
 
-# Caveat being that "!$" evaluates to the last string passed as an argument to the command in your 
-# history. 
+# Caveat being that "!$" evaluates to the last string 
+# passed as an argument to the command in your history. 
 # "!$" does not evaluate to all the strings following your previous command.
 
 # For example if I repeated the above mistake again with 2 files now 
