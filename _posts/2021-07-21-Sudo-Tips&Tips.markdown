@@ -44,4 +44,26 @@ g++ -ggdb -O2 -ulimit -Wall -Wno-unused-result -std=c++11 program.c -o program
 # you can simply 
 !g++
 
+
+# The classic "!!"
+# !! expands out to the previous command you passed to your shell
+echo $PATH                      # this is equivalent to !-3
+ls /proc/$(pgrep -f -n bash)    # this is equivalent to !-2
+echo $SHELL                     # this is equivalent to !-1 or !!
+!!                              # this is equivalent to "echo $SHELL"
+sudo !!                         # this is equivalent to "sudo echo $SHELL"
+
+# Now let's say I want to run sudo on the ls command above 
+sudo !-2                        # notice how this just evaluates to echo $SHELL 
+                                # not what I wanted
+# What I really wanted 
+sudo !ls
+
+ls /proc/$(pgrep -f -n bash)    # My current line in the history lists
+^bash^tmux^                     # This evaluates previous line  substituting bash for tmux.
+
+# The man pages call these thing Event Designators.
+man history  # Event Designators is under the HISTORY EXPANSION section of the man page.
+
+
 ```
