@@ -40,8 +40,8 @@ cat !$                                                 # cat !$ := cat test.c
 g++ -ggdb -O2 -ulimit -Wall -Wno-unused-result -std=c++11 program.c -o program
 
 # I continue working on the program, I step into gdb, and I do other important things.
-# Now when I come back to my shell I don't want to retype the long compilation line again
-# you can simply 
+# Now when I come back to my shell I don't want to retype the long compilation line 
+# again so I simply type, 
 !g++
 
 
