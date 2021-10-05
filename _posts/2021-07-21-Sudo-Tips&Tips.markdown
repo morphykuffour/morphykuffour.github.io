@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Sudo Tips & Tricks"
+title:  "Shell Tips & Tricks"
 date:   2021-07-21 14:23:25 -0400
 categories: linux
 ---
@@ -63,6 +63,8 @@ ls /proc/$(pgrep -f -n bash)    # My current line in the history lists
 ^bash^tmux^                     # This evaluates previous line  substituting bash for tmux.
 
 # The man pages call these thing Event Designators.
+# You can think of the history list as a stack that grows down thus the top of the
+# stack is the previous command sent to our shell.  
 man history  # Event Designators is under the HISTORY EXPANSION section of the man page.
 
 ```
