@@ -1,14 +1,14 @@
 ---
 layout: post
-title:  "Shell Tips & Tricks"
-date:   2021-07-21 14:23:25 -0400
-categories: linux
+title:  "Dactyl Manuform 5x6 Build Log"
+date:   2021-12-29 14:23:25 -0400
+categories: keyboards, Ergonomics
 ---
+
 Dactyl Manuform 5x6 Build log
 
 my main goal of writing this blog post is to simple compile the missing information
-that was extremely helpful that many guides I followed glossed over probably assuming prior knowledge
-c
+that was extremely helpful that many guides I followed glossed over probably assuming prior knowledge.
 
 
 
