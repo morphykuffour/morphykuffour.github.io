@@ -21,8 +21,9 @@
 title: Morphy Kuffour's Blog
 email: morpkuff@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Arch Linux, scripting, WSL, Windows Customization
-baseurl: "" # the subpath of your site, e.g. /blog
+  Arch Linux, scripting, WSL, Windows Customization, keyboards, 
+# baseurl: "" # the subpath of your site, e.g. /blog
+baseurl: "morphykuffour.github.io"
 domain: morphykuffour.github.io
 url: https://morphykuffour.github.io # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: morpkuff
