@@ -147,5 +147,5 @@ did not really hold the hot swaps in place well, they kept falling out.
 [QMK Online Configurator](https://config.qmk.fm/)<br />
 [Nick Green's Build log](https://nickgreen.info/dactyl-manuform-build-log/)<br />
 [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
-[Install QMK on Windows]()<br /> 
-[Install QMK on Mac OS]()<br /> 
+<!-- [Install QMK on Windows]()<br /> --> 
+<!-- [Install QMK on Mac OS]()<br /> --> 
