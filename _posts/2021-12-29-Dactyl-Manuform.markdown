@@ -18,6 +18,11 @@ QMK Configurable
 Kalih Box Navy Jades
 
 ### Parts and Materials
+<style>
+.tablelines table, .tablelines td, .tablelines th {
+        border: 1px solid black;
+        }
+</style>
 | Parts                       | Specs                            | Count             | Price  | URL                                                                                                                                                                                                                                            |
 | ----------------------------|----------------------------------|-------------------|--------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Keyboard Case               | 5x6 Standard with Kalih Hot Swap | 1 order(2 pcs)    | $85.00 | [link](https://www.etsy.com/listing/1028152282/made-to-order-dactyl-manuform?click_key=bc4fa2b252b2076958c924c6f1c3ee0819fec15a%3A1028152282&click_sum=1892a9ae&ref=shop_home_active_2&crt=1&sts=1&variation0=2278401877&variation1=2088216304)|
@@ -60,6 +65,11 @@ Your regular aux cable will not because it is a trs cable and you need a trrs ca
 [STL files from my build](1drv.ms/u/s!AgfFc4Wt-K5kgYs7pACpvXQLlsFYPw?e=vnPhcg)
 
 ### Tools 
+<style>
+.tablelines table, .tablelines td, .tablelines th {
+        border: 1px solid black;
+        }
+</style>
 | Tools              | Price          | URL     |
 | -------------------|----------------|---------|
 | Glue Gun           |                |         |
