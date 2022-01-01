@@ -66,7 +66,7 @@ Your regular aux cable will not because it is a trs cable and you need a trrs ca
 ![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_printout.jpg)  
 
 ### Final Setup 
-![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_cropped.jpg)  
+![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)  
 
 ### Tools 
 <style>
