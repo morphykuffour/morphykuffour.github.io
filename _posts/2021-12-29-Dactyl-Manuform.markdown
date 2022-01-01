@@ -62,7 +62,9 @@ Make sure to listen to key switches sound tests and look at ke
 The amoeba pcbs are not neccessary if you handwire but if you get a non
 Your regular aux cable will not because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros
 
-[STL files from my build](1drv.ms/u/s!AgfFc4Wt-K5kgYs7pACpvXQLlsFYPw?e=vnPhcg)
+<!-- [Intial 3D Printout](/morphykuffour.github.io/assests/dactyl_printout.jpg) -->
+![cat](https://www.google.com/imgres?imgurl=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1529778873920-4da4926a72c2%3Fixlib%3Drb-1.2.1%26ixid%3DMnwxMjA3fDB8MHxzZWFyY2h8MXx8Y3V0ZSUyMGNhdHxlbnwwfHwwfHw%253D%26w%3D1000%26q%3D80&imgrefurl=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Fcute-cat&tbnid=aiul5-jr8DbWEM&vet=12ahUKEwi-l9a3z5H1AhVBYzUKHSyMAVsQMygBegUIARCoAg..i&docid=6MsMJjk6eGCktM&w=1000&h=1333&itg=1&q=cat%20pictures&ved=2ahUKEwi-l9a3z5H1AhVBYzUKHSyMAVsQMygBegUIARCoAg)
+<img src="images/dactyl_printout.jpg" alt="Intial 3D Printout" class="inline"/>
 
 ### Tools 
 <style>
@@ -125,6 +127,7 @@ You do not have to install qmk toolbox if you don't want as qmk supports flashin
 QMK toolbox is just easier and less error prone.
 
 ## My C Further customizations going forward
+![Intial 3D Printout](/morphykuffour.github.io/assests/morphy-/dactyl_printout.jpg)
 
 ## misc advice 
 

@@ -8,8 +8,12 @@ url: https://morphykuffour.github.io
 twitter_username: morpkuff
 github_username: morphykuffour
 
+minima:
+  skin: dark
+  date_format: "%b %-d, %Y"
+
 theme: minima
-skin: dark
+
 plugins:
   - jekyll-feed
   - jekyll-include-cache
