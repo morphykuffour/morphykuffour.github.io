@@ -11,11 +11,11 @@ that was extremely helpful that many guides I followed glossed neccessary inform
 
 ## Ergonomic Dactyl Kalih Box Navy Jades Build
 
-Features
-Hotswappable
-Key Layout: QWERTY
-QMK Configurable
-Kalih Box Navy Jades
+**Features:**    
+Hotswappable  
+Key Layout: QWERTY  
+QMK Configurable   
+Kalih Box Navy Jades  
 
 ### Parts and Materials
 <style>
@@ -159,3 +159,4 @@ did not really hold the hot swaps in place well, they kept falling out.
 [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
 <!-- [Install QMK on Windows]()<br /> --> 
 <!-- [Install QMK on Mac OS]()<br /> --> 
+<!-- https://switches.mx/kailh-box-navy?search=box& -->

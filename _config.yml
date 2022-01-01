@@ -30,7 +30,8 @@ twitter_username: morpkuff
 github_username: morphykuffour
 
 # Build settings
-theme: minima
+# theme: minima
+theme: minimal-mistakes-jekyll
 plugins:
   - jekyll-feed
 
