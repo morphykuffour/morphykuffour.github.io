@@ -64,7 +64,7 @@ Kalih Box Navy
 | Gel wrist rests (Optional)  | Silicone Gel Mouse Pad           | 1 order (2 pcs)   | $15.00 | [link](https://www.amazon.com/LetGoShop-Heart-Shaped-Translucence-Ergonomic-Effectively/dp/B01DKCPC16/ref=pd_yo_rr_rp_5/135-8132732-7350062?pd_rd_w=XFX2T&pf_rd_p=a7b08c2f-223b-4262-a124-eb0a7efa1703&pf_rd_r=D330W5VXKQVKGBC4487N&pd_rd_r=37bc83cd-b13f-4b77-935e-4047d85fb826&pd_rd_wg=TKAfd&pd_rd_i=B01DKCPC16&psc=1)|
 | Wrist rests (Optional)      | 3D printed wirst rests           | 1 order (2 pcs)   | $14.00 | [link](https://www.etsy.com/listing/1098507650/pair-of-wrist-rests-for-split-style?click_key=be86e6ce5e47849a9088ed12facff1807e68175e%3A1098507650&click_sum=40716b38&ref=shop_home_active_1&crt=1&sts=1)|
 
-Total Cost excluding optional parts: NaN (Not including shipping and taxes)
+Total Cost excluding PCB not used in this build: $274.86 (Not including shipping and taxes)
 
 ### Notes on Materials
 
