@@ -29,8 +29,8 @@ Kalih Box Navy
 | ----------------------------|----------------------------------|-------------------|--------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Keyboard Case               | 5x6 Standard with Kalih Hot Swap | 1 order(2 pcs)    | $85.00 | [link](https://www.etsy.com/listing/1028152282/made-to-order-dactyl-manuform?click_key=bc4fa2b252b2076958c924c6f1c3ee0819fec15a%3A1028152282&click_sum=1892a9ae&ref=shop_home_active_2&crt=1&sts=1&variation0=2278401877&variation1=2088216304)|
 | Diodes 1N4148               | 2368-1N4148-ND                   | 100 pcs           | $4.24  | [link](https://www.digikey.com/en/products/detail/1N4148/2368-1N4148-ND/11645052?itemSeq=382356410)|
-| Kalih Hot-Swappable Sockets | holds switches in place for wiring | 1 order (100 pcs) | $4.24| [link](https://www.amazon.com/Hot-swappable-Socket-CPG151101S11-Mechanical-Keyboard/dp/B096WZ6TJ5/ref=pd_lpo_1?pd_rd_i=B096WZ6TJ5&psc=1)|
-| M3 Threaded Inserts         |                                  | 1 order (100 pcs) | $4.24  | [link](https://www.digikey.com/en/products/detail/1N4148/2368-1N4148-ND/11645052?itemSeq=382356410)|
+| Kalih Hot-Swappable Sockets | holds switches in place for wiring | 1 order (100 pcs) | $14.50 | [link](https://www.amazon.com/Hot-swappable-Socket-CPG151101S11-Mechanical-Keyboard/dp/B096WZ6TJ5/ref=pd_lpo_1?pd_rd_i=B096WZ6TJ5&psc=1)|
+| M3 Threaded Inserts         |                                  | 1 order (100 pcs) | $13.89  | [link](https://www.amazon.com/dp/B087NBYF65?psc=1&ref=ppx_yo2_dt_b_product_details)|
 | M3 Screws assortiment       | M3 Comptatible screws            | 1 order (304 pcs) | $9.99  | [link](https://www.amazon.com/Sutemribor-320Pcs-Stainless-Button-Assortment/dp/B07CYNKLT2/ref=sr_1_3?crid=1LLHEMSMGCMXK&keywords=m3+screws&qid=1641085137&s=industrial&sprefix=m3+screws%2Cindustrial%2C76&sr=1-3)|
 | Wires                       | Jumper Wires                     | 120 pcs           | $6.98  | [link](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?crid=3LNP22FLTTM5C&keywords=EDGELEC+120pcs+Breadboard+Jumper+Wires&qid=1640879388&s=electronics&sprefix=edgelec+120pcs+breadboard+jumper+wires%2Celectronics%2C89&sr=1-3)|
 | Elite-C V4                  | USB-C Pro Micro                  | 2 pcs             | $35.98 | [link](https://keeb.io/collections/diy-parts/products/elite-c-low-profile-version-usb-c-pro-micro-replacement-atmega32u4)|
@@ -206,7 +206,6 @@ did not really hold the hot swaps in place well, they occasionally fell out.
 [QMK Official Documentation](https://docs.qmk.fm/#/)<br />
 [QMK Online Configurator](https://config.qmk.fm/)<br />
 [Nick Green's Build log](https://nickgreen.info/dactyl-manuform-build-log/)<br />
-[David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
-<!-- [Install QMK on Windows]()<br /> --> 
-<!-- [Install QMK on Mac OS]()<br /> --> 
-<!-- https://switches.mx/kailh-box-navy?search=box& -->
+[David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br />  
+[Handwiring Guide](https://docs.qmk.fm/#/hand_wire)   
+[Resources Gist](https://gist.github.com/ultrox/d0afc641e52cbdd2f0a1e7336c8bd78e)  
