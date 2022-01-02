@@ -5,6 +5,26 @@ date:   2021-12-29 14:23:25 -0400
 categories: keyboards, Ergonomics, qmk
 ---
 
+<!-- vim-markdown-toc GFM -->
+
+* [Motivation](#motivation)
+* [Ergonomic Dactyl Kalih Box Navy Jades Build](#ergonomic-dactyl-kalih-box-navy-jades-build)
+  * [Parts and Materials](#parts-and-materials)
+  * [Notes on Materials](#notes-on-materials)
+  * [Tools](#tools)
+  * [Notes on Tools](#notes-on-tools)
+* [Build Guide Informations & Tips](#build-guide-informations--tips)
+    * [Intial 3D Printout](#intial-3d-printout)
+  * [Wiring](#wiring)
+  * [Compiling code for custom QMK keymaps](#compiling-code-for-custom-qmk-keymaps)
+  * [Flashing](#flashing)
+    * [Final Setup](#final-setup)
+* [misc advice](#misc-advice)
+* [Mistakes I made](#mistakes-i-made)
+* [Helpful Links](#helpful-links)
+
+<!-- vim-markdown-toc -->
+
 ## Motivation
 
 My main goal for this post is to simply provdie a helpful supplement to other more detailed build guides.  
