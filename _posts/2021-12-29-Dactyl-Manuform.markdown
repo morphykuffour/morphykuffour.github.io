@@ -5,15 +5,17 @@ date:   2021-12-29 14:23:25 -0400
 categories: keyboards, Ergonomics, qmk
 ---
 
-My main goal of writing this blog post is to simply provdie a helpful supplement to other build guides 
-I followed while building my dacytl manuform. Some of these guides 
-that was extremely helpful that many guides I followed glossed neccessary information over probably assuming prior knowledge.
+## Motivation
+
+My main goal for this post is to simply provdie a helpful supplement to other more detailed build guides.  
+Many of the build guides I followed while building my dacytl manuform skipped relevant information, 
+information critical to the function of the keyboard. My guess is that these guides assumed prior knowledge.  
 
 ## Ergonomic Dactyl Kalih Box Navy Jades Build
 
 **Features:**    
 Hotswappable  
-Key Layout: QWERTY  
+Key Layout: QWERTY, maybe DVORAK  
 QMK Configurable   
 Kalih Box Navy Jades  
 
@@ -27,45 +29,56 @@ Kalih Box Navy Jades
 | ----------------------------|----------------------------------|-------------------|--------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | Keyboard Case               | 5x6 Standard with Kalih Hot Swap | 1 order(2 pcs)    | $85.00 | [link](https://www.etsy.com/listing/1028152282/made-to-order-dactyl-manuform?click_key=bc4fa2b252b2076958c924c6f1c3ee0819fec15a%3A1028152282&click_sum=1892a9ae&ref=shop_home_active_2&crt=1&sts=1&variation0=2278401877&variation1=2088216304)|
 | Diodes 1N4148               | 2368-1N4148-ND                   | 100 pcs           | $4.24  | [link](https://www.digikey.com/en/products/detail/1N4148/2368-1N4148-ND/11645052?itemSeq=382356410)|
-| Kalih Hot-Swappable Sockets |                                  | 1 order (100 pcs) | $4.24  | [link](https://www.digikey.com/en/products/detail/1N4148/2368-1N4148-ND/11645052?itemSeq=382356410)|
+| Kalih Hot-Swappable Sockets | holds switches in place for wiring | 1 order (100 pcs) | $4.24| [link](https://www.amazon.com/Hot-swappable-Socket-CPG151101S11-Mechanical-Keyboard/dp/B096WZ6TJ5/ref=pd_lpo_1?pd_rd_i=B096WZ6TJ5&psc=1)|
 | M3 Threaded Inserts         |                                  | 1 order (100 pcs) | $4.24  | [link](https://www.digikey.com/en/products/detail/1N4148/2368-1N4148-ND/11645052?itemSeq=382356410)|
+| M3 Screws assortiment       | M3 Comptatible screws            | 1 order (304 pcs) | $9.99  | [link](https://www.amazon.com/Sutemribor-320Pcs-Stainless-Button-Assortment/dp/B07CYNKLT2/ref=sr_1_3?crid=1LLHEMSMGCMXK&keywords=m3+screws&qid=1641085137&s=industrial&sprefix=m3+screws%2Cindustrial%2C76&sr=1-3)|
 | Wires                       | Jumper Wires                     | 120 pcs           | $6.98  | [link](https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?crid=3LNP22FLTTM5C&keywords=EDGELEC+120pcs+Breadboard+Jumper+Wires&qid=1640879388&s=electronics&sprefix=edgelec+120pcs+breadboard+jumper+wires%2Celectronics%2C89&sr=1-3)|
 | Elite-C V4                  | USB-C Pro Micro                  | 2 pcs             | $35.98 | [link](https://keeb.io/collections/diy-parts/products/elite-c-low-profile-version-usb-c-pro-micro-replacement-atmega32u4)|
 | Key Switches                | NovelKeys x Kaihua Box Navy      | 70 pcs            | $29.40 | [link](https://kbdfans.com/products/novelkeys-x-kailh-box-thick-clicks-navy-jade?variant=2840537759757)|
 | TRRS Jack                   | PJ-320A Jack - 3.5mm             | 2 pcs             | $1.00  | [link](https://keeb.io/collections/diy-parts/products/trrs-jack-3-5mm)|
 | TRRS Cable                  | B07PJW6RQ7 - 5ft                 | 1 order (2 pcs)   | $6.99  | [link](https://www.amazon.com/Auxiliary-Braided-Compatible-Stereos-Headphones/dp/B07PJW6RQ7/ref=sr_1_2?crid=1RMMTAUNK09NO&keywords=TRRS%2B3.5mm%2BAudio%2BCable&qid=1640881233&s=industrial&sprefix=trrs%2B3.5mm%2Baudio%2Bcable%2Cindustrial%2C80&sr=1-2&th=1)|
 | Reset Switch                | Reset Pushbutton Switch          | 2 pc              | $1.00  | [link](https://keeb.io/collections/diy-parts/products/reset-pushbutton-switch)|
-| Keycaps                     | Matcha ZDA PBT Keycap set        | 1 order(124 pcs)  | $32.90 | [link](https://keeb.io/collections/diy-parts/products/amoeba-single-switch-pcbs)|
+| Keycaps                     | Matcha ZDA PBT Keycap set        | 1 order(124 pcs)  | $32.90 | [link](https://www.amazon.com/Similar-Japanese-Russian-Keyboard-Tada68%EF%BC%88Only/dp/B08MDYHJ7Q)|
 | PCB (Optional)              | Amoeba Single-Switch PCBs        | 3 order(90 pcs)   | $14.97 | [link](https://keeb.io/collections/diy-parts/products/amoeba-single-switch-pcbs)|
-| Rubber Feet                 | Sticky rubber feets              | 1 order (100 pcs) | $3.99  | [link](https://keeb.io/collections/diy-parts/products/amoeba-single-switch-pcbs)|
-| Gel wrist rests (Optional)  | Silicone Gel Mouse Pad           | 1 order (2 pcs)   | $15.00 | [link](https://www.etsy.com/listing/1098507650/pair-of-wrist-rests-for-split-style?click_key=be86e6ce5e47849a9088ed12facff1807e68175e%3A1098507650&click_sum=40716b38&ref=shop_home_active_1&crt=1&sts=1)|
-| Wrist rests (Optional)      | 3D printed wirst rests           | 1 order (2 pcs)   | $14.00 | [link](https://keeb.io/collections/diy-parts/products/amoeba-single-switch-pcbs)|
+| Rubber Feet                 | Sticky rubber feets              | 1 order (100 pcs) | $3.99  | [link](https://www.amazon.com/dp/B07G8926LH?psc=1&ref=ppx_yo2_dt_b_product_details)|
+| Gel wrist rests (Optional)  | Silicone Gel Mouse Pad           | 1 order (2 pcs)   | $15.00 | [link](https://www.amazon.com/LetGoShop-Heart-Shaped-Translucence-Ergonomic-Effectively/dp/B01DKCPC16/ref=pd_yo_rr_rp_5/135-8132732-7350062?pd_rd_w=XFX2T&pf_rd_p=a7b08c2f-223b-4262-a124-eb0a7efa1703&pf_rd_r=D330W5VXKQVKGBC4487N&pd_rd_r=37bc83cd-b13f-4b77-935e-4047d85fb826&pd_rd_wg=TKAfd&pd_rd_i=B01DKCPC16&psc=1)|
+| Wrist rests (Optional)      | 3D printed wirst rests           | 1 order (2 pcs)   | $14.00 | [link](https://www.etsy.com/listing/1098507650/pair-of-wrist-rests-for-split-style?click_key=be86e6ce5e47849a9088ed12facff1807e68175e%3A1098507650&click_sum=40716b38&ref=shop_home_active_1&crt=1&sts=1)|
 
 Total Cost excluding optional parts: NaN (Not including shipping and taxes)
 
 ## Notes on Materials
-The switches you decide to use will can change your total cost drastically. 
-The key switches is where you want to ball out and pimp your keybaord. 
-Research carefully  and select the key switches you want. 
-If you end up going with alps switches make sure to get the proper keycaps
-If you want to save some money buy most of these on aliexpress but the 
-downside is the shipping time which is usually over 30 days
+
+* The switches you decide to use will can change your total cost drastically.  
+* The key switches is where you want to ball out and pimp your keybaord. 
+* Research carefully and select the key switches you want. Switches.mx has great 
+  information on different switches. For example, this is the info they have on the [Kalih BOX Navy](https://switches.mx/kailh-box-navy).
+* Make sure to listen to key switches sound tests and look at the force-graphs to see the actuation
+  points. This is especially important if you play games and want faster key presses.
+* If you end up going with alps switches make sure to get the proper keycaps.
+* If you want to save some money buy most of parts and materials on aliexpress but the 
+  downside of purchasing the parts on aliexpress is the shipping time, usually over 30 days or longer.
+
+## Build Guide
+
+Follow [aaronmak's build guide ](https://arnmk.com/building-a-dactyl-manuform-with-hot-swappable-sockets/) to see how the
+kalih hotswap sockets are setup.
 
 if you buy the non hotswappable case from andrew which is what I recommend after completing this build
 and if you decide you want a hostwappable keybaord then I would highly recommend the Amoeba Single-Switch PCBs. 
 The only annoying part of the single pcbs from keebio is that 1 order has 30 pcs and you need 64 pieces of the
 PCB for the dactyl build so you end spending extra for the extra 4 PCBs. 
 
-
-is where you want to focus 
-Make sure to listen to key switches sound tests and look at ke
 The amoeba pcbs are not neccessary if you handwire but if you get a non
 Your regular aux cable will not because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros
 
-### Intial 3D Printout
+
+#### Wiring Diagram from Nick Green
+![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/Wiring-Diagram-1.svg)  
+
+#### Intial 3D Printout
 ![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_printout.jpg)  
 
-### Final Setup 
+#### Final Setup 
 ![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)  
 
 ### Tools 
