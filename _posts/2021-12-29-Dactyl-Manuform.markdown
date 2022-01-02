@@ -138,6 +138,8 @@ brew install neovim
 ```
 Use the text editor to edit the keymaps and compile to create the .hex file.
 
+### Flashing
+
 [Install qmk toolbox](https://github.com/qmk/qmk_toolbox/releases)
 The annoying thing on windows is that every time you connect the pro mirco 
 by usb the os thinks it is being "smart" by automatically installing drivers for the pro micro
@@ -146,11 +148,20 @@ so you have to be physically fast clicking on flash in order to flash the hex fi
 You do not have to install qmk toolbox if you don't want as qmk supports flashing the hex file you generate from the command line.
 QMK toolbox is just easier and less error prone.
 
-### Flashing
+```bash
+qmk compile -kb handwired/dactyl_manuform/6x6 -km custom;
+qmk compile -kb handwired/dactyl_manuform/6x6 -km custom_right;
+```
+* These two commands will create 2 hex files and place them in **$QMK_HOME** directory.
 
-* A regular aux cable will not work because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros.
+* Use the QMK toolbox gui application to flash these hex files on the left and right pro micros.
 
-* Follow balatero to flash the QMK firmware on the pro micros. [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
+* If you don't want to edit any code use [QMK's Online Configurator](https://config.qmk.fm/#/handwired/dactyl_manuform/5x6/LAYOUT_5x6) to create the hex files. 
+
+[Personal QWERTY Keymap for Dactyl](https://github.com/morphykuffour/dactyl_manuform.git)
+* ![my custom keympas](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_manuform_keymaps.jpg)  
+
+* Follow [balatero](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/) to flash the QMK firmware on the pro micros. [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
 
 * Make ure that you connect both halves with the trrs cable before connecting the usb-c cable to your computer.
 
@@ -158,8 +169,6 @@ QMK toolbox is just easier and less error prone.
 
 > Try loading the default hex as shown by the GUI, connect the left half to USB, with both halves connected together. Short the VCC and a GND port to put it in bootloader mode, and immediately hit **flash** in QMK Toolbox. Then, disconnect the left half and flash the right half the same way, with the same file. Then connect the left half again, and you should be getting letters when you type.
 
-### My keympa
-[Personal QWERTY Keymap for Dactyl](https://github.com/morphykuffour/dactyl_manuform.git)
 
 #### Final Setup 
 ![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)  
@@ -167,7 +176,9 @@ QMK toolbox is just easier and less error prone.
 <!-- ## My C Further customizations going forward -->
 
 ## misc advice 
-* Add a reset key known as **RESET** to a layer through the QMK firware.
+* Enable **EE_HANDS** in the rules.mk in the directory for the left half.
+
+* Add a reset key known as **RESET** to a layer through the QMK firmware. This allows you to but the keyboard in flash mode using a key press on the actual keyboard.
 
 * Use the jumper wires I linked above as the wires you connect to the pro mircos and pcb or the hot swaps or 
 directly to the key switches if you decide to not go for a hotswappable build.
@@ -179,6 +190,8 @@ or additional letters that you didn't type.
 NKRO should be naturally possible if you add a diode to each key switch. You will also want to enable NKRO in 
 the keyboard's firmware by editing the rules.mk file in both of your custom folders.
 
+* A regular aux cable will not work because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros.
+
 * If you are building the dactyl manuform you have the option to use a RJ-9 female to female connection to connect the 
 two halves. If I had to start over I would have gone with this approach because you don't have to remember to
 always connect the two halves first before connecting to your computer.
@@ -189,7 +202,7 @@ Getting the case printed without the Kalih Hot swap holders and using the amoeba
 This would save some money. Also the plastic holders in the hotswap case 3D print by Andrew 
 did not really hold the hot swaps in place well, they kept falling out.
 
-## Helpful guides
+## Helpful Links
 [QMK Firmware Repo](https://github.com/qmk/qmk_firmware)<br />
 [QMK Official Documentation](https://docs.qmk.fm/#/)<br />
 [QMK Online Configurator](https://config.qmk.fm/)<br />
