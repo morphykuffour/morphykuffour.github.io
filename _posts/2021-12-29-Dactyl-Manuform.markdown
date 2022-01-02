@@ -163,7 +163,7 @@ qmk compile -kb handwired/dactyl_manuform/6x6 -km custom_right;
 
 * Follow [balatero](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/) to flash the QMK firmware on the pro micros. [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
 
-* Make ure that you connect both halves with the trrs cable before connecting the usb-c cable to your computer.
+* Make sure that you connect both halves with the trrs cable before connecting the usb-c cable to your computer.
 
 * Important flashing info provided by Nick Green: 
 
@@ -197,10 +197,9 @@ two halves. If I had to start over I would have gone with this approach because 
 always connect the two halves first before connecting to your computer.
  
 ## Mistakes I made
-Getting the case printed without the Kalih Hot swap holders and using the amoeba PCBs. <br \>
-
+Getting the case printed without the Kalih Hot swap holders and buying the amoeba PCBs which I ended up not using. <br />
 This would save some money. Also the plastic holders in the hotswap case 3D print by Andrew 
-did not really hold the hot swaps in place well, they kept falling out.
+did not really hold the hot swaps in place well, they occasionally fell out.
 
 ## Helpful Links
 [QMK Firmware Repo](https://github.com/qmk/qmk_firmware)<br />
