@@ -17,7 +17,7 @@ information critical to the function of the keyboard. My guess is that these gui
 Hotswappable  
 Key Layout: QWERTY, maybe DVORAK  
 QMK Configurable   
-Kalih Box Navy Jades  
+Kalih Box Navy   
 
 ### Parts and Materials
 <style>
@@ -46,7 +46,7 @@ Kalih Box Navy Jades
 
 Total Cost excluding optional parts: NaN (Not including shipping and taxes)
 
-## Notes on Materials
+### Notes on Materials
 
 * The switches you decide to use will can change your total cost drastically.  
 * The key switches is where you want to ball out and pimp your keybaord. 
@@ -58,62 +58,66 @@ Total Cost excluding optional parts: NaN (Not including shipping and taxes)
 * If you want to save some money buy most of parts and materials on aliexpress but the 
   downside of purchasing the parts on aliexpress is the shipping time, usually over 30 days or longer.
 
-## Build Guide
-
-Follow [aaronmak's build guide ](https://arnmk.com/building-a-dactyl-manuform-with-hot-swappable-sockets/) to see how the
-kalih hotswap sockets are setup.
-
-if you buy the non hotswappable case from andrew which is what I recommend after completing this build
-and if you decide you want a hostwappable keybaord then I would highly recommend the Amoeba Single-Switch PCBs. 
-The only annoying part of the single pcbs from keebio is that 1 order has 30 pcs and you need 64 pieces of the
-PCB for the dactyl build so you end spending extra for the extra 4 PCBs. 
-
-The amoeba pcbs are not neccessary if you handwire but if you get a non
-Your regular aux cable will not because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros
-
-
-#### Wiring Diagram from Nick Green
-![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/Wiring-Diagram-1.svg)  
-
-#### Intial 3D Printout
-![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_printout.jpg)  
-
-#### Final Setup 
-![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)  
-
 ### Tools 
 <style>
 .tablelines table, .tablelines td, .tablelines th {
         border: 1px solid black;
         }
 </style>
-| Tools              | Price          | URL     |
-| -------------------|----------------|---------|
-| Glue Gun           |                |         |
-| Rosin Core solder  |                |         |
-| Small fan          |                |         |
-| Soldering Station  |                |         |
-| Heat Insulation Mat|                |         |
-| Helping hands      |                |         |
-| MX Switch opener   |                |         |
-| Keycap remover     |                |         |
-| Key Switch opener  |                |         |
-| Tweezers           |                |         |
-| wire cutter        |                |         |
-| wire stripper      |                |         |
+| Tools              | Use Case        | URL     |
+| -------------------|-----------------|---------|
+| Glue Gun           | Glue things in place.|[link]()|
+| Rosin Core solder  | Used for soldering.|[link]()|
+| Small fan          | Stop fumes from going into your body.|[link]()|
+| Soldering Station  | Soldering the metal contacts.|[link]()|
+| Soldering Pencil   | Alternative tool for fine soldering.|[link](https://www.amazon.com/gp/product/B08B8L7C8D/ref=ox_sc_saved_title_2?smid=A1CJB5SYI9X4XC&psc=1)|
+| Heat Insulation Mat| Used to organize tools and materials and prevent destruction of your table. |[link]()|
+| Helping hands      | Extra hands are nice to have.|   [link]()|
+| MX Switch opener   | If you want to lube your switches. | [link]()|
+| Keycap remover     | Remove Keycaps safely and efficiently.| [link]()|
+| Tweezers           | Great tool for tiny manuevers.|[link]()|
+| wire cutter        | Cut wires.|[link]()|
+| wire stripper      | Strip wires.|[link]()|
 
-## Notes on Materials
-* I would advice going to a maker studio to build as they will have many of the tools I listed above 
-but if you going to build more things in the future I would recommend investing in some of these tools,
-Do not cheap out on the tools if you decide to build at home because you will end up wasting 
-your time which will make your build process painful and future projects a misery.
+### Notes on Tools
+* I would advice going to a maker studio to build the keyboard as they will have many of the tools I have listed above
+but if you going to build more things in the future I would recommend investing in some of these tools.  
 
- * For the soldering tool I would recommend the hakko station I linked above or better yet a Soldering pencil because of (You want small fine tip for the gun or pencil) | 
-Personally, I purchased a Hakko FX888D-23BY Digital Soldering Station and used my desoldering pump I purchased from my ECE class 
+* Do not cheap out on the tools if you decide to build at home because you will end up wasting 
+  your time which will make your build process painful and future projects a misery.
 
+* For the soldering tool I would recommend the hakko station I linked above or better yet a Soldering pencil because of
+  the somewhat small soldering pointpoints; a fine tip for the gun or pencil helps dramatically.
 
-## Compiling code for custom QMK keymaps
-If you are on windows follow the windows tab o from the follwing link in order to setup your build environment. [Setup QMK build Enivronment](https://docs.qmk.fm/#/getting_started_build_tools?id=set-up-your-environment)
+* Personally, I purchased a Hakko FX888D-23BY Digital Soldering Station and used my desoldering pump I purchased for my ECE class 
+  and the keyboard build was somewhat easy overall.
+
+## Build Guide Informations & Tips 
+
+#### Intial 3D Printout
+![Inital 3D Printout](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_printout.jpg)  
+
+### Wiring
+* Follow [Nick Green's Build log](https://nickgreen.info/dactyl-manuform-build-log/) to build the keybaord. I like said in my
+  intial motivation for this post. I wanted to create a supplement and point out caveats of the build process.
+  * His wiring diagram was propably the most important guide for my build. See the image below.
+  * ![wiring diagram](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/Wiring-Diagram-1.svg)  
+
+* Follow [aaronmak's build guide ](https://arnmk.com/building-a-dactyl-manuform-with-hot-swappable-sockets/) to see how the
+kalih hotswap sockets are setup.
+
+* If you buy the cheaper, regular (non-hotswappable) case from Andrew on etsy.com which is what I recommend after completing my build.
+but you decide you want a hostwappable keybaord then I would highly recommend the Amoeba Single-Switch PCBs as the PCB enables hotswappablenes. 
+
+* The only annoying part of the single pcbs from keebio is that 1 order has 30 pcs and you need 64 pieces of the PCB for the dactyl build so you end spending extra for the extra 4 PCBs. 
+
+* FYI, I purchased the hotswappable case from [Andrew on esty.com](https://www.etsy.com/listing/1028152282/made-to-order-dactyl-manuform).
+
+* If you decide to use the PCB do not break them into individual parts before attaching the switches to the PCB, attach the switches first and then break them apart.  
+  See this [reddit thread](https://www.reddit.com/r/olkb/comments/bajnlq/help_with_amoeba_single_switch_dactyl/) for more help on the amoeba PCB wiring setup with the dactyl manuform.
+
+### Compiling code for custom QMK keymaps
+If you are on windows follow the windows tab on from the follwing link in order to setup your build environment. [Setup QMK build Enivronment](https://docs.qmk.fm/#/getting_started_build_tools?id=set-up-your-environment)
 I used 
 Setup QMK and QMK toolbox on Macos
 
@@ -132,6 +136,7 @@ It will inform you if you need to install any additionaly dependencies neccessar
 ```bash
 brew install neovim
 ```
+Use the text editor to edit the keymaps and compile to create the .hex file.
 
 [Install qmk toolbox](https://github.com/qmk/qmk_toolbox/releases)
 The annoying thing on windows is that every time you connect the pro mirco 
@@ -141,25 +146,40 @@ so you have to be physically fast clicking on flash in order to flash the hex fi
 You do not have to install qmk toolbox if you don't want as qmk supports flashing the hex file you generate from the command line.
 QMK toolbox is just easier and less error prone.
 
-## My C Further customizations going forward
-![Intial 3D Printout](/morphykuffour.github.io/assests/morphy-/dactyl_printout.jpg)
+### Flashing
+
+* A regular aux cable will not work because it is a trs cable and you need a trrs cable in order to transmit data signals between the two pro micros.
+
+* Follow balatero to flash the QMK firmware on the pro micros. [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 
+
+* Make ure that you connect both halves with the trrs cable before connecting the usb-c cable to your computer.
+
+* Important flashing info provided by Nick Green: 
+
+> Try loading the default hex as shown by the GUI, connect the left half to USB, with both halves connected together. Short the VCC and a GND port to put it in bootloader mode, and immediately hit **flash** in QMK Toolbox. Then, disconnect the left half and flash the right half the same way, with the same file. Then connect the left half again, and you should be getting letters when you type.
+
+### My keympa
+[Personal QWERTY Keymap for Dactyl](https://github.com/morphykuffour/dactyl_manuform.git)
+
+#### Final Setup 
+![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)  
+
+<!-- ## My C Further customizations going forward -->
 
 ## misc advice 
+* Add a reset key known as **RESET** to a layer through the QMK firware.
 
-* add a reset key to a layer (RESET) through the firware
-
-* use the jumper wires I linked above as the wires you connect to the pro mircos and pcb or the hot swaps or 
+* Use the jumper wires I linked above as the wires you connect to the pro mircos and pcb or the hot swaps or 
 directly to the key switches if you decide to not go for a hotswappable build.
 
-* if you decide to directly solder the switches make sure to get glue sticks 
-the gun glue I linked above has plenty of glue included. 
+* If you decide to directly solder the switches make sure to get glue sticks the glue gun I linked above has plenty of glue included. 
 
 * You will aslo want NKRO (N-Key Rollover) to prevent ghosting — letters missing from what you actually typed, 
 or additional letters that you didn't type. 
-NKRO should be possible naturally if you add a diode to each key switch. You will also want to enable NKRO in 
+NKRO should be naturally possible if you add a diode to each key switch. You will also want to enable NKRO in 
 the keyboard's firmware by editing the rules.mk file in both of your custom folders.
 
-* if you building the dactyl manuform you have the option to use a RJ-9 female to female connection to connect the 
+* If you are building the dactyl manuform you have the option to use a RJ-9 female to female connection to connect the 
 two halves. If I had to start over I would have gone with this approach because you don't have to remember to
 always connect the two halves first before connecting to your computer.
  
