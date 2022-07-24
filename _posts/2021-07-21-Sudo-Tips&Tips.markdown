@@ -12,6 +12,13 @@ Make Sudo suckless.
 echo "%${USER} ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee ' visudo --quiet --file=/etc/sudoers.d/passwordless-sudo
 ```
 
+Print exit code of previously excuted commands
+```bash
+echo "yes"
+echo $? 
+```
+should print 0 if `echo "yes"` was successfully excuted otherwise 1.
+
 Less retyping
 ```bash
  # run whichever-command on the last argument of the previous command
