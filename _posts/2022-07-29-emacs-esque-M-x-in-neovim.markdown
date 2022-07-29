@@ -2,7 +2,7 @@
 layout: post
 title:  "Emacs-esque M-x in Neovim"
 <!-- date:   2022-07-29 11:23:25 -0400 -->
-date: {{ page.date | date_to_rfc822 }}
+date: <li>{{ page.date | date_to_rfc822 }}</li>
 categories: linux emacs neovim vim
 ---
 
