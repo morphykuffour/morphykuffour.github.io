@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Emacs M-x in Neovim"
-date:   2021-07-21 14:23:25 -0400
+date:   2022-07-29 14:23:25 -0400
 categories: linux emacs neovim vim
 ---
 
