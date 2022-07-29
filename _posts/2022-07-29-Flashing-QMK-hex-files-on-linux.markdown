@@ -51,7 +51,7 @@ dfu-programmer atmega32u4 erase --force
 dfu-programmer atmega32u4 flash ./handwired_dactyl_manuform_5x6_colemak-dh.hex 
 ```
 
-- Reset the board ( I honestly do not know why you have type this command but however you cannot start using your keeb unless you type this command or disconnect and reconnect your microcontroller.
+- Reset the board ( I honestly do not know why you have type this command but you cannot start using your keeb unless you type this command or disconnect and reconnect your microcontroller.
 ```bash
 dfu-programmer atmega32u4 reset
 ```
