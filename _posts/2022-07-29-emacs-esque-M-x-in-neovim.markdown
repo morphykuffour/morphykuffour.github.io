@@ -6,8 +6,6 @@ title:  "Emacs-esque M-x in Neovim"
 categories: linux emacs neovim vim
 ---
 
-<!-- <li>{{ page.date | date_to_rfc822 }}</li> -->
-
 I have been using neovim extensively for a year and a half now and it has a wonderful experience. First class support for lua scripting is proving to be [neovim](https://neovim.io/)'s killer feature. The defaults are great and more recently in version 0.8.0 you can easily create and bind lua functions that leverage all of vim, neovim, and linux shell utilities to keybindings. 
 
 This has always been the case with emacs, a functional system from its roots. With the entire editor  being writing in elisp, you can easily bind whatever elisp function to a keybinding.
@@ -31,7 +29,7 @@ Here's the breakdown, whenever `<A-x>` i.e. when the key `Alt + x` is pressed in
 vim.keymap.set("n", "<A-y>", function()
 	vim.cmd("echo expand('%:p')")
 	vim.cmd("let @+ = expand('%:p')")
-	vim.cmd('echo "Full path of " . expand(\'%:t\') . " was copied to system clipboard"')
+	vim.cmd('echo "Full path of " . expand(\'%:t\') . "was copied"')
 end)
 ```
 This is an old vimrc snippet that I converted to lua, It essentially copies the currently edited neovim buffer full path into the system's clipboard and informs the user of the action. 
