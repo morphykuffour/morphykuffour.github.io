@@ -10,6 +10,12 @@ I have been experimenting with custom keyboard layers and keyboards. An annoying
 ```bash
 nix-env -iA nixos.dfu-programmer
 ```
+
+- on ubuntu
+```bash
+sudo apt-get install dfu-programmer 
+```
+
 - Create or get the hex file you want to compile
 ```bash
 cd ~/.qmk_firmware
@@ -17,15 +23,21 @@ qmk compile -kb handwired/dactyl_manuform/5x6 -km colemak-dh
 ls ./handwired_dactyl_manuform_5x6_colemak-dh
 ```
 
+- Make sure your microcontroller is connected via usb and verify with `lsusb`
+```bash
+lsusb
+```
+
 - Press the hardware reset button on your microcontroller to put the system into bootloader mode
 
 - Check to see if the device is recognized by dfu-programmer
 ```bash
+# dfu-programmer name_of_board command_to_execute_on_board
  dfu-programmer atmega32u4 get
 ```
 this should output the bootloader version number.
 
-- Erase the current firmare to prep the board for the new firmware you want to flash
+- Erase the current firmware to prep the board for the new firmware you want to flash
 ```bash
 dfu-programmer atmega32u4 erase --force 
 ```
