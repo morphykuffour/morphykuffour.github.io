@@ -6,7 +6,7 @@ title:  "Emacs-esque M-x in Neovim"
 categories: linux emacs neovim vim
 ---
 
-<li>{{ page.date | date_to_rfc822 }}</li>
+<!-- <li>{{ page.date | date_to_rfc822 }}</li> -->
 
 I have been using neovim extensively for a year and a half now and it has a wonderful experience. First class support for lua scripting is proving to be [neovim](https://neovim.io/)'s killer feature. The defaults are great and more recently in version 0.8.0 you can easily create and bind lua functions that leverage all of vim, neovim, and linux shell utilities to keybindings. 
 
