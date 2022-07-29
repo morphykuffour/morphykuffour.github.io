@@ -1,8 +1,6 @@
 ---
 layout: post
 title:  "Emacs-esque M-x in Neovim"
-<!-- date:   2022-07-29 11:23:25 -0400 -->
-<!-- date:  -->
 categories: linux emacs neovim vim
 ---
 
