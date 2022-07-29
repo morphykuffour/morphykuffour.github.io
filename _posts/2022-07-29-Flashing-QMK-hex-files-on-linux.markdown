@@ -16,6 +16,11 @@ nix-env -iA nixos.dfu-programmer
 sudo apt-get install dfu-programmer 
 ```
 
+- on arch linux
+```bash
+sudo pacman -S dfu-programmer
+```
+
 - Create or get the hex file you want to compile
 ```bash
 cd ~/.qmk_firmware
