@@ -43,6 +43,6 @@ dfu-programmer atmega32u4 reset
 ```bash
 man dfu-programmer
 ```
-See [https://dfu-programmer.github.io/](https://dfu-programmer.github.io/)
+See [https://dfu-programmer.github.io/](https://dfu-programmer.github.io/)  
 See `SUPPORTED MICROCONTROLLERS` section of the dfu-programmer man page for the supported microcontrollers. 
 
