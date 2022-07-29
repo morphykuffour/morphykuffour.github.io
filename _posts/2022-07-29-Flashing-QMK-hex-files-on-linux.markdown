@@ -27,7 +27,7 @@ this should output the bootloader version number.
 
 - Erase the current firmare to prep the board for the new firmware you want to flash
 ```bash
-dfu-programmer ATmega32u4 erase --force 
+dfu-programmer atmega32u4 erase --force 
 ```
 - Flash the file to the microcontroller board
 ```bash
@@ -43,6 +43,6 @@ dfu-programmer atmega32u4 reset
 ```bash
 man dfu-programmer
 ```
-See https://dfu-programmer.github.io/  
+See [https://dfu-programmer.github.io/](https://dfu-programmer.github.io/)
 See `SUPPORTED MICROCONTROLLERS` section of the dfu-programmer man page for the supported microcontrollers. 
 
