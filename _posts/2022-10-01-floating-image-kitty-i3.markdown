@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  ""
+title:  "learning steno: part 0"
 categories: linux i3 keyboard qmk firmware
 ---
 
