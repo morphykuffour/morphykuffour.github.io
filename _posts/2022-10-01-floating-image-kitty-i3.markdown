@@ -24,7 +24,7 @@ These are the following pieces of software and hacks I used to make this happen:
 * miscellaneous linux tools
 * community forum answers: [https://unix.stackexchange.com/a/474300](https://unix.stackexchange.com/a/474300)
 
-i3 handles the keybinding to execute the process and floats the window. Kitty creates a bash process that forks another kitty process running a kitty icat kitty to display the image in the terminal.
+i3 handles the keybinding to execute the process and floats the window. Kitty creates a bash process that forks another kitty process running a kitty icat kitten to display the image in the terminal.
 
 The following was added to my [i3.nix](https://github.com/morphykuffour/nix/blob/main/modules/i3.nix) to enable i3 to bind the `floatimage` script to `Alt+Shift+M`,
 ```nix
