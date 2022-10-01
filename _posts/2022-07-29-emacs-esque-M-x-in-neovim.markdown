@@ -33,7 +33,7 @@ end)
 This is an old vimrc snippet that I converted to lua, It essentially copies the currently edited neovim buffer full path into the system's clipboard and informs the user of the action. 
 
 
-## Help
+## nota bene
 `:h map`
 `:h telescope`
 `:h vim.keymap.set`
