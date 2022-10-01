@@ -8,7 +8,7 @@ categories: linux i3 keyboard qmk firmware
 
 I have been exploring the deepest ends of typing, ergonomics, and stenography recently. I thought about building a georgi keyboard but lack of scad files, time, and my busy school schedule made that idea a mote point. I decided to pickup an off the shelf steno machine, the [uni v4](https://stenokeyboards.com/products/the-uni-v4), since it was cost and time efficient.
 
-Now the biggest challenge is learn the layout of the uni and put in the practice hours to reap the life long rewards of typing close to the speed of my thought. I use nixos so I had to install plover, an open source stenotype engine that translates mechanical keyboards presses to words with little to no latency.
+Now the biggest challenge is learn the layout of the uni and put in the practice hours to reap the life long rewards of typing close to the speed of my thoughts. To use the uni you have to install plover, an open source stenotype engine that translates mechanical keyboards presses to words with little to no latency. The instructions and [documentation](https://docs.stenokeyboards.com/) provided for the uni is great.
 
 I find it very easy to learn new skills by creating a productive environment that facilitates the learning this new skill. Linux makes it very easy to customize desktop environment to ease the learn process.
 
@@ -73,7 +73,7 @@ wait "${pid}";
 I put this `chmod`ed the script and put it in my PATH so that my shell could find it.
 
 ## nota bene
-[https://raw.githubusercontent.com/morphykuffour/dotfiles/main/scripts/.local/bin/floatimage](script to floatimage)
+[floatimage script](https://raw.githubusercontent.com/morphykuffour/dotfiles/main/scripts/.local/bin/floatimage)
 
 
 
