@@ -6,13 +6,13 @@ categories: linux i3 keyboard qmk firmware
 
 ## learning steno
 
-I have been exploring the deepest ends of typing, ergonomics, and stenography recently. I thought about building a georgi keyboard but lack of scad files, time, and my busy school schedule made that idea a mote point. I decided to pickup an off the shelf steno machine, the [https://stenokeyboards.com/products/the-uni-v4](uni v4), since it was cost and time efficient.
+I have been exploring the deepest ends of typing, ergonomics, and stenography recently. I thought about building a georgi keyboard but lack of scad files, time, and my busy school schedule made that idea a mote point. I decided to pickup an off the shelf steno machine, the [uni v4](https://stenokeyboards.com/products/the-uni-v4), since it was cost and time efficient.
 
 Now the biggest challenge is learn the layout of the uni and put in the practice hours to reap the life long rewards of typing close to the speed of my thought. I use nixos so I had to install plover, an open source stenotype engine that translates mechanical keyboards presses to words with little to no latency.
 
 I find it very easy to learn new skills by creating a productive environment that facilitates the learning this new skill. Linux makes it very easy to customize desktop environment to ease the learn process.
 
-I simply wanted to have a floating image of the uni steno layout, something like this: ![/home/morp/Dropbox/screenshots/2022-10-01_04-33.png](floating overlay). 
+I simply wanted to have a floating image of the uni steno layout, something like this: ![floating overlay](/home/morp/Dropbox/screenshots/2022-10-01_04-33.png). 
 
 These are the following pieces of software and hacks I used to make this happen:
 
