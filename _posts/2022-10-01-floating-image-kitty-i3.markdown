@@ -10,7 +10,7 @@ I have been exploring the deepest ends of typing, ergonomics, and stenography re
 
 Now the biggest challenge is learning the layout of the uni and putting in the practice hours to reap the life long rewards of typing close to the speed of my thoughts. To use the uni you have to install plover, an open source stenotype engine that translates mechanical keyboards presses to words with little to no latency. The instructions and [documentation](https://docs.stenokeyboards.com/) provided for the uni is great.
 
-I find it very easy to learn new skills by creating a productive environment that facilitates the learning of this new skill. Linux makes it very easy to customize your desktop environment to ease the learn process.
+I find it very easy to learn new skills by creating a productive environment that facilitates the learning of this new skill. Linux makes it very easy to customize your desktop environment to ease the learning process.
 
 I simply wanted to have a floating image of the uni steno layout floating on my window while i practice, something like this: ![floating overlay](https://www.dropbox.com/s/0dmdh005dyz0md8/2022-10-01_04-33.png?raw=1)
 
