@@ -18,3 +18,11 @@ plugins:
   - jekyll-feed
   - jekyll-include-cache
 
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "blog"
+      comments: true
