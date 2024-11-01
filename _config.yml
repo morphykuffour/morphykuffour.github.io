@@ -18,4 +18,11 @@ plugins:
   - jekyll-feed
   - jekyll-include-cache
 
-google_analytics: G-4GQJ2S3DCG
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "blog"
+      comments: true
