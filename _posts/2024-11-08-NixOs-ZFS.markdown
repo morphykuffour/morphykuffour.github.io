@@ -1,0 +1,211 @@
+---
+layout: post
+title:  "Installing NixOS on ZFS encrypted Partition"
+categories: linux NixOs
+---
+
+## Installation
+On to the good stuff, actual installation steps start here! Note all commands should be run as root.
+
+Download an installer and burn it to a bootable USB drive.
+https://www.ventoy.net/en/doc_start.html
+
+## Filesystem partitioning
+
+Open a terminal and switch to root to avoid having to prefix everything with `sudo`.
+
+```bash
+sudo su
+```
+
+**Identify the root partition**:
+
+Next, we need to figure out which disk we want to use. I want to wipe and reinstall NixOs on my current linux system. To check which disk your current Linux system is installed on using the `/dev/disk/by-id` directory, follow these steps:
+
+To find which `/dev/disk/by-id` entry corresponds to your system disk `(/dev/nvme0n1)`, you can use the following command:
+
+```bash
+ls -l /dev/disk/by-id/ | grep nvme0n1
+```
+
+In my case this is my first NVMe in this machine so I will be using nvme0n1, but you may see a different number based on what is connected. Let's start partitioning the disk
+
+For the filesystem, we’re going to create two partitions. We need one, vfat, for the boot and another, zfs, for the rest of the filesystem.
+
+```bash
+DISK=/dev/nvme0n1
+```
+
+Next, it's time to partition the actual disk. I'm going to be creating the following partitions:
+
+1 GiB (unencrypted) boot partition
+The remainder of the drive will be our actual, usable, partition
+
+```bash
+gdisk "${DISK}"
+```
+
+We can start by creating the first partition of 1GB.
+
+```
+GPT fdisk (gdisk) version 1.0.5
+
+Partition table scan:
+  MBR: not present
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+Creating new GPT entries in memory.
+
+Command (? for help): o
+This option deletes all partitions and creates a new protective MBR.
+Proceed? (Y/N): Y
+
+Command (? for help): n
+Partition number (1-128, default 1):
+First sector (34-1953525134, default = 2048) or {+-}size{KMGTP}:
+Last sector (2048-1953525134, default = 1953525134) or {+-}size{KMGTP}: +1G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): EF00
+Changed type of partition to 'EFI system partition'
+```
+
+Followed by the rest of the filesystem.
+
+```bash
+Command (? for help): n
+Partition number (2-128, default 2): 2
+First sector (34-1953525134, default = 2099200) or {+-}size{KMGTP}:
+Last sector (2099200-1953525134, default = 1953525134) or {+-}size{KMGTP}:
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300):
+Changed type of partition to 'Linux filesystem'
+
+Command (? for help): c
+Partition number (1-2): 2
+Enter name: root
+```
+
+Write the changes 
+
+```
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): Y
+OK; writing new GUID partition table (GPT) to /dev/nvme0n1.
+The operation has completed successfully.
+```
+
+## Filesystem formatting
+Now that we got our partitions creates, let’s go ahead and format them properly.
+
+Starting with the boot partition first.
+
+```bash
+mkfs.vfat /dev/disk/by-id/VENDOR-ID-part1
+```
+
+Then our zfs partition, but we need to encrypt it first. So, we create the Luks partition. The following command should prompt you to enter your passphrase.
+
+```bash
+cryptsetup luksFormat /dev/disk/by-id/VENDOR-ID-part2
+```
+
+At this stage, stage we are done with the filesystem formatting and we need to create the zfs pool. To do so, we need to mount the encrypted root filesystem; Luks. Note: The following command will prompt you to enter your passphrase again.
+
+```bash
+cryptsetup open --type luks /dev/disk/by-id/VENDOR-ID-part2 crypt
+```
+
+This mounts the filesystem in /dev/mapper/crypt. We’ll use that to create the pool.
+
+```bash
+zpool create -O mountpoint=none rpool /dev/mapper/crypt
+zfs create -o mountpoint=legacy rpool/root
+zfs create -o mountpoint=legacy rpool/root/nixos
+zfs create -o mountpoint=legacy rpool/home
+
+```
+## Filesystem mounting 
+
+After creating the filesystem, let’s mount everything.
+
+```bash
+# Mounting filesystem
+mount -t zfs rpool/root/nixos /mnt
+mkdir /mnt/home
+mkdir /mnt/boot
+# Mounting home directory
+mount -t zfs rpool/home /mnt/home
+# Mounting boot partition
+mount /dev/disk/by-id/VENDOR-ID-part1 /mnt/boot
+```
+
+## Generating NixOs configuration
+
+At this stage, we need a nix configuration to build our system from. I didn’t have any configuration to start from so I generated one.
+
+
+```bash
+nixos-generate-config --root /mnt
+```
+
+## NixOs configuration
+
+The required configuration bits to be added to `/mnt/etc/nixos/configuration.nix` are:
+
+
+```nix
+boot.supportedFilesystems = [ "zfs" ];
+# Make sure you set the networking.hostId option, which ZFS requires:
+networking.hostId = "<random 8-digit hex string>";
+# See https://nixos.org/nixos/manual/options.html#opt-networking.hostId for more.
+
+# Use the GRUB 2 boot loader.
+boot.loader.grub = {
+  enable = true;
+  version =2;
+  device = "nodev";
+  efiSupport = true;
+  enableCryptodisk = true;
+};
+
+boot.initrd.luks.devices = {
+ root = {
+   device = "/dev/disk/by-uuid/VENDOR-UUID"; ## Use blkid to find this UUID
+   # Required even if we're not using LVM
+   preLVM = true;
+ };
+};
+```
+
+To get the `networking.hostId` use the following command:
+
+```bash
+head -c 8 /etc/machine-id
+```
+
+To get the luks encrypted partition use the following command:
+```bash
+blkid | grep $DISK
+```
+The vendor UUID you should look for should be the one with `PARTLABEL="root"`
+
+Note: You might have to comment out the `boot.loader.grub` section out in order to run `nixos-install`
+
+## NixOS installation
+If we’re done with all of the configuration as described above, we should be able to build a bootable system. Let’s try that out by installing NixOS.
+
+```bash
+nixos-install
+```
+
+## Resources
+
+https://nixos.wiki/wiki/ZFS
+https://blog.lazkani.io/posts/nixos-on-encrypted-zfs/
+https://ipetkov.dev/blog/installing-nixos-and-zfs-on-my-desktop/
