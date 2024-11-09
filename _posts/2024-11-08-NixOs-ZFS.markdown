@@ -5,7 +5,8 @@ categories: linux NixOs
 ---
 
 ## Installation
-On to the good stuff, actual installation steps start here! Note all commands should be run as root.
+
+Note all commands should be run as root.
 
 Download an installer and burn it to a bootable USB drive.
 https://www.ventoy.net/en/doc_start.html
@@ -128,8 +129,8 @@ zpool create -O mountpoint=none rpool /dev/mapper/crypt
 zfs create -o mountpoint=legacy rpool/root
 zfs create -o mountpoint=legacy rpool/root/nixos
 zfs create -o mountpoint=legacy rpool/home
-
 ```
+
 ## Filesystem mounting 
 
 After creating the filesystem, let’s mount everything.
@@ -207,5 +208,8 @@ nixos-install
 ## Resources
 
 https://nixos.wiki/wiki/ZFS
+
 https://blog.lazkani.io/posts/nixos-on-encrypted-zfs/
+
 https://ipetkov.dev/blog/installing-nixos-and-zfs-on-my-desktop/
+
