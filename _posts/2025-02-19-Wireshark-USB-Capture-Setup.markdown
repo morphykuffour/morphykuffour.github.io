@@ -5,7 +5,7 @@ categories: linux Wireshark
 ---
 
 ## Motivation 
-I wanted to capture hidapi calls on my ferris sweep in order to debug some code I wrote. I tried following the [Capture Setup](https://wiki.wireshark.org/CaptureSetup/USB) but it did not work. 
+I wanted to capture hidapi calls on my ferris sweep in order to debug some code I wrote. I tried following the [Capture Setup](https://wiki.wireshark.org/CaptureSetup/USB) but `setfacl` command did not work. 
 
 ## Add default user to wireshark group
 The following section is from the wireshark wiki
@@ -35,11 +35,11 @@ To dump USB traffic on Linux, you need the usbmon kernel module. If it is not lo
 sudo modprobe usbmon
 ```
 
+## Create udev rule
+
 On most modern Linux systems, **devtmpfs** (which manages `/dev` entries) does not typically support setting ACLs via `setfacl`. That’s why you keep getting errors when trying `setfacl -m u:$USER:r /dev/usbmon*`. Instead, you need to ensure those USB monitor devices have the right group ownership and permissions so that members of the "wireshark" group can access them.
 
 The most reliable way is to use a udev rule:
-
-## Create udev rule
 
 **Create a new udev rule**
 
