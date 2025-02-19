@@ -5,7 +5,7 @@ categories: linux Wireshark
 ---
 
 ## Motivation 
-I wanted to capture hidapi calls on my ferris sweep in order to debug some code I wrote. I tried following the [Capture Setup](https://wiki.wireshark.org/CaptureSetup/USB) but `setfacl` command did not work. 
+I wanted to capture hidapi calls on my ferris sweep in order to debug some code I wrote. I tried following the [Capture Setup](https://wiki.wireshark.org/CaptureSetup/USB) but `setfacl` command did not work. I made this setup from a kali arm64 vm.
 
 ## Add default user to wireshark group
 The following section is from the wireshark wiki
