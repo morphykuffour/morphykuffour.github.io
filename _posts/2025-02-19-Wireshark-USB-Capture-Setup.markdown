@@ -41,7 +41,7 @@ The most reliable way is to use a udev rule:
 
 ## Create udev rule
 
-1. Create a new udev rule
+**Create a new udev rule**
 
 For example, create the file `/etc/udev/rules.d/99-usbmon.rules` (the name can vary, but must end in .rules), and add the following line:
 
@@ -55,14 +55,14 @@ echo 'SUBSYSTEM=="usbmon", MODE="0660", GROUP="wireshark"' > /etc/udev/rules.d/9
 
 This instructs udev to set the device mode to `0660` (read/write for owner and group) and assign the group `wireshark` whenever a `/dev/usbmon*` device is created.
 
-2. Reload udev rules and trigger
+**Reload udev rules and trigger**
 
 ```bash
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
 
-3. Verify permissions
+**Verify permissions**
 
 Check the device permissions:
 
@@ -72,7 +72,7 @@ ls -l /dev/usbmon*
 
 You should now see something like `crw-rw---- 1 root wireshark ... /dev/usbmon0`.
 
-4. Ensure you’re in the "wireshark" group
+**Ensure you’re in the "wireshark" group**
 
 If you haven’t already:
 
@@ -92,4 +92,4 @@ sudo modprobe usbmon
 
 ## Resources
 
-https://wiki.wireshark.org/CaptureSetup/USB
+[https://wiki.wireshark.org/CaptureSetup/USB](https://wiki.wireshark.org/CaptureSetup/USB)
