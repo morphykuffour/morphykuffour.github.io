@@ -114,13 +114,6 @@ The script works by:
 4. Converting the keycodes to their corresponding characters
 5. Outputting the captured keystrokes in real-time
 
-## Ethical Considerations
-
-Remember that keyloggers can be used maliciously. This tutorial is meant for educational purposes and security research only. Always:
-- Obtain proper authorization before monitoring any system
-- Follow your local laws and regulations
-- Use these skills ethically and responsibly (lol)
-
 ## References
 
 This implementation is based on examples from ["Wireshark for Security Professionals"](https://computerscience.unicam.it/marcantoni/reti/laboratorio_wireshark/Wireshark%20for%20Security%20Professionals%20-%20Using%20Wireshark%20and%20the%20Metasploit%20Framework.pdf), which provides excellent insights into network security analysis using Wireshark and related tools.
