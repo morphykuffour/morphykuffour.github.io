@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Common lisp disassembly through SBCL on risc-v architecture"
+title:  "Common lisp disassembly through SBCL on RISC-V architecture"
 date:   2025-05-06
 categories: linux riscv qemu ubuntu sbcl
 ---
@@ -19,7 +19,7 @@ Bootstrap: In compiler development, the process of first building a minimal "hos
 
 contrib: The extension libraries shipped with SBCL.
 
-## Build SBCL on risc-v
+## Build SBCL on RISC-V
 
 ### Preparation
 
