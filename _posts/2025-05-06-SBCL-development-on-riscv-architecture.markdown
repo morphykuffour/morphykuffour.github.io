@@ -51,6 +51,7 @@ The original image size is not enough for image building, we need enlarge it fir
 ```bash
 qemu-img resize -f raw ubuntu-24.04.2-preinstalled-server-riscv64.img +5G
 ```
+
 Boot RISC-V qemu vm in NAT mode, you'll most likely get an IP address that starts with 10.0.2.NUM/24.
 
 ```bash
@@ -61,6 +62,7 @@ qemu-system-riscv64 \
   -device virtio-net-device,netdev=net0 \
   -drive file=ubuntu-24.04.2-preinstalled-server-riscv64.img,if=virtio,format=raw
 ```
+
 Login with the user ubuntu and the default password ubuntu; you will be asked to choose a new password
 
 Install and configure ssh on the ubuntu vm.
@@ -93,18 +95,20 @@ git clone https://git.code.sf.net/p/sbcl/sbcl /home/ubuntu/sbcl
 ```
 
 4. Clone SBCL on the host
+
 ```bash
 cd riscv64-linux
 git clone https://git.code.sf.net/p/sbcl/sbcl
 ```
 
 5. Run the cross-make script on the host
+
 ```bash
 cd sbcl
 sh cross-make.sh -p 2222 sync ubuntu@localhost /home/ubuntu/sbcl "GNUMAKE=gmake SBCL_ARCH=riscv64 CFLAGS='-fsigned-char'"
 ```
-- sync ensures the VM's and host's SBCL source are identical (it uses the VM's repo HEAD).
 
+- sync ensures the VM's and host's SBCL source are identical (it uses the VM's repo HEAD).
 - The SBCL_ARCH and CFLAGS variables set the target architecture and compiler flags.
 
 You might get an error about GNU Make not being found. To fix this, install the `build-essential` package on the guest ubuntu vm
@@ -190,12 +194,12 @@ mkdir output
 ```
 
 8. Re-run the cross-make script
+
 ```bash
 bash cross-make.sh -p 2222 sync ubuntu@localhost /home/ubuntu/sbcl "GNUMAKE=gmake SBCL_ARCH=riscv64 CFLAGS='-fsigned-char'"
 ```
 
 9. Resolve `sbcl: not found` error
-You will run into 
 
 The "sbcl: not found" is coming from your host (the Kali VM), not the RISC-V target. The `make-host-1.sh` step needs a working SBCL on the machine where you invoked `cross-make.sh` so it can build the C runtime and do the first "genesis" pass.
 
@@ -203,6 +207,7 @@ The "sbcl: not found" is coming from your host (the Kali VM), not the RISC-V tar
 ```bash
 sudo apt install sbcl
 ```
+
 This gives you the "stage-0" SBCL compiler that the cross-make process uses to build the stage-1 compiler for RISC-V.
 
 Re-run the cross-make script
@@ -226,6 +231,7 @@ You'll see a flood of binary gibberish on your terminal.
 Extensive debugging revealed that SBCL's run-program function (used to concatenate files via cat) ignores its `:output` argument and always writes to stdout. This pollutes the terminal.
 
 12. Apply the make-contrib patch
+
 ```bash
 wget https://raw.githubusercontent.com/fedora-riscv/sbcl-build-docs/refs/heads/main/sbcl-make-contrib.patch
 git apply sbcl-make-contrib.patch
@@ -279,6 +285,7 @@ To install SBCL (more information in INSTALL):
 //build started:  Tue May  6 16:41:55 UTC 2025
 //build finished: Tue May  6 17:08:55 UTC 2025
 ```
+
 To install `sbcl` run `sh install.sh`, you might need to run `sudo sh install.sh` if you are running as a regular user.
 
 ## Disassembling Common lisp code
