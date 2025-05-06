@@ -15,7 +15,7 @@ This writeup documents my journey of setting up an environment for SBCL developm
 ## SBCL Cross-Compiling Terminology
 SBCL: A Common Lisp compiler. Project page: https://www.sbcl.org/
 
-Bootstrap: In compiler development, the process of first building a minimal “host” compiler by some special means, then using it to compile the full compiler.
+Bootstrap: In compiler development, the process of first building a minimal "host" compiler by some special means, then using it to compile the full compiler.
 
 contrib: The extension libraries shipped with SBCL.
 
@@ -73,6 +73,7 @@ Then on your host, test the ssh connection,
 ```bash
 ssh -p 2222 ubuntu@localhost
 ```
+
 2. Configure SSH access
 
 - Interactively generate an ed25519 SSH keypair on the host.
@@ -80,7 +81,7 @@ ssh -p 2222 ubuntu@localhost
 ssh-keygen
 ```
 
-- Copy the public key into the VM’s `/home/ubuntu/.ssh/authorized_keys`.
+- Copy the public key into the VM's `/home/ubuntu/.ssh/authorized_keys`.
 ```bash
 ssh-copy-id -p 2222 ubuntu@localhost
 ```
@@ -92,7 +93,7 @@ git clone https://git.code.sf.net/p/sbcl/sbcl /home/ubuntu/sbcl
 ```
 
 4. Clone SBCL on the host
-```
+```bash
 cd riscv64-linux
 git clone https://git.code.sf.net/p/sbcl/sbcl
 ```
@@ -102,7 +103,7 @@ git clone https://git.code.sf.net/p/sbcl/sbcl
 cd sbcl
 sh cross-make.sh -p 2222 sync ubuntu@localhost /home/ubuntu/sbcl "GNUMAKE=gmake SBCL_ARCH=riscv64 CFLAGS='-fsigned-char'"
 ```
-- sync ensures the VM’s and host’s SBCL source are identical (it uses the VM’s repo HEAD).
+- sync ensures the VM's and host's SBCL source are identical (it uses the VM's repo HEAD).
 
 - The SBCL_ARCH and CFLAGS variables set the target architecture and compiler flags.
 
@@ -202,14 +203,14 @@ The "sbcl: not found" is coming from your host (the Kali VM), not the RISC-V tar
 ```bash
 sudo apt install sbcl
 ```
-This gives you the “stage-0” SBCL compiler that the cross-make process uses to build the stage-1 compiler for RISC-V.
+This gives you the "stage-0" SBCL compiler that the cross-make process uses to build the stage-1 compiler for RISC-V.
 
 Re-run the cross-make script
 ```bash
 bash cross-make.sh -p 2222 sync ubuntu@localhost /home/ubuntu/sbcl "GNUMAKE=gmake SBCL_ARCH=riscv64 CFLAGS='-fsigned-char'"
 ```
 
-Once the host build finishes, you’ll have a stage-1 SBCL compiler in the VM’s `/home/ubuntu/sbcl` directory.
+Once the host build finishes, you'll have a stage-1 SBCL compiler in the VM's `/home/ubuntu/sbcl` directory.
 
 10. Build the `contrib` libraries on the ubuntu VM
 
@@ -218,11 +219,11 @@ cd /home/ubuntu/sbcl
 sh make-target-contrib.sh
 ```
 
-You’ll see a flood of binary gibberish on your terminal.
+You'll see a flood of binary gibberish on your terminal.
 
 11. Work around the broken run-program output parameter
 
-Extensive debugging revealed that SBCL’s run-program function (used to concatenate files via cat) ignores its `:output` argument and always writes to stdout. This pollutes the terminal.
+Extensive debugging revealed that SBCL's run-program function (used to concatenate files via cat) ignores its `:output` argument and always writes to stdout. This pollutes the terminal.
 
 12. Apply the make-contrib patch
 ```bash
@@ -327,7 +328,7 @@ Then call `(fib-iterative N)` or `(fib-recursive N)` at the REPL.
 
 ![output]({{ site.baseurl }}/images/fib.png)
 
-In SBCL you can use the built-in disassembler at the REPL. Just make sure your function is compiled, then call `disassemble` on it. For example, assuming you’ve already defined the two versions:
+In SBCL you can use the built-in disassembler at the REPL. Just make sure your function is compiled, then call `disassemble` on it. For example, assuming you've already defined the two versions:
 
 ```bash
 (compile 'fib-recursive)
