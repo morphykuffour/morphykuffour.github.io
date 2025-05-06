@@ -325,7 +325,7 @@ sbcl --load fib.lisp
 
 Then call `(fib-iterative N)` or `(fib-recursive N)` at the REPL.
 
-![output](../images/fib.png)
+![output]({{ site.baseurl }}/images/fib.png)
 
 In SBCL you can use the built-in disassembler at the REPL. Just make sure your function is compiled, then call `disassemble` on it. For example, assuming you’ve already defined the two versions:
 
@@ -337,7 +337,8 @@ In SBCL you can use the built-in disassembler at the REPL. Just make sure your f
 (disassemble 'fib-recursive)
 (disassemble 'fib-iterative)
 ```
-![First 10 lines of fib-recursive disassembly](../images/disassembly.png)
+
+![First 10 lines of fib-recursive disassembly]({{ site.baseurl }}/images/disassembly.png)
 
 
 ## Sources
