@@ -10,7 +10,7 @@ My name is Morphy Kuffour.
 When my face is not buried in my computer, I am working out at the gym.  
 
 Github : [Github](https://github.com/morphykuffour)
-Email Address: [morphy.kuffour@uconn.edu](mailto:morphy.kuffour@uconn.edu)
+Email Address: [github.snowless957@passmail.net](github.snowless957@passmail.net)
 
 If you feeling generous ;)
 
