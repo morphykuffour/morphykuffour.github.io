@@ -12,4 +12,6 @@ When my face is not buried in my computer, I am working out at the gym.
 Github : [Github](https://github.com/morphykuffour)
 Email Address: [morphy.kuffour@uconn.edu](mailto:morphy.kuffour@uconn.edu)
 
-Monero: 8BHNmWfxkfbFgKMuPvQgTncRqAjKRJ5AYRx1vkxRwwLVDjP9W2vo9zJCznNsYgZsnbW3bztJWrhTMgmB8dddWeH8VPm6hxi
+If you feeling generous ;)
+
+Monero: 42i8j4Yg6pPWS5VWvwipSDfsZ5u1T5oVJKccvJpM4zyxfpSjx4LJjfSKG7WiGK5pNdVKEosnij5MDjQhcCjCT1iiRcHGmTh
