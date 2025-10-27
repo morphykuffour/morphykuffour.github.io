@@ -7,21 +7,21 @@ categories: keyboards, ergonomics, qmk
 
 <!-- vim-markdown-toc GFM -->
 
-* [Motivation](#motivation)
-* [Ergonomic Dactyl Kailh Box Navy Jades Build](#ergonomic-dactyl-kailh-box-navy-jades-build)
-  * [Parts and Materials](#parts-and-materials)
-  * [Notes on Materials](#notes-on-materials)
-  * [Tools](#tools)
-  * [Notes on Tools](#notes-on-tools)
-* [Build Guide Information & Tips](#build-guide-information--tips)
-    * [Initial 3D Printout](#initial-3d-printout)
-  * [Wiring](#wiring)
-  * [Compiling code for custom QMK keymaps](#compiling-code-for-custom-qmk-keymaps)
-  * [Flashing](#flashing)
-    * [Final Setup](#final-setup)
-* [Misc Advice](#misc-advice)
-* [Mistakes I made](#mistakes-i-made)
-* [Helpful Links](#helpful-links)
+- [Motivation](#motivation)
+- [Ergonomic Dactyl Kailh Box Navy Jades Build](#ergonomic-dactyl-kailh-box-navy-jades-build)
+  - [Parts and Materials](#parts-and-materials)
+  - [Notes on Materials](#notes-on-materials)
+  - [Tools](#tools)
+  - [Notes on Tools](#notes-on-tools)
+- [Build Guide Information \& Tips](#build-guide-information--tips)
+    - [Initial 3D Printout](#initial-3d-printout)
+  - [Wiring](#wiring)
+  - [Compiling code for custom QMK keymaps](#compiling-code-for-custom-qmk-keymaps)
+  - [Flashing](#flashing)
+    - [Final Setup](#final-setup)
+- [Misc Advice](#misc-advice)
+- [Mistakes I made](#mistakes-i-made)
+- [Helpful Links](#helpful-links)
 
 <!-- vim-markdown-toc -->
 
@@ -192,8 +192,7 @@ qmk compile -kb handwired/dactyl_manuform/6x6 -km custom_right;
 
 
 #### Final Setup 
-<!-- ![Final Setup with Gameball](https://github.com/morphykuffour/morphykuffour.github.io/blob/9021f7cf664d687a41006d6b73efc592a0d4befd/images/dactyl_setup_croped.jpg) -->
-![Final Setup with Gameball](https://github.com/morphykuffour/morphykuffour.github.io/blob/main/images/dactyl_setup_croped.jpg)
+![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_cropped.jpg)
 <!-- ## My C Further customizations going forward -->
 
 ## Misc Advice 
