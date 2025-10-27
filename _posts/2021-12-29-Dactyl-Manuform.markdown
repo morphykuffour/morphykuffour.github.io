@@ -192,7 +192,7 @@ qmk compile -kb handwired/dactyl_manuform/6x6 -km custom_right;
 
 
 #### Final Setup 
-![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_cropped.jpg)
+![Final Setup with Gameball](https://raw.githubusercontent.com/morphykuffour/morphykuffour.github.io/main/images/dactyl_setup_croped.jpg)
 <!-- ## My C Further customizations going forward -->
 
 ## Misc Advice 
