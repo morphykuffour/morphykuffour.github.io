@@ -12,7 +12,7 @@ Now the biggest challenge is learning the layout of the uni and putting in the p
 
 I find it very easy to learn new skills by creating a productive environment that facilitates the learning of this new skill. Linux makes it very easy to customize your desktop environment to ease the learning process.
 
-I simply wanted to have a floating image of the uni steno layout floating on my window while i practice, something like this: ![floating overlay](https://www.dropbox.com/s/0dmdh005dyz0md8/2022-10-01_04-33.png?raw=1)
+I simply wanted to have a floating image of the uni steno layout floating on my window while i practice, something like this: ![floating overlay](../images/2022-10-01_04-33.png)
 
 This is great since I do not have to look down at the board when chording on the uni.
 
