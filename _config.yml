@@ -5,7 +5,7 @@ description: >-
 # baseurl: "" # the subpath of your site, e.g. /blog
 domain: morphykuffour.github.io
 url: https://morphykuffour.github.io 
-twitter_username: morpkuff
+bluesky: morphk
 github_username: morphykuffour
 
 minima:
