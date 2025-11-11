@@ -1,7 +1,7 @@
 title: Morphy Kuffour's Blog
-email: morpkuff@gmail.com
+email: morpkuff@protonmail.com
 description: >- 
-  Arch Linux, scripting, WSL, Windows Customization, keyboards, 
+  nixos, security, qmk, vim, neovim, scripting, keyboards, 
 # baseurl: "" # the subpath of your site, e.g. /blog
 domain: morphykuffour.github.io
 url: https://morphykuffour.github.io 
