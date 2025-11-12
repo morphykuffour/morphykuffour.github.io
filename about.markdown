@@ -4,14 +4,17 @@ title: About
 permalink: /about/
 ---
 
-My name is Morphy Kuffour.  
-![avatar](https://avatars.githubusercontent.com/u/23323356?v=4)  
+My name is Morphy Kuffour. When my face is not buried in my computer, I am working out at the gym. 
 
-When my face is not buried in my computer, I am working out at the gym.  
+![avatar](https://avatars.githubusercontent.com/u/23323356?v=4)
 
 Github : [Github](https://github.com/morphykuffour)
-Email Address: [github.snowless957@passmail.net](github.snowless957@passmail.net)
 
-If you feeling generous ;)
+BlueSky : [Bluesky](https://bsky.app/profile/morphk.bsky.social)
 
-Monero: 42i8j4Yg6pPWS5VWvwipSDfsZ5u1T5oVJKccvJpM4zyxfpSjx4LJjfSKG7WiGK5pNdVKEosnij5MDjQhcCjCT1iiRcHGmTh
+pm: [morpkuff@pm.me](morpkuff@pm.me)
+
+Donate to help kids in Uganda get an education. See the urls below.
+
+[uganda.txt by Bram Moolenaar](https://vimhelp.org/uganda.txt.html) or [donate directly](https://www.kuwasha.net/)
+

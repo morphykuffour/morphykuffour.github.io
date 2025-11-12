@@ -1,5 +1,5 @@
 title: Morphy Kuffour's Blog
-email: morpkuff@protonmail.com
+email: morpkuff@pm.me
 description: >- 
   nixos, security, qmk, vim, neovim, scripting, keyboards, 
 # baseurl: "" # the subpath of your site, e.g. /blog
@@ -25,3 +25,4 @@ defaults:
       type: "posts"
     values:
       layout: "blog"
+
