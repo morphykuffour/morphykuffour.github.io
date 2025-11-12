@@ -12,7 +12,7 @@ Github : [Github](https://github.com/morphykuffour)
 
 BlueSky : [Bluesky](https://bsky.app/profile/morphk.bsky.social)
 
-pm: [morpkuff@pm.me](morpkuff@pm.me)
+pm: [morpkuff@pm.me](mailto:morpkuff@pm.me)
 
 Donate to help kids in Uganda get an education. See the urls below.
 
