@@ -69,12 +69,13 @@ void raw_hid_receive_kb(uint8_t *data, uint8_t length) {
             uint8_t target_layer = data[1];
             if (target_layer <= 3) {
                 // Switch the default/base layer
-                set_single_persistent_default_layer(target_layer);
+                set_single_default_layer(target_layer);
                 
                 // Send response
                 data[0] = 0x00;         // Success
                 data[1] = target_layer; // Confirm layer
                 data[2] = 0xAA;         // Acknowledgment byte
+                raw_hid_send(data, length);
             } else {
                 *command_id = 0xFF;     // Error
             }
