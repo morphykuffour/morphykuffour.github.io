@@ -16,6 +16,8 @@ entries:
     entries:
       - title: github
         url: https://github.com/morph-k
+      - title: website
+        url: https://morphykuffour.com
       - title: resume
         url: https://morph-k.github.io/resume
       - title: rss
