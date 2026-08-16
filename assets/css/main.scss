@@ -95,6 +95,158 @@ div.highlighter-rouge {
 }
 
 // ---------------------------------------------------------------------------
+// About page
+// ---------------------------------------------------------------------------
+// Everything here is authored in light-mode colours only. Dark mode is the
+// theme's whole-page `filter: invert(1)`, which flips these along with the
+// rest of the page (and re-inverts <img> back to true tone), so none of it
+// needs dark rules — only the purple ones further down, purple being a third
+// palette rather than an inversion.
+
+.avatar {
+  display: block;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto .9rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .35rem .9rem;
+  margin: 0 0 1.5rem;
+  font-size: .85rem;
+}
+
+// ---------------------------------------------------------------------------
+// Quote card (about page)
+// ---------------------------------------------------------------------------
+// Authored in light-mode colours only. Dark mode is the theme's whole-page
+// `filter: invert(1)`, which flips this along with everything else and
+// re-inverts the portrait back to its true tone — so it needs no dark rules,
+// only the purple ones further down.
+//
+// The portrait floats rather than sitting in a grid cell: the Latin block is
+// taller than the circle, so the translation drops to the card's flush-left
+// edge on its own, which is the layout being reproduced.
+
+.quote-card {
+  margin: 2rem 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(0, 0, 0, .18);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  // Contains the float without the clipping `overflow: hidden` would bring.
+  display: flow-root;
+
+  .quote-portrait {
+    float: left;
+    width: 110px;
+    height: 110px;
+    margin: .2rem 1.5rem .6rem 0;
+    border-radius: 50%;
+    object-fit: cover;
+    // The engraving is a rectangle of hatching; a hairline ring keeps the
+    // circle reading as a deliberate crop rather than a clipped photo.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+  }
+
+  // The theme puts a full `thin solid black` box on every blockquote, plus its
+  // own margins. Both have to go, or the card gets a box inside a rule.
+  blockquote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  .quote-latin   { font-style: italic; margin: 0 0 1.1rem; }
+  // The theme italicises every blockquote, so the translation has to opt back
+  // out — otherwise the Latin and the English read as the same voice.
+  .quote-english { font-style: normal; margin: 0; }
+
+  figcaption {
+    margin-top: 1rem;
+    font-size: .9rem;
+    letter-spacing: .03em;
+    color: rgba(0, 0, 0, .55);
+  }
+}
+
+@media (max-width: 480px) {
+  .quote-card .quote-portrait {
+    float: none;
+    display: block;
+    margin: 0 auto 1rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Core competencies
+// ---------------------------------------------------------------------------
+// A <dl> rather than nested lists: each row really is term-and-definition, and
+// it gives the label/tags split for free. The grid puts the label in a fixed
+// left column on wide viewports and stacks it above on narrow ones.
+
+.competencies {
+  margin: 1rem 0 0;
+
+  dt {
+    font-weight: bold;
+    font-size: .9rem;
+    letter-spacing: .02em;
+    margin-bottom: .45rem;
+  }
+
+  dd {
+    margin: 0 0 1.4rem;
+    &:last-of-type { margin-bottom: 0; }
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      // The theme puts bullets and indentation on every li; both are undone
+      // by the list-style/padding above, but its margins still apply.
+      margin: 0;
+      padding: .12rem .5rem;
+      font-size: .78rem;
+      line-height: 1.5;
+      border: 1px solid rgba(0, 0, 0, .22);
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (min-width: 620px) {
+  .competencies {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    column-gap: 1.25rem;
+    row-gap: 1.1rem;
+
+    dt { margin-bottom: 0; padding-top: .18rem; }
+    dd { margin: 0; }
+  }
+}
+
+// Long entries would otherwise force a horizontal scroll on a phone.
+@media (max-width: 380px) {
+  .competencies .tags li { white-space: normal; }
+}
+
+// ---------------------------------------------------------------------------
 // Light / dark toggle
 // ---------------------------------------------------------------------------
 
@@ -206,6 +358,21 @@ body[a="purple"] {
     .gi { color: $purple-number; }
     .gh, .gu { color: $purple-base; }
     .err { color: $purple-glitch; }
+  }
+
+  // The card's blockquote is exempt from the purple blockquote rule above —
+  // it carries no box, so only its text colour is inherited.
+  .quote-card {
+    border-top-color: rgba(199, 125, 255, .3);
+
+    blockquote { color: $purple-pale; border: 0; }
+    .quote-portrait { box-shadow: 0 0 0 1px rgba(199, 125, 255, .45); }
+    figcaption { color: $purple-dim; }
+  }
+
+  .competencies {
+    dt { color: $purple-base; }
+    .tags li { border-color: rgba(199, 125, 255, .35); color: $purple-attr; }
   }
 
   .theme-toggle button {
