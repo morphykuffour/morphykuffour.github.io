@@ -18,10 +18,17 @@
 
     <main class="page-content" aria-label="Content">
       <div class="w">
-        <div class="theme-toggle">
-          <button type="button" data-appearance="light" aria-pressed="false">light</button>
-          <button type="button" data-appearance="purple" aria-pressed="false">purple</button>
-          <button type="button" data-appearance="dark" aria-pressed="false">dark</button>
+        <div class="theme-slider">
+          <div class="theme-slider__panel">
+            <input class="theme-slider__range" type="range"
+                   min="0" max="2" step="1" value="0"
+                   aria-label="Colour theme" aria-valuetext="light">
+            <div class="theme-slider__marks" aria-hidden="true">
+              <span>light</span>
+              <span>purple</span>
+              <span>dark</span>
+            </div>
+          </div>
         </div>
 
         {{ content }}
@@ -31,30 +38,37 @@
     <script>
       (function () {
         var body = document.body;
-        var buttons = document.querySelectorAll('.theme-toggle button');
+        var range = document.querySelector('.theme-slider__range');
+        var marks = document.querySelectorAll('.theme-slider__marks span');
+        // Left-to-right along the dial; the index is the slider's value.
+        var ORDER = ['light', 'purple', 'dark'];
 
         // With no stored choice the theme stays on "auto", so reflect whichever
-        // mode the OS is actually resolving to rather than showing neither.
+        // mode the OS is actually resolving to rather than parking at one end.
         function current() {
           var a = body.getAttribute('a');
-          if (a === 'light' || a === 'purple' || a === 'dark') return a;
+          if (ORDER.indexOf(a) !== -1) return a;
           return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
         function sync() {
           var now = current();
-          buttons.forEach(function (b) {
-            b.setAttribute('aria-pressed', String(b.dataset.appearance === now));
+          var i = ORDER.indexOf(now);
+          range.value = String(i);
+          // Otherwise a screen reader announces the bare index.
+          range.setAttribute('aria-valuetext', now);
+          marks.forEach(function (m, j) {
+            m.classList.toggle('is-on', j === i);
           });
         }
 
-        buttons.forEach(function (b) {
-          b.addEventListener('click', function () {
-            var choice = b.dataset.appearance;
-            body.setAttribute('a', choice);
-            try { localStorage.setItem('appearance', choice); } catch (e) {}
-            sync();
-          });
+        // `input` rather than `change`, so dragging repaints as it passes each
+        // detent instead of only on release.
+        range.addEventListener('input', function () {
+          var choice = ORDER[Number(range.value)] || 'light';
+          body.setAttribute('a', choice);
+          try { localStorage.setItem('appearance', choice); } catch (e) {}
+          sync();
         });
 
         // Keep the pressed state honest if the OS flips while on "auto".

@@ -261,34 +261,154 @@ div.highlighter-rouge {
 }
 
 // ---------------------------------------------------------------------------
-// Light / dark toggle
+// Theme slider
 // ---------------------------------------------------------------------------
+// A fader on a vintage faceplate: a full spectrum band for a dial face, a
+// ridged cap riding in a recessed groove, three notched detents underneath.
+// The control is a real `input[type=range]` with three steps, so dragging,
+// clicking the track and arrow keys all work without any of it being faked.
+//
+// Range styling is the one place vendor pseudo-elements can't be grouped —
+// a selector list containing an unknown one is dropped whole by every engine,
+// so track and thumb are each written out twice from a shared mixin.
 
-.theme-toggle {
+$fader-track-h: 15px;
+$fader-thumb-w: 17px;
+$fader-thumb-h: 27px;
+
+// The dial face. Every hue on the spectrum gets a stop, aged down towards the
+// muted inks of a printed radio scale rather than screen-bright rainbow.
+$fader-spectrum: linear-gradient(
+  90deg,
+  #a33a48   0%,   // faded crimson
+  #c8552f   9%,   // burnt orange
+  #d98f34  20%,   // amber
+  #cfc04a  31%,   // wheat
+  #7ab353  42%,   // leaf
+  #2f9c6b  52%,   // phosphor, near the middle detent
+  #2f8f9c  63%,   // teal
+  #3b6aa8  74%,   // denim
+  #6b4f9e  85%,   // indigo
+  #a3548f 100%    // magenta
+);
+
+// Vertical scoring over the band, the way an old dial is ruled by its bezel.
+// Kept faint and widely spaced on purpose: any heavier and the ruling reads as
+// a barcode instead of a scale, and the hues underneath stop being legible.
+$fader-grille: repeating-linear-gradient(
+  90deg,
+  rgba(0, 0, 0, .13) 0 1px,
+  rgba(0, 0, 0, 0)   1px 6px
+);
+
+@mixin fader-track {
+  box-sizing: border-box;
+  height: $fader-track-h;
+  border: 1px solid rgba(0, 0, 0, .55);
+  border-radius: 2px;
+  // Sepia wash first, then the ruling, then the spectrum underneath. The wash
+  // is a highlight at the top fading to shade at the bottom, so the band looks
+  // like a curved dial face rather than a flat swatch.
+  background-image:
+    linear-gradient(180deg, rgba(255, 245, 215, .30), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, .30)),
+    $fader-grille,
+    $fader-spectrum;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .65);
+}
+
+@mixin fader-thumb {
+  box-sizing: border-box;
+  width: $fader-thumb-w;
+  height: $fader-thumb-h;
+  border: 1px solid #14140f;
+  border-radius: 2px;
+  // Knurling over an ivory-plastic bevel, with the index line at the waist.
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .22) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
+    linear-gradient(180deg, #efe7d2 0%, #cdc3a8 46%, #8d8571 50%, #d6ccb4 54%, #b3a992 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+  cursor: grab;
+}
+
+.theme-slider {
   display: flex;
-  gap: .4rem;
   justify-content: flex-end;
-  margin: 0 0 1rem;
+  margin: 0 0 1.4rem;
+}
 
-  button {
-    font: inherit;
-    font-size: .8rem;
-    padding: .15rem .6rem;
-    cursor: pointer;
-    color: $matrix-base;
-    background: $matrix-bg;
-    border: 1px solid rgba(0, 255, 65, .45);
-    border-radius: 2px;
+.theme-slider__panel {
+  width: 212px;
+  padding: .5rem .7rem .35rem;
+  background: $matrix-bg;
+  border: 1px solid rgba(0, 255, 65, .45);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(0, 255, 65, .12);
+}
 
-    &:hover  { border-color: $matrix-base; }
-    &:focus-visible { outline: 2px solid $matrix-base; outline-offset: 1px; }
+.theme-slider__range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  // The input box is the thumb's height so the cap has its full hit area; the
+  // track paints thinner inside it.
+  height: $fader-thumb-h;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
 
-    &[aria-pressed="true"] {
-      background: $matrix-base;
-      color: $matrix-bg;
-      font-weight: bold;
+  &:focus { outline: none; }
+  &:focus-visible { outline: 2px solid $matrix-base; outline-offset: 3px; }
+  &:active { cursor: grabbing; }
+}
+
+.theme-slider__range::-webkit-slider-runnable-track { @include fader-track; }
+.theme-slider__range::-moz-range-track             { @include fader-track; }
+
+.theme-slider__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  @include fader-thumb;
+  // WebKit hangs the thumb off the track's top edge, so it needs centring by
+  // hand; Firefox already centres it.
+  margin-top: ($fader-track-h - $fader-thumb-h) * .5;
+}
+.theme-slider__range::-moz-range-thumb { @include fader-thumb; }
+
+// The scale is inset by half a cap on each side, because that is where the
+// thumb's centre actually travels between — ticks drawn at the panel's edges
+// would sit a cap-width off from the positions they claim to mark.
+.theme-slider__marks {
+  position: relative;
+  height: .95rem;
+  margin: .1rem ($fader-thumb-w * .5) 0;
+  font-size: .62rem;
+  letter-spacing: .06em;
+  color: $matrix-base;
+
+  span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: .45;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -.3rem;
+      left: 50%;
+      width: 1px;
+      height: .24rem;
+      background: currentColor;
     }
+
+    &.is-on { opacity: 1; font-weight: bold; }
   }
+
+  span:nth-child(1) { left: 0; }
+  span:nth-child(2) { left: 50%; }
+  span:nth-child(3) { left: 100%; }
 }
 
 // Re-invert so both keep their true colours once <body> flips.
@@ -299,12 +419,15 @@ div.highlighter-rouge {
 // unopposed and rendering the block white-on-magenta. The outer
 // div.highlighter-rouge wraps each block exactly once, and carries the
 // border and background besides.
+// The slider is in here for the same reason as the code blocks, and gets more
+// out of it: re-inverting keeps the spectrum band showing its authored hues
+// instead of its complement, so the dial face reads the same in both modes.
 body[a="dark"] {
-  div.highlighter-rouge, .theme-toggle { filter: invert(1); }
+  div.highlighter-rouge, .theme-slider { filter: invert(1); }
 }
 @media (prefers-color-scheme: dark) {
   body[a="auto"] {
-    div.highlighter-rouge, .theme-toggle { filter: invert(1); }
+    div.highlighter-rouge, .theme-slider { filter: invert(1); }
   }
 }
 
@@ -389,17 +512,14 @@ body[a="purple"] {
     .tags li { border-color: rgba(199, 125, 255, .35); color: $purple-attr; }
   }
 
-  .theme-toggle button {
-    color: $purple-base;
-    background: $purple-bg;
+  // Only the faceplate around the dial changes — the spectrum band is the same
+  // band in every mode, since it is the thing being chosen from.
+  .theme-slider__panel {
+    background: $purple-code-bg;
     border-color: rgba(199, 125, 255, .45);
-
-    &:hover { border-color: $purple-base; }
-    &:focus-visible { outline-color: $purple-base; }
-
-    &[aria-pressed="true"] {
-      background: $purple-base;
-      color: $purple-bg;
-    }
+    box-shadow: inset 0 1px 0 rgba(199, 125, 255, .12);
   }
+
+  .theme-slider__marks { color: $purple-base; }
+  .theme-slider__range:focus-visible { outline-color: $purple-base; }
 }
