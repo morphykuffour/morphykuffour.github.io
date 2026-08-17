@@ -264,7 +264,7 @@ div.highlighter-rouge {
 // Theme slider
 // ---------------------------------------------------------------------------
 // A fader on a vintage faceplate: a full spectrum band for a dial face, a
-// ridged cap riding in a recessed groove, three notched detents underneath.
+// knurled cursor tracking along it, three notched detents underneath.
 // The control is a real `input[type=range]` with three steps, so dragging,
 // clicking the track and arrow keys all work without any of it being faked.
 //
@@ -276,21 +276,30 @@ $fader-track-h: 15px;
 $fader-thumb-w: 17px;
 $fader-thumb-h: 27px;
 
-// The dial face. Every hue on the spectrum gets a stop, aged down towards the
-// muted inks of a printed radio scale rather than screen-bright rainbow.
-$fader-spectrum: linear-gradient(
-  90deg,
-  #a33a48   0%,   // faded crimson
-  #c8552f   9%,   // burnt orange
-  #d98f34  20%,   // amber
-  #cfc04a  31%,   // wheat
-  #7ab353  42%,   // leaf
-  #2f9c6b  52%,   // phosphor, near the middle detent
-  #2f8f9c  63%,   // teal
-  #3b6aa8  74%,   // denim
-  #6b4f9e  85%,   // indigo
-  #a3548f 100%    // magenta
-);
+// The dial face: the entire hue circle, 0deg to 360deg, laid out left to right.
+// Written as a loop rather than a hand-picked list so no hue can be skipped —
+// a hand-picked list is exactly how a band ends up missing its cyans. The
+// sweep closes back on red at the far end because the circle does; that wrap
+// is what makes it every hue rather than a slice of them.
+//
+// Saturation and lightness sit under full tilt, which is what keeps this a
+// printed radio scale instead of a screen-bright rainbow, and the vertical
+// wash further down carries the band through lighter and darker besides.
+@function fader-spectrum($steps, $sat, $light) {
+  $stops: ();
+  @for $i from 0 through $steps {
+    $stops: append(
+      $stops,
+      hsl(360 * $i / $steps, $sat, $light) percentage($i / $steps),
+      comma
+    );
+  }
+  @return linear-gradient(90deg, $stops);
+}
+
+// 36 steps is a stop every 10deg. Interpolation between neighbours that close
+// is indistinguishable from a continuous sweep at this size.
+$fader-spectrum: fader-spectrum(36, 62%, 52%);
 
 // Vertical scoring over the band, the way an old dial is ruled by its bezel.
 // Kept faint and widely spaced on purpose: any heavier and the ruling reads as
@@ -308,25 +317,52 @@ $fader-grille: repeating-linear-gradient(
   border-radius: 2px;
   // Sepia wash first, then the ruling, then the spectrum underneath. The wash
   // is a highlight at the top fading to shade at the bottom, so the band looks
-  // like a curved dial face rather than a flat swatch.
+  // like a curved dial face rather than a flat swatch — kept light, because
+  // past about a third it stops ageing the hues and starts hiding them.
   background-image:
-    linear-gradient(180deg, rgba(255, 245, 215, .30), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, .30)),
+    linear-gradient(180deg, rgba(255, 245, 215, .22), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, .24)),
     $fader-grille,
     $fader-spectrum;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, .65);
 }
 
+// A tuning-window cursor rather than a solid cap: a solid one sits on the band
+// and blanks out whichever hues it covers, which is the one thing this control
+// cannot afford — the band is the point. So the jaws take the top and bottom
+// $fader-jaw of the cursor and the middle is left clear, leaving every hue
+// visible straight through the window with a hairline needle marking the spot.
+$fader-jaw: 6px;
+
 @mixin fader-thumb {
   box-sizing: border-box;
   width: $fader-thumb-w;
   height: $fader-thumb-h;
-  border: 1px solid #14140f;
+  border: 1px solid rgba(20, 20, 15, .9);
   border-radius: 2px;
-  // Knurling over an ivory-plastic bevel, with the index line at the waist.
+  background-color: transparent;
+  // Top to bottom: the needle, knurling on each jaw, then the jaws themselves.
+  // The knurl layers are sized and pinned to the jaws so the ruling stops at
+  // the glass instead of striping across it.
   background-image:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, .22) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
-    linear-gradient(180deg, #efe7d2 0%, #cdc3a8 46%, #8d8571 50%, #d6ccb4 54%, #b3a992 100%);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) calc(50% - 1px),
+      rgba(20, 20, 15, .8) calc(50% - 1px) calc(50% + 1px),
+      rgba(0, 0, 0, 0) calc(50% + 1px)
+    ),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
+    linear-gradient(
+      180deg,
+      #f2ead6 0, #b3a992 $fader-jaw,
+      rgba(0, 0, 0, 0) $fader-jaw,
+      rgba(0, 0, 0, 0) calc(100% - #{$fader-jaw}),
+      #b3a992 calc(100% - #{$fader-jaw}), #f2ead6 100%
+    );
+  background-size: auto, 100% $fader-jaw, 100% $fader-jaw, auto;
+  background-position: 0 0, left top, left bottom, 0 0;
+  background-repeat: no-repeat;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
   cursor: grab;
 }
 

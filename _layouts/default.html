@@ -62,14 +62,23 @@
           });
         }
 
-        // `input` rather than `change`, so dragging repaints as it passes each
-        // detent instead of only on release.
-        range.addEventListener('input', function () {
+        function commit() {
           var choice = ORDER[Number(range.value)] || 'light';
           body.setAttribute('a', choice);
           try { localStorage.setItem('appearance', choice); } catch (e) {}
           sync();
-        });
+        }
+
+        // `input` rather than `change`, so dragging repaints as it passes each
+        // detent instead of only on release.
+        range.addEventListener('input', commit);
+
+        // And `click` besides, because `input` only fires when the value moves.
+        // On a fresh visit the theme is "auto" with the cursor already parked on
+        // whichever end the OS resolves to — so clicking that same end, which is
+        // exactly how someone pins the theme they can already see, would
+        // otherwise do nothing at all and store nothing.
+        range.addEventListener('click', commit);
 
         // Keep the pressed state honest if the OS flips while on "auto".
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sync);
