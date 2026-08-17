@@ -5,6 +5,9 @@ entries:
   - title: about
     url: /about/
 
+  - title: honors thesis
+    url: /thesis/
+
   - title: posts
     post_list:
       limit: 10

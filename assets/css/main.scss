@@ -261,6 +261,78 @@ div.highlighter-rouge {
 }
 
 // ---------------------------------------------------------------------------
+// Paper page (thesis)
+// ---------------------------------------------------------------------------
+// A journal-article layout inside the theme's plain column: byline block,
+// set-off abstract, numbered figures, hanging-indent references. Authored in
+// light-mode colours only, for the same reason as the about page above — dark
+// mode is the theme's whole-page inversion. Purple gets its own rules further
+// down.
+
+.paper-meta {
+  margin: 0 0 1.1rem;
+  font-size: .85rem;
+  line-height: 1.7;
+}
+
+.paper-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .9rem;
+  margin: 0 0 1.6rem;
+  font-size: .85rem;
+}
+
+// The abstract is prose, not a quotation, so it takes a rule on one side
+// rather than the theme's full blockquote box.
+.paper-abstract {
+  margin: 0 0 2rem;
+  padding: .1rem 0 .1rem 1rem;
+  border-left: 2px solid rgba(0, 0, 0, .25);
+  font-size: .95rem;
+  line-height: 1.6;
+
+  p { margin: 0; }
+}
+
+.paper-figure {
+  margin: 1.8rem 0;
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    margin-top: .6rem;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, .6);
+    text-align: center;
+  }
+}
+
+// The dependency graph is roughly 1:2.5, so at full column width it runs well
+// past a screenful. Capping the height keeps the figure inline-sized; the
+// caption's link is how you actually read it.
+.paper-figure--tall img { max-height: 70vh; width: auto; }
+
+// Hanging indent, the way a reference list is normally set: first line flush,
+// continuations indented.
+.paper-refs {
+  font-size: .88rem;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 .8rem;
+    padding-left: 1.6rem;
+    text-indent: -1.6rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Theme slider
 // ---------------------------------------------------------------------------
 // A fader on a vintage faceplate: a full spectrum band for a dial face, a
@@ -546,6 +618,17 @@ body[a="purple"] {
   .competencies {
     dt { color: $purple-base; }
     .tags li { border-color: rgba(199, 125, 255, .35); color: $purple-attr; }
+  }
+
+  .paper-abstract { border-left-color: $purple-op; }
+  .paper-figure figcaption { color: $purple-dim; }
+
+  // The two figures are ink-on-white diagrams, so on the purple page they'd
+  // sit as white slabs. A light knock-back plus a matching frame settles them
+  // into the page without inverting the diagrams into unreadable negatives.
+  .paper-figure img {
+    border: 1px solid rgba(199, 125, 255, .35);
+    opacity: .92;
   }
 
   // Only the faceplate around the dial changes — the spectrum band is the same
