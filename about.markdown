@@ -1,6 +1,6 @@
 ---
 layout: page
-title: peri
+title: përi
 permalink: /about/
 ---
 

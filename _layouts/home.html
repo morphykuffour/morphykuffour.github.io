@@ -3,12 +3,13 @@ layout: default
 ---
 {%- comment -%}
 Shadows the theme's own home layout so the title line can carry a tagline
-after the alias, and the name can wear its slashed o here without the
-stroke leaking into <title>, the feed, or any other page's heading.
+after the alias, and the name can be respelled here -- slashed o, open e --
+without those letters leaking into <title>, the feed, or any other page's
+heading.
 Everything else is the upstream layout verbatim.
 {%- endcomment -%}
 <header>
-  <h1>{{ site.title | replace_first: 'o', 'ø' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+  <h1>{{ site.title | replace_first: 'o', 'ø' | replace_first: 'e', 'ɛ' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
   {%-if site.theme_config.show_description-%}
     <p>{{ site.description }}</p>
   {%-endif-%}
