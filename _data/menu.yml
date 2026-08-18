@@ -25,3 +25,7 @@ entries:
         url: /resume/
       - title: rss
         url: /feed.xml
+      - title: reddit
+        url: https://www.reddit.com/user/JediMasterMorphy/
+      - title: instagram
+        url: https://www.instagram.com/morp.k/

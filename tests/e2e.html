@@ -69,6 +69,14 @@ function loadNarrow(url, width) {
     const posts = Array.from(d.querySelectorAll('li a[href$=".html"]'));
     check('home: the menu still lists every post', posts.length > 10, posts.length + ' post links');
 
+    const elsewhere = Array.from(d.querySelectorAll('li a')).map(x => x.href);
+    for (const profile of ['https://www.reddit.com/user/JediMasterMorphy/',
+                           'https://www.instagram.com/morp.k/']) {
+      check('home: elsewhere carries ' + profile.split('/')[2].replace('www.', ''),
+            elsewhere.indexOf(profile) !== -1,
+            elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
+    }
+
     // --- about: the linked Hippocrates portrait ----------------------------
     d = await load('/about/');
     const p = d.querySelector('.quote-card a.quote-portrait');
