@@ -2,7 +2,7 @@
 # https://github.com/riggraz/no-style-please#customize-the-menu
 
 entries:
-  - title: about
+  - title: peri
     url: /about/
 
   - title: honors thesis
@@ -19,6 +19,8 @@ entries:
     entries:
       - title: github
         url: https://github.com/morph-k
+      - title: linkedin
+        url: https://www.linkedin.com/in/morphy-kuffour/
       - title: website
         url: https://morphykuffour.com
       - title: resume
