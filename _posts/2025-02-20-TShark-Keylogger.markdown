@@ -44,7 +44,7 @@ local function init_listener()
 
   --called for every packet meeting the filter set for the Listener(), so usb packets
   function tap.packet(pinfo, tvb)
-    --list from http://www.usb.org/developers/devclass_docs/Hut1_11.pdf
+    --list from https://www.usb.org/document-library/hid-usage-tables-16
     local keys = "????abcdefghijklmnopqrstuvwxyz1234567890\n??\t -=[]\\?;??,./"
     --get the usb.capdata
     local data = usbdata()
