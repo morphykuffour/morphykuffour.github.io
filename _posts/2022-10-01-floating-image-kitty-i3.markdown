@@ -81,7 +81,11 @@ The script has drifted since I wrote this. kitty's `icat` kitten gave way to
 ghostty driving [chafa](https://hpjansson.org/chafa/), which draws the image as
 terminal graphics and holds the window open until a keypress, and the layout
 image itself moved from Dropbox to iCloud. It also sets its own window title
-now, so the i3 binding no longer has to. The version I run today:
+now, so the i3 binding no longer has to. The guard above was quietly broken
+too: it tested `$noteFilename`, which is never set anywhere, and an unset
+unquoted variable collapses it to `[ ! -f ]` - always false, so it never fired
+and the script carried on with a missing image. It checks `$imageFilename`
+now. The version I run today:
 
 ```bash
 #!/bin/sh
@@ -89,7 +93,7 @@ now, so the i3 binding no longer has to. The version I run today:
 # TODO make image dmenu selectable
 imageFilename="$HOME/iCloud/learn/stenography/uni-layout.png"
 
-if [ ! -f $noteFilename ]; then
+if [ ! -f "$imageFilename" ]; then
   echo "File $imageFilename is not there, aborting."
   exit
 fi
