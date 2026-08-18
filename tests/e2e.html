@@ -93,6 +93,12 @@ function loadNarrow(url, width) {
     check('home: icon is sized off the text', iconCS.width === iconCS.height &&
           Math.abs(parseFloat(iconCS.width) - parseFloat(linkCS.fontSize)) < 1,
           iconCS.width + ' at font-size ' + linkCS.fontSize);
+    // Without an intrinsic size a stale or missing stylesheet blows each mark
+    // up to the width of the list, so the attributes stay on the element even
+    // though .menu-icon overrides them.
+    check('home: icon carries its intrinsic size as an attribute',
+          oneIcon.getAttribute('width') === '16' && oneIcon.getAttribute('height') === '16',
+          oneIcon.getAttribute('width') + 'x' + oneIcon.getAttribute('height'));
     check('home: the underline is held to the label',
           linkCS.textDecorationLine === 'none' &&
           d.defaultView.getComputedStyle(marked[0].querySelector('.menu-label')).textDecorationLine === 'underline',
