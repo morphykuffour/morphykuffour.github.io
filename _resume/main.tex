@@ -1,0 +1,278 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[pdftex]{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{tabularx}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.530in}
+\addtolength{\evensidemargin}{-0.375in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.35in}
+\addtolength{\textheight}{1in}
+
+\urlstyle{rm}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-10pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-6pt}]
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item\small{
+    \textbf{#1}{: #2 \vspace{-2pt}}
+  }
+}
+\newcommand{\resumeItemCustom}[2]{
+  \item\small{
+    \textbf{#1}{ #2 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeItemWithoutTitle}[1]{
+  \item\small{
+    {\vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{#3} & \textit{#4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-3pt}}
+
+%\renewcommand{\labelitemii}{$\circ$}
+\renewcommand{\labelitemi}{$\bullet$}
+\renewcommand{\labelitemii}{$\bullet$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+\hypersetup{colorlinks=true,linkcolor=blue, urlcolor=blue, linktocpage}
+
+%-----------------------------
+%%%%%%  CV STARTS HERE  %%%%%%
+
+\begin{document}
+
+%----------HEADING-----------------
+  \textbf{Morphy Kuffour} \textbar{} \href{mailto:mail@morphykuffour.com}{mail@morphykuffour.com} \textbar{} \href{https://www.linkedin.com/in/morphy-kuffour/}{LinkedIn} \textbar{} \href{https://github.com/morphykuffour}{GitHub} \textbar{} \href{https://morphykuffour.github.io/}{Personal Blog} 
+
+%-----------PROFESSIONAL SUMMARY-----------------
+\vspace{-13pt}
+
+\section{}
+Linux-focused technology professional with hands-on experience in cybersecurity, cloud engineering, MLOps, and infrastructure automation. 
+
+%-----------EDUCATION-----------------
+\section{Education}
+\vspace{5pt}
+  % \resumeSubHeadingListStart
+  \begin{itemize}[leftmargin=0pt, label={}]  % Remove bullets and left margin
+    \resumeSubheading
+      {Georgia Institute of Technology}{Atlanta, GA, USA}
+      {M.S., Cybersecurity - Information Security}{Jan 2026 - Present}
+      \vspace{5pt}
+      {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Relevant Courses:} Applied Cryptography, Secure Computer Systems, Network Security, Advanced Topics in Malware Analysis, Hardware-Oriented Security and Trust, Compilers}}}
+      \vspace{2pt}
+	  {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Electives:} \href{https://www.nature.com/articles/nature16961}{AI}, \href{https://link.springer.com/journal/11569}{Ethics and Society}, Global Entrepreneurship (\href{https://www.investopedia.com/terms/s/subchapters.asp}{S-Corp} + \href{https://www.investopedia.com/terms/s/spac.asp}{Special Purpose Acquisition Companies (SPACs)} + \href{https://en.wikipedia.org/wiki/Non-governmental_organization}{NGO})}}}
+      \vspace{2pt}
+  \begin{itemize}[leftmargin=0pt, label={}]  % Remove bullets and left margin
+    \resumeSubheading
+      {University of Connecticut}{Storrs, CT, USA}
+      {B.S.E, Computer Science and Engineering}{Aug 2019 - May 2023}
+      \vspace{5pt}
+      {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Relevant Courses:} Operating Systems, Data Structures, Analysis Of Algorithms, Machine Learning, Networking, Databases}}}
+      {\scriptsize \textit{ \footnotesize{\newline{}\textbf{Programs \& Clubs:}
+  \href{https://honors.uconn.edu/}{UConn Honors Program}, \href{https://github.com/UConn-UPE}{UConn Upsilon Pi Epsilon}, \href{https://www.nsf.gov/funding/opportunities/lsamp-louis-stokes-alliances-minority-participation}{Louis Stokes Alliance for Minority Participation (LSAMP)}, \href{https://nsbe.org/}{National Society for Black Engineers (NSBE)}, \href{https://uconntact.uconn.edu/organization/uconncyber}{UConn Cybersecurity Club}}}}
+  \end{itemize}
+  \end{itemize}
+
+\section{Skills Summary}
+    \vspace{1pt}
+	{\small
+	\begin{tabularx}{\textwidth}{@{}l@{\hspace{1em}}X@{}}
+	\textbf{Systems \& Infrastructure:} & \href{https://github.com/torvalds/linux}{Linux}, \href{https://nixos.org/manual/nixos/stable/}{NixOS}, \href{https://guix.gnu.org/}{Guix}, \href{https://openzfs.org/wiki/Main_Page}{ZFS}, \href{https://gitlab.com/cryptsetup/cryptsetup}{LUKS}, \href{https://podman.io/docs}{Podman}, \href{https://www.qemu.org/}{QEMU}, \href{https://riscv.org/}{RISC-V}, \href{https://ebpf.io/}{eBPF}, \href{https://developer.hashicorp.com/vagrant}{Vagrant}, \href{https://github.com/lima-vm/lima}{Lima} \\[2pt]
+	\textbf{Programming:}               & Python(\href{https://docs.astral.sh/uv/}{uv} + \href{https://python-poetry.org/docs/}{poetry}), \href{https://en.wikipedia.org/wiki/Robot_Operating_System}{ROS}, \href{https://www.lua.org/}{Lua} (\href{https://love2d.org/}{LÖVE}), \href{https://nixos.org/}{Nix}, \href{https://go.dev/}{Go}, \href{https://gustedt.gitlabpages.inria.fr/modern-c/}{C}, \href{https://rust-lang.org/}{Rust}, \href{https://gnucobol.sourceforge.io/doc/gnucobol.pdf}{COBOL}, \href{http://tuxgraphics.org/~guido/scripts/awk-one-liner.html}{AWK}, \href{https://www.gnu.org/software/gawk/manual/gawk.html}{GAWK} \\[2pt]
+	\textbf{Cloud \& DevOps:}           & \href{https://docs.aws.amazon.com/}{AWS}, Azure, Azure ETL, \href{https://about.gitlab.com/topics/ci-cd/cicd-pipeline/}{CI/CD Pipelines} \\[2pt]
+	\textbf{Tools:}                     & \href{https://git-scm.com/docs}{Git}, \href{https://neovim.io/doc/user/}{Neovim}, \href{https://www.gnu.org/software/emacs/manual/}{Emacs}, \href{https://www.sqlite.org/docs.html}{SQLite}, \href{https://docs.ansible.com/projects/ansible/latest/index.html}{Ansible}, \href{https://www.wireshark.org/download.html}{Wireshark} \\[2pt]
+	\textbf{Certifications:}            & Security+, RHCSA, OSCP(In Progress), CCIH(In Progress), CISSP(In Progress)  \\[2pt]
+	\textbf{Cybersecurity:}             & \href{https://morphykuffour.github.io/linux/tshark/hacking/2025/02/20/TShark-Keylogger.html}{USB Protocol Traffic Analysis}, \href{https://security.berkeley.edu/education-awareness/enabling-full-disk-encryption}{FDE}, Log Analysis (MCP-Based), \href{https://github.com/frangelbarrera/OSINT-BIBLE}{OSINT} \\[2pt]
+	\textbf{GenAI:}                     & \href{https://arxiv.org/abs/2005.11401}{RAG}, \href{https://arxiv.org/html/2409.17383v1}{Vector Search}, \href{https://kalyna.pro/llm-application-development/}{LLM Application Development} (\href{https://github.blog/ai-and-ml/llms/the-architecture-of-todays-llm-applications/}{Architecture}), \href{https://www.anthropic.com/engineering/building-effective-agents}{AI Agent Development}, \href{https://huyenchip.com/mlops/}{MLOps} \\[2pt]
+	\textbf{Cryptography:}              & \href{https://arxiv.org/pdf/2404.16109v1}{zkLLM}, \href{https://www.usenix.org/system/files/usenixsecurity25-liang-sok.pdf}{zk-SNARKs}, \href{https://www.mdpi.com/2410-387X/4/2/15}{Side Channel Analysis}, \href{https://taoa.io/posts/Understanding-KZG10-Polynomial-Commitments}{KZG10 Polynomial Commitments}, \href{https://www.getmonero.org/resources/research-lab/}{Ring Signatures}, \href{https://nvlpubs.nist.gov/nistpubs/ir/2016/NIST.IR.8105.pdf?ref=pqcinformation.com}{Post-Quantum Encryption}, \href{https://web.eecs.utk.edu/~ktomsovi/Vitae/Publications/VENK05.pdf}{Power Analysis}, \href{https://www.qsl.net/ab4oj/dl/rs/intro_rf_design.pdf}{Radio Frequency Analysis} \\
+	\textbf{Soft Skills:}              & \href{https://thayerleadership.com/}{Leadership}, Effective Verbal and Written Communication Skills, \href{https://orgmode.org/manual/Clocking-Work-Time.html}{Time Management} \\
+	\end{tabularx}}
+    \vspace{7pt}
+
+\vspace{-17pt}
+%-----------RELEVANT EXPERIENCE-----------------
+\section{Relevant Experience}
+
+    \vspace{2pt}
+  \resumeSubHeadingListStart
+    \resumeSubheading{Raytheon Technologies}{Remote}
+    {GRC Cybersecurity Analyst}{May 2025 - Aug 2026}
+
+    \vspace{5pt}
+    Currently supporting Pratt \& Whitney's compliance initiatives focused on improving compliance posture. Collaborating with cross-functional teams to meet compliance requirements.
+
+    \vspace{-3pt}
+    \resumeItemListStart
+    \resumeItemCustom{}{Supporting GRC (Governance, Risk \& Compliance) initiatives by scripting automated compliance validation tools in Bash, PowerShell and Python, enabling faster remediation and reducing audit turnaround time.}
+
+    \resumeItemCustom{}{Leading the development of a Retrieval-Augmented Generation (RAG) application for the Global GRC team, using local vector search and an Azure LLM backend to streamline policy inquiries, automate control mapping, and deliver data-driven compliance insights with auditable, row-level citations.}
+    \resumeItemListEnd
+
+    \vspace{1pt}
+    \resumeSubheading{Raytheon Technologies}{Remote}
+    {Digital Leadership Development Program Associate}{May 2023 - June 2025}
+    \resumeItemListStart
+
+    \vspace{4pt}
+    \item\small{\textbf{Cloud Data Engineer (Rotation 3):} Developing enterprise-scale AI solutions for manufacturing}
+    %\begin{itemize}[leftmargin=*]
+    \begin{itemize}[leftmargin=*, label=$\circ$]
+      \item\small{Implemented MLOps pipeline: Reduced model deployment time by 40\% through performance optimization and automated CI/CD workflows}
+      \item\small{Optimized data processing: Built Azure-based ETL pipeline that replaced a manual process, reducing processing time by 65\%}
+      % \item\small{Enhanced cross-team collaboration: Created standardized ML model deployment documentation}
+    \end{itemize}
+    
+    \vspace{4pt}
+    \item\small{\textbf{Technical Product Manager (Rotation 2):} Led legacy application modernization initiative}
+    \begin{itemize}[leftmargin=*, label=$\circ$]
+      \item\small{Accelerated migration timeline: Built a Lotus Notes MVP using the Mendix platform}
+      \item\small{Increased collaboration: Improved cross functional communication by utilizing Agile methodologies}
+      \item\small{Automated reporting: Created data pipeline that saved 15+ hours of manual work weekly}
+    \end{itemize}
+    
+    \vspace{4pt}
+    \item\small{\textbf{Software Developer (Rotation 1):} Developed compliance automation solutions}
+    \begin{itemize}[leftmargin=*, label=$\circ$]
+      \item\small{Streamlined document classification: Built PowerShell solution for SharePoint metadata management}
+      \item\small{Enhanced data governance: Integrated Term Store taxonomy reducing manual classification errors by 25\%}
+    \end{itemize}
+    \resumeItemListEnd
+    
+    \vspace{2pt}
+    \resumeSubheading{Raytheon Technologies}{Remote}
+    {Digital Leadership Development Program Intern}{Aug 2021 - May 2023}
+    
+    Supported enterprise-wide identity management initiatives focused on improving security posture and user experience. Collaborated with cross-functional teams to implement MFA solutions at scale.
+    \vspace{-3pt}
+    \resumeItemListStart
+    \resumeItemCustom{}{Part of the RTX Corporate Identity Access Solutions team that facilitated Multi-Factor Authentication (MFA) solutions for over 30,000 employees.}
+    \resumeItemCustom{}{Created documentation on the Single Sign-On (SSO) process.}
+    \resumeItemListEnd
+    
+\vspace{2pt}
+    \resumeSubheading{UConn Research Assistant}{Hybrid - Storrs, CT}
+    {Undergraduate Research Assistant}{Aug 2021 - May 2023}
+    \resumeItemListStart
+    \resumeItemCustom{}{Worked with Prof. Clay Tabor on porting \href{https://www.cesm.ucar.edu/}{Community Earth System Model (CESM)} to the UConn high performance computing system.}
+    \resumeItemCustom{}{Wrote honors thesis on \href{https://morphykuffour.github.io/thesis/}{``Creating Reproducible Environments with Nix for Scientific Computing''}}
+    \resumeItemListEnd
+    
+%--  \vspace{6pt}
+%--    \resumeSubheading{UConn Teaching Assistant}{Storrs, CT}
+%--    {Undergraduate Teaching Assistant for CSE 3140}{Jan 2022 - Dec 2022}
+%--    \resumeItemListStart
+%--    \resumeItemCustom{}{Assisted students in CSE 3140, a cybersecurity lab course, and held office hours to answer student questions regarding coursework. Skills: Shell Scripting, Linux Configuration, Debugging, Cybersecurity}
+%--    \resumeItemListEnd
+%--    
+%--    \vspace{2pt}
+%--    \resumeSubheading{UConn Teaching Assistant}{Storrs, CT}
+%--    {Undergraduate Teaching Assistant for CSE 1010}{Aug 2021 - Jan 2022}
+%--    \resumeItemListStart
+%--    \resumeItemCustom{}{Assisted students in CSE 1010, an introductory computer science course taught in Python and MATLAB, and held office hours to answer student questions regarding coursework.}
+%--    \resumeItemListEnd
+%--    
+%--\vspace{2pt}
+%--    \resumeSubheading
+%--		{UConn Information Technology Services}{Storrs, CT}
+%--		{UITS Network Assistant}{Jan 2021 - Jun 2021}
+%--		\resumeItemListStart
+%--        \resumeItemCustom{}{Duties included troubleshooting network hardware related problems, remotely configuring routers and access points, conducting wireless surveys, and working with Cisco Prime Infrastructure software to manage subnets on the UConn Campus.}
+%--		\resumeItemListEnd
+%--
+\resumeSubHeadingListEnd
+
+%-----------ACHIEVEMENTS-----------------
+\section{Achievements}
+\resumeSubHeadingListStart
+    \resumeSubheading
+        {1st Place UConn Senior Design Project}
+        {University of Connecticut}{May 2023}
+        {Project: \href{https://seniordesignday.engr.uconn.edu/seniorprojectpt/senior-design-2023-computer-science-and-engineering-team-05/}{\mbox{HuskyFit Mobile Application}}}
+        \resumeItemListStart
+            \resumeItemCustom{}{Part of a team that designed a Health and Fitness Mobile Application}
+            \resumeItemCustom{}{Utilized React framework, AWS technologies, and other software development tools to simplify the development process }
+            \resumeItemCustom{}{Presented the project to industry experts, securing 1st Place in the design competition.}
+            \resumeItemCustom{}{Competed against 39 Engineering teams to achieve this recognition.}
+        \resumeItemListEnd
+
+    \resumeSubheading
+        {Finalists in the RTX LDP Impact Project}
+        {RTX}{June 2025}
+        {Project: Finance for Non-Finance}
+        \resumeItemListStart
+            \resumeItemCustom{}{Collaborated on the design and development of an AI-generated short-form finance video aimed at improving financial literacy among Raytheon OSQ employees.}
+            \resumeItemCustom{}{Competed against 19 cross-functional LDP teams within RTX to achieve this recognition.}
+        \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------------
+\section{Projects}
+\vspace{5pt}
+\begin{itemize}[leftmargin=0pt, label={}]  % Remove bullets and left margin
+\resumeSubItem{\textbf{USB Protocol Traffic Analysis}}{Instrumented the Linux USB stack to capture and decode raw HID traffic, reconstructing keystrokes from packet captures to demonstrate the interception risk of unencrypted peripheral buses. Documented both the capture setup and the decoding technique. Tech: \href{https://www.wireshark.org/docs/}{Wireshark}, \href{https://www.wireshark.org/docs/man-pages/tshark.html}{tshark}, \href{https://www.kernel.org/doc/html/latest/usb/usbmon.html}{usbmon}, \href{https://www.kernel.org/doc/html/latest/}{Linux} \\Write-ups: \href{https://morphykuffour.github.io/linux/tshark/hacking/2025/02/20/TShark-Keylogger.html}{Using tshark as a keylogger}, \href{https://morphykuffour.github.io/linux/wireshark/2025/02/19/Wireshark-USB-Capture-Setup.html}{USB capture on Wireshark}}
+\vspace{2pt}
+
+\resumeSubItem{\textbf{NixOS on Encrypted ZFS}}{Built a fully declarative Linux install on an encrypted ZFS root, covering pool layout, native ZFS encryption, and unlocking the dataset at boot. Produced a reproducible procedure for an at-rest-encrypted workstation. Tech: NixOS, ZFS, \href{https://www.kernel.org/doc/html/latest/admin-guide/initrd.html}{Linux boot/initrd}\\Write-up: \href{https://morphykuffour.github.io/linux/nixos/2024/11/08/NixOs-ZFS.html}{Installing NixOS on a ZFS Encrypted Partition}}
+\vspace{2pt}
+
+\resumeSubItem{\textbf{RISC-V Systems \& Cross-Compilation}}{Ran NixOS on SiFive HiFive RISC-V hardware and cross-compiled toolchains and GUI applications for riscv64, using QEMU emulation to validate builds and inspect compiler output at the disassembly level. Tech: RISC-V, QEMU, Nix, Go, C \\Repository: \href{https://github.com/morphykuffour/nix-riscv}{github.com/morphykuffour/nix-riscv} \textbar{} \href{https://morphykuffour.github.io/linux/riscv/qemu/ubuntu/sbcl/2025/05/06/SBCL-development-on-riscv-architecture.html}{Disassembly on RISC-V}}
+\vspace{2pt}
+
+ \resumeSubItem{\textbf{Cross Platform Nix Configuration}}{Developed reproducible system configuration to solve inconsistency problems across multiple platforms. Built modular Nix configuration that works seamlessly across Linux, \href{https://github.com/microsoft/WSL}{WSL}, and OSX, reducing environment setup time from days to under an hour. \\Repository: \href{https://github.com/morphykuffour/nix.git}{github.com/morphykuffour/nix}}
+ \vspace{2pt}
+ 
+ \resumeSubItem{\textbf{lookup.nvim}}{Created a Neovim plugin to solve the workflow disruption of looking up word definitions. Implemented an API-based solution that displays definitions directly in the editor without context switching. \\Repository: \href{https://github.com/morphykuffour/lookup.nvim}{github.com/morphykuffour/lookup.nvim}}
+ \vspace{2pt}
+ 
+ \resumeSubItem{\textbf{rawtalk}}{Addressing the limitations of keyboard customization software, rawtalk is a userspace tool for direct communication with QMK keyboards. Leveraged the hidapi library to enable layout switching and custom macros without leaving the terminal. Fully functional and in active use, with layout switching and custom macros working end-to-end. Tech: Rust, Nix, C \\Repository: \href{https://github.com/morphykuffour/rawtalk.git}{github.com/morphykuffour/rawtalk}}
+ \vspace{2pt}
+ 
+ \resumeSubItem{\textbf{Dactyl Manuform 5x6 Keyboard Build}}{Tackled ergonomic issues of standard keyboards by building a custom split keyboard. Designed and assembled a parameterized, concave, columnar keyboard with custom firmware, reducing wrist strain and increasing typing comfort. Documented the entire process on my blog to help others with similar builds. Tech: \href{https://www.cs.sfu.ca/~ashriram/Courses/CS295/assets/books/C_Book_2nd.pdf}{C}, \href{https://qmk.fm/}{QMK}, \href{https://engineering.purdue.edu/ece477/Course/Lectures/Slides/7-HardwareDesignFundamentals.pdf}{Hardware Design} \\Blog Post: \href{https://morphykuffour.github.io/keyboards,/ergonomics,/qmk/2021/12/29/Dactyl-Manuform.html}{Dactyl Manuform 5x6 Build Log}}
+%-- \vspace{2pt}
+%-- 
+%-- \resumeSubItem{\textbf{Technical Writing}}{Maintain a Linux and systems engineering blog with 14 in-depth write-ups on traffic analysis, disk encryption, containers, cross-compilation, and shell tooling. \\Blog: \href{https://morphykuffour.github.io/}{morphykuffour.github.io}}
+\vspace{2pt}
+\end{itemize}
+\end{document}
