@@ -665,6 +665,48 @@ body[a="purple"] {
   border: 1px solid rgba(0, 0, 0, .25);
 }
 
+// ---------------------------------------------------------------------------
+// Homepage identity row
+// ---------------------------------------------------------------------------
+// The portrait rides beside the alias rather than above it, so the name still
+// opens the page and the description keeps the full column beneath. It is the
+// same GitHub avatar the përi page uses, and it links back to that account.
+// No dark rules: dark mode is the theme's whole-page `filter: invert(1)`,
+// which re-inverts <img> back to true tone.
+
+.home-id {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+
+// The theme gives h1 top and bottom margin; inside the row the portrait sets
+// the height, so only the bottom margin still has work to do.
+.home-id h1 { margin: 0; }
+
+.home-avatar {
+  flex: 0 0 auto;
+  // The link box is the image, so the inline leading below it would otherwise
+  // push the portrait off-centre against the alias.
+  line-height: 0;
+}
+
+.home-avatar img {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+// Under the column width the alias and tagline stack, so the row would leave
+// the portrait floating against a tall block of text. Centring is dropped and
+// the portrait aligns to the first line instead.
+@media (max-width: 34rem) {
+  .home-id { align-items: flex-start; }
+  .home-avatar img { width: 2.8rem; height: 2.8rem; }
+}
+
 // The tagline rides on the same line as the alias, at a third of its size so
 // it reads as a subtitle rather than a second title. Colour is inherited and
 // knocked back with opacity, which keeps it correct in all three modes without

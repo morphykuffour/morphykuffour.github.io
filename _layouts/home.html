@@ -5,11 +5,19 @@ layout: default
 Shadows the theme's own home layout so the title line can carry a tagline
 after the alias, and the name can be respelled here -- slashed o, open e --
 without those letters leaking into <title>, the feed, or any other page's
-heading.
+heading, and so the përi portrait can sit beside the alias, linked to the
+GitHub account it is served from.
 Everything else is the upstream layout verbatim.
 {%- endcomment -%}
 <header>
-  <h1>{{ site.title | replace_first: 'o', 'ø' | replace_first: 'e', 'ɛ' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+  <div class="home-id">
+    <a class="home-avatar" href="https://github.com/{{ site.github_username }}"
+       aria-label="{{ site.author }} on GitHub">
+      <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
+           alt="{{ site.author }}">
+    </a>
+    <h1>{{ site.title | replace_first: 'o', 'ø' | replace_first: 'e', 'ɛ' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+  </div>
   {%-if site.theme_config.show_description-%}
     <p>{{ site.description }}</p>
   {%-endif-%}
