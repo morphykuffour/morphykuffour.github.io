@@ -669,6 +669,14 @@ header h1 .tagline {
   white-space: nowrap;
 }
 
+// A linked phrase in the tagline keeps the subtitle's inherited colour rather
+// than taking the page's link colour, which at a third of the alias's size
+// would shout louder than the alias. The underline is left to carry it.
+header h1 .tagline a {
+  color: inherit;
+  text-underline-offset: .18em;
+}
+
 // Below the column width the two halves stop fitting side by side, so the
 // tagline drops to its own line instead of forcing a horizontal scroll.
 @media (max-width: 34rem) {

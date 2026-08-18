@@ -1,5 +1,6 @@
 title: morpheus
-tagline: skull crusher, head toucher, shadow bender
+# Markup is safe here: the homepage h1 is the only thing that renders it.
+tagline: <a href="https://barbend.com/skull-crushers/">skull crusher</a>, head toucher, <a href="https://www.pa.uky.edu/sciworks/xtra/shy.htm">shadow bender</a>
 author: Morphy Kuffour
 description: >-
   nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming
