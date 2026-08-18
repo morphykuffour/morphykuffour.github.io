@@ -22,6 +22,6 @@ entries:
       - title: website
         url: https://morphykuffour.com
       - title: resume
-        url: https://morph-k.github.io/resume
+        url: /resume/
       - title: rss
         url: /feed.xml
