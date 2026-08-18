@@ -3,8 +3,8 @@ author: Morphy Kuffour
 description: >-
   nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming
 # baseurl: "" # the subpath of your site, e.g. /blog
-domain: morph-k.github.io
-url: https://morph-k.github.io
+domain: morphykuffour.github.io
+url: https://morphykuffour.github.io
 github_username: morph-k
 
 remote_theme: riggraz/no-style-please

@@ -1,5 +1,5 @@
 {
-  description = "Jekyll toolchain for morph-k.github.io";
+  description = "Jekyll toolchain for morphykuffour.github.io";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 

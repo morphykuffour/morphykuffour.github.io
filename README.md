@@ -1,4 +1,4 @@
-# morph-k.github.io
+# morphykuffour.github.io
 
 Jekyll blog, built by GitHub Pages from `main`. Theme is
 [riggraz/no-style-please](https://github.com/riggraz/no-style-please), pulled at
