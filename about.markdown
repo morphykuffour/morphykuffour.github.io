@@ -11,6 +11,7 @@ permalink: /about/
   <a href="https://www.linkedin.com/in/morphy-kuffour/">LinkedIn</a>
   <a href="https://github.com/morph-k">GitHub</a>
   <a href="https://morphykuffour.github.io/">Personal Blog</a>
+  <a href="{{ site.baseurl }}/resume/">Resume</a>
   <a href="{{ site.baseurl }}/thesis/">Honors Thesis</a>
 </p>
 

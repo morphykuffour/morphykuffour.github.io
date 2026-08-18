@@ -642,3 +642,15 @@ body[a="purple"] {
   .theme-slider__marks { color: $purple-base; }
   .theme-slider__range:focus-visible { outline-color: $purple-base; }
 }
+
+// The resume is a PDF rather than prose, so it gets an inline viewer sized to
+// a page's aspect ratio instead of the paper layout above. Browsers that will
+// not embed a PDF fall back to the download link inside the object.
+.resume-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 8.5 / 11;
+  min-height: 30rem;
+  margin: 0 0 1.6rem;
+  border: 1px solid rgba(0, 0, 0, .25);
+}
