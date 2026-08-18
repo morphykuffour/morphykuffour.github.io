@@ -1,0 +1,42 @@
+# tests
+
+```sh
+nix develop
+./tests/run.sh          # build, serve, drive the pages in headless Chrome
+./tests/run.sh --no-build   # reuse the last build in _site
+```
+
+`run.sh` is the harness runner; `e2e.html` is every case. It is served from the
+built site so it shares an origin with the pages it frames, which is what lets
+it read their computed styles, their laid-out geometry, and the `appearance`
+key the theme toggle writes to `localStorage`.
+
+Only assert things a browser can answer. Anything checkable by reading the
+source — a URL in an `href`, a filename — belongs in a grep, not here. What
+earns a case is behaviour that emerges from the cascade or the layout: which
+rule wins in purple mode, whether a floated element still shortens the lines
+beside it, whether a small-screen rule fires at the width it claims.
+
+Two habits worth keeping:
+
+- **Frame width is viewport width.** A page framed at 420px evaluates its media
+  queries at 420px, so small-screen rules can be tested without resizing the
+  browser. Resizing the browser window does not work as well — Chrome enforces
+  a minimum window width, so a `--window-size=420` screenshot is still laid out
+  wider than it looks.
+- **Floats move line boxes, not block boxes.** A floated portrait shortens the
+  lines of the paragraph beside it while that paragraph's block box still spans
+  the full column, so assert on `Range.getClientRects()[0]`, not on the
+  element's own rect.
+
+## What a browser cannot check here
+
+The resume page embeds a PDF, which the browser paints through its own viewer.
+Headless Chrome does not render that viewer, so the cases under `resume/` assert
+the CSS that reaches it — the filter chain, the blend mode, the mode-specific
+values — and stop there. To eyeball the result, rasterise a page and apply the
+same declarations to the image:
+
+```sh
+qlmanage -t -s 1400 -o /tmp assets/resume/resume.pdf   # /tmp/resume.pdf.png
+```

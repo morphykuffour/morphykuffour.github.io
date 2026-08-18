@@ -37,6 +37,18 @@ Inside `nix develop` this is already correct. Outside it, be explicit:
 The failure names whichever gem happened to compile first, so it reads like a
 broken dependency rather than a PATH problem. It isn't.
 
+## Tests
+
+```sh
+nix develop
+./tests/run.sh
+```
+
+`tests/` drives the built pages in headless Chrome — computed styles, laid-out
+geometry, and the appearance toggle's `localStorage` round-trip. See
+[tests/README.md](tests/README.md) for what belongs there and what a browser
+cannot check about the embedded resume PDF.
+
 ## Appearance modes
 
 Three modes, toggled top-right and stored in `localStorage` under `appearance`:
