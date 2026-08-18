@@ -76,5 +76,40 @@ wait "${pid}";
 I `chmod`ed the script and put it in my PATH so that my shell could find it.
 
 ## nota bene
-[floatimage script](https://raw.githubusercontent.com/morph-k/dotfiles/main/scripts/.local/bin/floatimage)
 
+The script has drifted since I wrote this. kitty's `icat` kitten gave way to
+ghostty driving [chafa](https://hpjansson.org/chafa/), which draws the image as
+terminal graphics and holds the window open until a keypress, and the layout
+image itself moved from Dropbox to iCloud. It also sets its own window title
+now, so the i3 binding no longer has to. The version I run today:
+
+```bash
+#!/bin/sh
+
+# TODO make image dmenu selectable
+imageFilename="$HOME/iCloud/learn/stenography/uni-layout.png"
+
+if [ ! -f $noteFilename ]; then
+  echo "File $imageFilename is not there, aborting."
+  exit
+fi
+
+ghostty --title=floatimage_window -e sh -c "chafa \"$imageFilename\"; read -rsp 'Press any key to close...' -n1" &
+# sxiv $imageFilename &
+pid="$!"
+
+# Wait for the window to open and grab its window ID
+winid=''
+while : ; do
+    winid="`wmctrl -lp | awk -vpid=$pid '$3==pid {print $1; exit}'`"
+    [[ -z "${winid}" ]] || break
+done
+
+wmctrl -ia "${winid}"
+
+i3-msg floating enable > /dev/null;
+
+i3-msg move position center > /dev/null;
+
+wait "${pid}";
+```
