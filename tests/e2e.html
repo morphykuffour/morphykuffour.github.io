@@ -77,6 +77,29 @@ function loadNarrow(url, width) {
             elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
     }
 
+    // Every elsewhere entry carries a mark, drawn in currentColor so it picks
+    // up the link colour of whichever mode is on rather than needing one rule
+    // per mode. The underline is held to the label: run across the whole
+    // anchor it passes under the mark too.
+    const marked = Array.from(d.querySelectorAll('li a.menu-link'));
+    check('home: every elsewhere link carries an icon',
+          marked.length === 7 && marked.every(x => x.querySelector('svg.menu-icon')),
+          marked.length + ' marked links');
+    const oneIcon = marked[0].querySelector('svg.menu-icon');
+    const iconCS = d.defaultView.getComputedStyle(oneIcon);
+    const linkCS = d.defaultView.getComputedStyle(marked[0]);
+    check('home: icon is drawn in the link colour', iconCS.fill === linkCS.color,
+          iconCS.fill + ' vs ' + linkCS.color);
+    check('home: icon is sized off the text', iconCS.width === iconCS.height &&
+          Math.abs(parseFloat(iconCS.width) - parseFloat(linkCS.fontSize)) < 1,
+          iconCS.width + ' at font-size ' + linkCS.fontSize);
+    check('home: the underline is held to the label',
+          linkCS.textDecorationLine === 'none' &&
+          d.defaultView.getComputedStyle(marked[0].querySelector('.menu-label')).textDecorationLine === 'underline',
+          linkCS.textDecorationLine);
+    check('home: entries without an icon are left as the theme renders them',
+          !!d.querySelector('li a[href="/about/"]') && !d.querySelector('li a[href="/about/"]').querySelector('svg'));
+
     // --- about: the linked Hippocrates portrait ----------------------------
     d = await load('/about/');
     const p = d.querySelector('.quote-card a.quote-portrait');

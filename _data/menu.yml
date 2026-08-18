@@ -14,18 +14,27 @@ entries:
       show_more: false
 
   - title: elsewhere
+    # Each icon: names a file in _includes/icons. It is drawn in currentColor
+    # at 1em, so it follows the link colour of whichever mode is on.
     entries:
       - title: github
         url: https://github.com/morph-k
+        icon: github
       - title: linkedin
         url: https://www.linkedin.com/in/morphy-kuffour/
+        icon: linkedin
       - title: website
         url: https://morphykuffour.com
+        icon: website
       - title: resume
         url: /resume/
+        icon: resume
       - title: rss
         url: /feed.xml
+        icon: rss
       - title: reddit
         url: https://www.reddit.com/user/JediMasterMorphy/
+        icon: reddit
       - title: instagram
         url: https://www.instagram.com/morp.k/
+        icon: instagram

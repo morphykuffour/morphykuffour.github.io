@@ -682,6 +682,33 @@ body[a="purple"] {
 }
 
 // ---------------------------------------------------------------------------
+// Menu icons
+// ---------------------------------------------------------------------------
+// The marks in the "elsewhere" list. They sit inside the <a> and paint in
+// currentColor, so they need no per-mode rules at all: dark inverts them along
+// with the text, purple recolours them with the link colour.
+
+.menu-icon {
+  // Sized off the text rather than in pixels, so the mark tracks the list's
+  // font-size and stays the height of a lowercase word beside it.
+  width: 1em;
+  height: 1em;
+  margin-right: .45em;
+  // The glyph box is optically taller than the x-height; this drops it back
+  // onto the baseline instead of riding above it.
+  vertical-align: -.14em;
+}
+
+// The theme underlines links, and across an anchor that opens with a mark the
+// rule runs under the mark and the gap besides — a stray dash ahead of the
+// word. So the anchor drops the underline and the label carries it alone.
+.menu-link {
+  text-decoration: none;
+
+  .menu-label { text-decoration: underline; }
+}
+
+// ---------------------------------------------------------------------------
 // Homepage identity row
 // ---------------------------------------------------------------------------
 // The portrait rides beside the alias rather than above it, so the name still

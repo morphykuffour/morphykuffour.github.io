@@ -1,0 +1,40 @@
+{%- comment -%}
+Shadows the theme's own menu_item.html so an entry can carry an `icon:` key
+naming a file in _includes/icons. The mark goes inside the <a>, which is what
+gives it the link's colour in all three modes and the whole click target, with
+the title wrapped so the underline can be held to the word -- run across the
+whole anchor it passes under the mark and the gap, and reads as a stray dash.
+Entries without an icon render exactly as upstream, so the nested post list and
+the plain top-level entries are untouched.
+{%- endcomment -%}
+<ul>
+  {%-for item in include.collection-%}
+    <li>
+    {%- if item.url -%}
+      {%- if item.icon -%}
+        {%- capture icon_file -%}icons/{{ item.icon }}.svg{%- endcapture -%}
+        <a class="menu-link" href="{{ item.url }}">{%- include {{ icon_file }} -%}<span class="menu-label">{{ item.title }}</span></a>
+      {%- else -%}
+        <a href="{{ item.url }}">{{ item.title }}</a>
+      {%- endif -%}
+    {%- else -%}
+      {{ item.title }}
+    {%- endif -%}
+    </li>
+
+    {%-if item.post_list-%}
+      {%
+        include post_list.html
+          category=item.post_list.category
+          limit=item.post_list.limit
+          show_more=item.post_list.show_more
+          show_more_text=item.post_list.show_more_text
+          show_more_url=item.post_list.show_more_url
+     -%}
+    {%-endif-%}
+
+    {%-if item.entries-%}
+      {%-include menu_item.html collection=item.entries-%}
+    {%-endif-%}
+  {%-endfor-%}
+</ul>
