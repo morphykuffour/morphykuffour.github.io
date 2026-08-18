@@ -1,0 +1,17 @@
+---
+layout: default
+---
+{%- comment -%}
+Shadows the theme's own home layout so the title line can carry a tagline
+after the alias. Everything else is the upstream layout verbatim.
+{%- endcomment -%}
+<header>
+  <h1>{{ site.title }}{%-if site.tagline-%}<span class="tagline">{{ site.tagline }}</span>{%-endif-%}</h1>
+  {%-if site.theme_config.show_description-%}
+    <p>{{ site.description }}</p>
+  {%-endif-%}
+</header>
+
+{%-include menu_item.html collection=site.data.menu.entries-%}
+
+{{ content }}

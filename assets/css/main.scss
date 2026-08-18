@@ -654,3 +654,25 @@ body[a="purple"] {
   margin: 0 0 1.6rem;
   border: 1px solid rgba(0, 0, 0, .25);
 }
+
+// The tagline rides on the same line as the alias, at roughly half its size so
+// it reads as a subtitle rather than a second title. Colour is inherited and
+// knocked back with opacity, which keeps it correct in all three modes without
+// a per-mode override (dark mode inverts the whole page, purple recolours it).
+header h1 .tagline {
+  font-size: .45em;
+  font-weight: normal;
+  opacity: .6;
+  // Its own leading space, so it survives the h1's collapsed markup, and a
+  // wrap point in case the line runs past the column on a narrow screen.
+  &::before { content: " "; }
+}
+
+// Below the column width the two halves stop fitting side by side, so the
+// tagline drops to its own line instead of forcing a horizontal scroll.
+@media (max-width: 30rem) {
+  header h1 .tagline {
+    display: block;
+    &::before { content: none; }
+  }
+}
