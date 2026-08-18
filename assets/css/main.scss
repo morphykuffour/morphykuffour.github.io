@@ -142,16 +142,26 @@ div.highlighter-rouge {
   // Contains the float without the clipping `overflow: hidden` would bring.
   display: flow-root;
 
+  // The portrait is a link to the man himself, so the circle is the anchor
+  // rather than the image inside it — that keeps the float, the ring and the
+  // small-screen centring on one box, and gives the click the whole disc.
   .quote-portrait {
     float: left;
     width: 110px;
     height: 110px;
     margin: .2rem 1.5rem .6rem 0;
     border-radius: 50%;
-    object-fit: cover;
     // The engraving is a rectangle of hatching; a hairline ring keeps the
     // circle reading as a deliberate crop rather than a clipped photo.
     box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
   }
 
   // The theme puts a full `thin solid black` box on every blockquote, plus its

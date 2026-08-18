@@ -16,9 +16,10 @@ permalink: /about/
 </p>
 
 <figure class="quote-card">
-  <img class="quote-portrait"
-       src="{{ site.baseurl }}/images/hippocrates.jpg"
-       alt="Engraved bust of Hippocrates, after Rubens">
+  <a class="quote-portrait" href="https://en.wikipedia.org/wiki/Hippocrates">
+    <img src="{{ site.baseurl }}/images/hippocrates.jpg"
+         alt="Engraved bust of Hippocrates, after Rubens">
+  </a>
   <blockquote>
     <p class="quote-latin">&ldquo;Ars longa,<br>
       vita brevis,<br>
@@ -31,7 +32,7 @@ permalink: /about/
       experiment dangerous,<br>
       judgment difficult.&rdquo;</p>
   </blockquote>
-  <figcaption>&mdash; Hippocrates</figcaption>
+  <figcaption>&mdash; <a href="https://en.wikipedia.org/wiki/Hippocrates">Hippocrates</a></figcaption>
 </figure>
 
 <figure class="paper-figure">
