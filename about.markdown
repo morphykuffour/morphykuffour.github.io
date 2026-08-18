@@ -34,6 +34,14 @@ permalink: /about/
   <figcaption>&mdash; Hippocrates</figcaption>
 </figure>
 
+<figure class="paper-figure">
+  <img src="{{ site.baseurl }}/images/gold-coast-map-1745.jpg"
+       alt="Hand-coloured 1745 engraved map of the Gold Coast, the shoreline running east to west across the sheet, dotted with the names of coastal forts and trading towns from Issini to Alampi.">
+  <figcaption>A Map of the Gold Coast, from Issini to Alampi &mdash; engraved by G. Child after
+    d&rsquo;Anville, 1745. Atlas of Mutual Heritage / Koninklijke Bibliotheek, public domain, via
+    <a href="https://commons.wikimedia.org/wiki/File:AMH-8170-KB_Map_of_the_Gold_Coast.jpg">Wikimedia Commons</a>.</figcaption>
+</figure>
+
 ## Core Competencies
 
 <dl class="competencies">
@@ -116,3 +124,12 @@ permalink: /about/
     </ul>
   </dd>
 </dl>
+
+<figure class="paper-figure paper-figure--tall">
+  <img src="{{ site.baseurl }}/images/akan-gold-weight-bovid-head.jpg"
+       alt="Cast brass Akan gold weight shaped as a bovid head, its horns curving back over a ridged muzzle, photographed against a plain ground.">
+  <figcaption>Akan gold weight in the form of a bovid head, Muséum de Toulouse.
+    Photo <a href="https://commons.wikimedia.org/wiki/User:Archaeodontosaurus">Didier Descouens</a>,
+    <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via
+    <a href="https://commons.wikimedia.org/wiki/File:Akan_Gold_Weight_MHNT_bovid_head.jpg">Wikimedia Commons</a>.</figcaption>
+</figure>
