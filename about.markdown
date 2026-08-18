@@ -4,7 +4,7 @@ title: peri
 permalink: /about/
 ---
 
-<img class="avatar" src="https://avatars.githubusercontent.com/u/23323356?v=4" alt="Morphy Kuffour">
+<img class="avatar" src="{{ site.baseurl }}/images/avatar.jpg" alt="Morphy Kuffour">
 
 <p class="contact">
   <a href="mailto:mail@morphykuffour.com">mail@morphykuffour.com</a>
