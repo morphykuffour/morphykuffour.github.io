@@ -10,10 +10,8 @@ entries:
 
   - title: posts
     post_list:
-      limit: 10
-      show_more: true
-      show_more_text: See all posts...
-      show_more_url: /archive.html
+      # No limit and no "see all" link: the homepage lists every post itself.
+      show_more: false
 
   - title: elsewhere
     entries:
