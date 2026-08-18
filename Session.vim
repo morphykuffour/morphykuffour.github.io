@@ -4,17 +4,17 @@ let v:this_session=expand("<sfile>:p")
 doautoall SessionLoadPre
 silent only
 silent tabonly
-cd ~/tmp/morph-k.github.io
+cd ~/tmp/morphykuffour.github.io
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 let s:shortmess_save = &shortmess
 set shortmess+=aoO
-badd +0 about.markdown
+badd +1 .git/COMMIT_EDITMSG
 argglobal
 %argdel
-$argadd about.markdown
-edit about.markdown
+$argadd .git/COMMIT_EDITMSG
+edit .git/COMMIT_EDITMSG
 argglobal
 setlocal foldmethod=manual
 setlocal foldexpr=0
@@ -31,7 +31,7 @@ if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 1
-normal! 0
+normal! 013|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
