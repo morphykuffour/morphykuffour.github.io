@@ -12,7 +12,7 @@ description: >-
   Morphy Kuffour &middot;
   <a href="mailto:morphy.kuffour@uconn.edu">morphy.kuffour@uconn.edu</a><br>
   Department of Computer Science and Engineering, University of Connecticut<br>
-  Thesis advisor: Prof. Clay Tabor &middot; Honors advisor: Prof. Caiwen Ding<br>
+  Thesis advisor: <a href="https://earthsciences.uconn.edu/person/clay_tabor/">Prof. Clay Tabor</a> &middot; Honors advisor: <a href="https://cse.umn.edu/cs/caiwen-ding">Prof. Caiwen Ding</a><br>
   May 2023
 </p>
 
