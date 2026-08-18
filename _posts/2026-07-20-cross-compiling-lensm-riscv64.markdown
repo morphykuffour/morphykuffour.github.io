@@ -246,7 +246,7 @@ tar xf data.tar.*
 hdiutil makehybrid -o seed.iso -iso -joliet -default-volume-name CIDATA seed
 ```
 
-attached as a second virtio drive. The image itself is now `ubuntu-24.04.4-preinstalled-server-riscv64.img.xz` (the older post used 24.04.2). Otherwise the invocation is the familiar one:
+attached as a second virtio drive. The image itself is `ubuntu-24.04.4-preinstalled-server-riscv64.img.xz` — cdimage serves only the current point release, so that filename moves and the SBCL post has been bumped to match. Otherwise the invocation is the familiar one:
 
 ```bash
 qemu-system-riscv64 \

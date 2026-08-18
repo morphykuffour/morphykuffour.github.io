@@ -43,13 +43,13 @@ Research showed that option 1 demands matching very specific versions and that n
 
    Download pre-built ubuntu image and uncompress
    ```bash
-   wget https://cdimage.ubuntu.com/releases/noble/release/ubuntu-24.04.2-preinstalled-server-riscv64.img.xz
-   xz -dk ubuntu-24.04.2-preinstalled-server-riscv64.img.xz
+   wget https://cdimage.ubuntu.com/releases/noble/release/ubuntu-24.04.4-preinstalled-server-riscv64.img.xz
+   xz -dk ubuntu-24.04.4-preinstalled-server-riscv64.img.xz
    ```
 
    The original image size is not enough for image building, we need enlarge it first.
    ```bash
-   qemu-img resize -f raw ubuntu-24.04.2-preinstalled-server-riscv64.img +5G
+   qemu-img resize -f raw ubuntu-24.04.4-preinstalled-server-riscv64.img +5G
    ```
 
    Boot RISC-V qemu vm in NAT mode, you'll most likely get an IP address that starts with 10.0.2.NUM/24.
@@ -60,7 +60,7 @@ Research showed that option 1 demands matching very specific versions and that n
      -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
      -netdev user,id=net0,hostfwd=tcp::2222-:22 \
      -device virtio-net-device,netdev=net0 \
-     -drive file=ubuntu-24.04.2-preinstalled-server-riscv64.img,if=virtio,format=raw
+     -drive file=ubuntu-24.04.4-preinstalled-server-riscv64.img,if=virtio,format=raw
    ```
 
    Login with the user ubuntu and the default password ubuntu; you will be asked to choose a new password
