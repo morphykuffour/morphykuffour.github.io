@@ -179,7 +179,7 @@ qmk compile -kb handwired/dactyl_manuform/6x6 -km custom_right;
 
 * If you don't want to edit any code use [QMK's Online Configurator](https://config.qmk.fm/#/handwired/dactyl_manuform/5x6/LAYOUT_5x6) to create the hex files. 
 
-[Personal QWERTY Keymap for Dactyl](https://github.com/morph-k/qmk_keymaps)
+[Personal QWERTY Keymap for Dactyl](https://github.com/morphykuffour/qmk_keymaps)
 * ![my custom keymaps](/images/dactyl_manuform_keymaps.jpg)  
 
 * Follow [balatero](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/) to flash the QMK firmware on the Pro Micros. [David Balatero's Flashing Guide and Keymap setup](https://balatero.com/writings/qmk/getting-started-with-dactyl-manuform-and-qmk/)<br /> 

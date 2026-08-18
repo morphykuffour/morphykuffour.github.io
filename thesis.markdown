@@ -18,7 +18,7 @@ description: >-
 
 <p class="paper-actions">
   <a href="{{ site.baseurl }}/assets/thesis/Morphy_Kuffour_Honors-Thesis.pdf">Download the PDF (12 pp.)</a>
-  <a href="https://github.com/morph-k/honors-thesis">Source</a>
+  <a href="https://github.com/morphykuffour/honors-thesis">Source</a>
 </p>
 
 <div class="paper-abstract" markdown="1">
