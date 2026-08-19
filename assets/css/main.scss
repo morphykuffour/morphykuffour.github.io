@@ -694,14 +694,35 @@ body[a="purple"] {
 }
 
 // xkcd itself is framed on /xkcd/, and its layout wants more room than this
-// theme's 640px column gives it -- held to the column the comic scrolls
-// sideways inside the frame. So the frame alone steps outside the column,
-// centred on it, up to the width xkcd actually lays out at. Dark mode needs
-// no rule here: the theme already re-inverts <iframe> along with <img>, so
-// the comic keeps its true tone the way every other image on the site does.
+// theme's 640px column gives it. So the frame alone steps outside the column,
+// centred on it, at the width xkcd actually lays out at. Dark mode needs no
+// rule here: the theme already re-inverts <iframe> along with <img>, so the
+// comic keeps its true tone the way every other image on the site does.
+//
+// That width is not a taste call. xkcd's own body is `position: absolute;
+// left: 50%; width: 780px; margin-left: -390px` -- a fixed 780px column
+// centred on whatever viewport it is handed. Hand it less and the overflow
+// goes to *both* sides, and the left half of it is unreachable: an absolutely
+// positioned box hanging off the left edge produces no scroll there, so the
+// masthead and the first panel of every comic are simply gone. 50rem is that
+// 780px plus room for the frame's own scrollbar.
+//
+// Below 50rem there is no width left to give, so the frame is scaled instead
+// of squeezed: `zoom` shrinks the box in the flow while the page inside still
+// believes it has the full 800px, which is the one way to fit a fixed layout
+// into a phone without cutting a third of it off. The factor is the ratio of
+// what is available to what is wanted -- tan(atan2(a, b)) is how CSS divides
+// one length by another -- clamped to 1 so a roomy viewport is left alone.
+// A browser too old to do the trigonometry drops the declaration and lands
+// where this page was before: full size, and clipped on a small screen.
+//
+// The calc() around the subtraction is for the compiler, not the browser:
+// this build's Sass evaluates the arguments of functions it does not know,
+// and refuses to take rem from vw itself. Inside calc() it leaves them be.
 .xkcd-embed {
   display: block;
-  width: min(100vw - 2rem, 46rem);
+  width: 50rem;
+  zoom: clamp(0, tan(atan2(calc(100vw - 2rem), 50rem)), 1);
   margin: 0 0 1.2rem;
   margin-left: 50%;
   transform: translateX(-50%);

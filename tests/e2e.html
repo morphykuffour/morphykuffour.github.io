@@ -216,6 +216,15 @@ function loadNarrow(url, width) {
     check('xkcd: the two in-page buttons target the frame',
           acts.filter(x => x.target === 'xkcd-frame').length === 2,
           acts.map(x => x.textContent + ':' + (x.target || '-')).join(' '));
+    // The frame has to hand xkcd at least the 780px its fixed, centre-anchored
+    // layout wants; give it less and the left of every comic falls off the
+    // edge where nothing can scroll it back. 1100px of harness is plenty, so
+    // the frame should be at its full size and untouched by the zoom.
+    let fcs = d.defaultView.getComputedStyle(frame);
+    check('xkcd: the frame is as wide as xkcd lays out',
+          frame.getBoundingClientRect().width >= 780 && fcs.zoom === '1',
+          frame.getBoundingClientRect().width + ' zoom ' + fcs.zoom);
+
     const rnd = d.getElementById('xkcd-random');
     check('xkcd: random is armed with a comic before any click',
           /^https:\/\/xkcd\.com\/\d+\/$/.test(rnd.href), rnd.href);
@@ -232,6 +241,19 @@ function loadNarrow(url, width) {
       if (rnd.href.indexOf('https://xkcd.com/') !== 0 || rnd.href === 'https://xkcd.com/404/') https = false;
     }
     check('xkcd: 200 rolls stay on https and skip the missing comic 404', https, rnd.href);
+
+    // On a phone there is no width left to give, so the frame is scaled down
+    // whole rather than cropped: it fits the screen, and the page inside it
+    // still gets the 800px it lays out against.
+    d = await loadNarrow('/xkcd/', 420);
+    const narrow = d.querySelector('.xkcd-embed');
+    fcs = d.defaultView.getComputedStyle(narrow);
+    check('xkcd/narrow: the frame is scaled to fit rather than cropped',
+          narrow.getBoundingClientRect().width <= 420 && parseFloat(fcs.zoom) < 1 &&
+          fcs.width === '800px' && d.documentElement.scrollWidth <= 420,
+          narrow.getBoundingClientRect().width + ' zoom ' + fcs.zoom + ' inner ' + fcs.width +
+          ' page ' + d.documentElement.scrollWidth);
+    document.getElementById('f').style.width = '1100px';
 
     // Purple has no page-wide invert, so the frame -- another site's white
     // page -- takes the same treatment the resume PDF does.
