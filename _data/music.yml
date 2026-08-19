@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'uSIuHYAa7yM.jpg'
+  title: '(Caravan) Whiplash Last Scene - HD'
+  channel: 'Mina Elias'
+  channel_url: 'https://www.youtube.com/channel/UCNOOuOdX7yN9Ervy8Rj2Zfg'
+  duration: '9:42'
+  link: 'https://www.youtube.com/watch?v=uSIuHYAa7yM'
 - file: 'vvtfSYmjFXc.jpg'
   title: 'Next Levels'
   channel: 'King Geedorah - Topic'
