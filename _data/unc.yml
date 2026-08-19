@@ -35,3 +35,31 @@
   height: 1353
   caption: 'a passage about one person wide'
   alt: 'Standing in a narrow vaulted stone passage, another visitor on the steps behind.'
+
+# The anime one is drawn rather than taken, which is why it says so in the
+# caption: on a page of photographs an unlabelled render is a small lie.
+# It arrived as a screenshot with this site's own theme slider sitting over
+# the car, so it is cropped to the 750 rows above that.
+- file: 'anime-uconn.jpg'
+  width: 893
+  height: 750
+  caption: 'the anime version, UConn polo and all'
+  alt: 'Anime-style illustration of me standing in front of a red Subaru in a navy UConn polo.'
+
+- file: 'check-scarf.jpg'
+  width: 994
+  height: 1273
+  caption: 'blurred, but the scarf came through'
+  alt: 'Motion-blurred selfie in a dark coat and a beige check scarf.'
+
+- file: 'wine-and-headphones.jpg'
+  width: 755
+  height: 1121
+  caption: 'hood up, headphones on, one glass in'
+  alt: 'Selfie in a green hooded sweatshirt and wired over-ear headphones, holding a glass of red wine.'
+
+- file: 'burger.jpg'
+  width: 971
+  height: 1090
+  caption: 'a burger that wanted both hands'
+  alt: 'Sitting at a restaurant table by the window, holding a burger with both hands over a plate of salad.'
