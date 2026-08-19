@@ -487,16 +487,24 @@ function loadNarrow(url, width) {
     const tracks = Array.from(d.querySelectorAll('.music-track'));
     check('music: the grid has tracks in it', tracks.length > 0, tracks.length + ' tracks');
 
-    // The two halves of editing this page by hand. A track added to
-    // _data/music_local.yml leads the grid and appears exactly once even after
-    // the history catches up with it; a track dropped from the page has to be
-    // in the script's DROPPED set too, or the next run brings it back and only
-    // this case would notice.
+    // The two halves of editing this page by hand. Tracks added to
+    // _data/music_local.yml lead the grid, in the order that file has them,
+    // and each appears exactly once even after the history catches up with it;
+    // a track dropped from the page has to be in the script's DROPPED set too,
+    // or the next run brings it back and only this case would notice. The ids
+    // are listed here rather than read from anywhere, so adding one by hand is
+    // one line in each file -- and the order is the assertion, which pinning a
+    // single id at the top was not: it broke the next time one was added above
+    // it, which is the ordinary case rather than a regression.
+    const handKept = ['1s40J0N5CxE', '3DxPnr48fKc', 'yoYZf-lBF_U',
+                      '01yUzXQctcM', 'lMTZa82UVqE', 'SmqXKbxDoJ0', 'cpbeS15sHZ0'];
     const hrefs = tracks.map(t => t.querySelector('a.music-cover').getAttribute('href'));
-    const added = hrefs.filter(h => h.indexOf('v=cpbeS15sHZ0') !== -1);
-    check('music: a hand-kept track leads the grid, once',
-          added.length === 1 && hrefs[0].indexOf('v=cpbeS15sHZ0') !== -1,
-          added.length + ' copies, first is ' + hrefs[0]);
+    check('music: the hand-kept tracks lead the grid, in order',
+          handKept.every((id, i) => hrefs[i] && hrefs[i].indexOf('v=' + id) !== -1),
+          hrefs.slice(0, handKept.length).join(' '));
+    check('music: no hand-kept track is repeated further down',
+          handKept.every(id => hrefs.filter(h => h.indexOf('v=' + id) !== -1).length === 1),
+          hrefs.length + ' tracks in the grid');
     check('music: a dropped track stays off the page',
           hrefs.every(h => h.indexOf('v=Sbcq7TZLQA4') === -1),
           hrefs.length + ' tracks, none of them Sbcq7TZLQA4');
