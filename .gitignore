@@ -6,3 +6,10 @@ vendor
 
 # nix + bundler toolchain
 .bundle/
+
+# Pinterest session for scripts/pinterest-art.py. The board is private, so the
+# scraper needs a signed-in cookie; it must never reach a commit.
+.pinterest-cookie
+
+# scripts/pinterest-art.py leaves these behind when imported.
+__pycache__/

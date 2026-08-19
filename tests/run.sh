@@ -70,7 +70,14 @@ done
 # renderer that never receives the budget: the subframe then sits pending, the
 # page's load event never fires, and the harness waits out the clock on a page
 # that is in fact laid out. In one process the frame loads like any other.
+# Reduced motion is forced for the run so that anything which scrolls itself
+# lands where it is going within the same task instead of animating there.
+# Under --virtual-time-budget Chrome never runs the rendering lifecycle, so a
+# `behavior: smooth` scroll is simply inert and the box never moves at all --
+# the /art/ carousel could not be driven otherwise. Nothing here asserts an
+# animation, so no case loses anything by it.
 output=$("$CHROME" --headless=new --disable-gpu --virtual-time-budget=20000 \
+  --force-prefers-reduced-motion \
   --disable-site-isolation-trials --disable-features=IsolateOrigins,site-per-process \
   --dump-dom "http://localhost:$PORT/e2e.html" 2>/dev/null |
   sed -n '/<pre id="out">/,/<\/pre>/p' | sed 's/<[^>]*>//g')

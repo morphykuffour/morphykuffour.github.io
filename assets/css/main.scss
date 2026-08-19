@@ -669,6 +669,12 @@ body[a="purple"] {
 
   .xkcd-note { color: $purple-dim; }
 
+  // The pins keep their own colour in purple mode -- they are photographs, not
+  // ink-on-white diagrams, so inverting or tinting them would be vandalism.
+  // Only the hairline needs restating: the authored black is invisible here.
+  .art-slide img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
+  .art-note { color: $purple-dim; }
+
   // Only the faceplate around the dial changes — the spectrum band is the same
   // band in every mode, since it is the thing being chosen from.
   .theme-slider__panel {
@@ -732,6 +738,114 @@ body[a="purple"] {
 }
 
 .xkcd-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Art carousel
+// ---------------------------------------------------------------------------
+// Saved pins, one at a time. The track is a plain horizontal scroll container
+// with scroll-snap on it -- no transform, no translated inner rail, no index
+// held in JS. That is what makes a swipe, a trackpad flick, a keyboard scroll
+// and the arrow buttons all the same gesture: they move scrollLeft, and the
+// snap points decide where it comes to rest.
+//
+// The frame steps outside the theme's 640px column the way /xkcd/ does. Pins
+// are overwhelmingly portrait, and at 640px a whole one is either postage-stamp
+// small or taller than the viewport; `min()` rather than a media query gives a
+// phone the full width less its gutters and never a horizontal page scroll.
+
+.art-carousel {
+  width: min(56rem, calc(100vw - 2rem));
+  margin: 1.5rem 0 1rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.art-track {
+  display: flex;
+  // The theme puts list markers and padding on every <ul>; across a row of
+  // slides that is a bullet hanging in the gutter of each one.
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  // Focusable for keyboard scrolling, so it takes a focus ring; the theme
+  // gives it none, and a scroll box with no visible focus is a trap.
+  &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+}
+
+.art-slide {
+  // Exactly one slide per view: no basis on flex-grow/shrink, so the width is
+  // the track's and the snap lands whole pictures rather than halves.
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  a {
+    display: block;
+    // The theme underlines every link; across an image that is a rule hanging
+    // off its bottom edge.
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    // Pins are tall. Without a ceiling a portrait one is taller than the
+    // window and the carousel becomes a scroll-down-to-see-it, which defeats
+    // stepping through them.
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    // The pins are other people's photographs and drawings, on a page that has
+    // no other frame anywhere. A hairline keeps a white-cornered image from
+    // bleeding into the light page without adding a visible box.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+  }
+}
+
+.art-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: .7rem 0 1.4rem;
+  font-size: .85rem;
+
+  button {
+    // The theme styles no buttons at all, so these are drawn from scratch and
+    // deliberately plain: a bordered box in the current text colour, which
+    // means all three modes get them right with no per-mode rule.
+    font: inherit;
+    line-height: 1;
+    color: inherit;
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    padding: .25rem .7rem;
+    cursor: pointer;
+    opacity: .75;
+
+    &:hover { opacity: 1; }
+    &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  }
+
+  // Tabular figures so the counter does not jostle the arrows either side of
+  // it as it steps from 9 to 10.
+  .art-count { font-variant-numeric: tabular-nums; opacity: .75; }
+}
+
+.art-note {
   font-size: .82rem;
   line-height: 1.6;
   color: rgba(0, 0, 0, .6);
