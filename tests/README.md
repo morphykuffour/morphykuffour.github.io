@@ -29,6 +29,16 @@ Two habits worth keeping:
   the full column, so assert on `Range.getClientRects()[0]`, not on the
   element's own rect.
 
+## The cross-origin frame on /xkcd/
+
+`run.sh` launches Chrome with site isolation off. `/xkcd/` frames xkcd.com, and
+virtual time is per-renderer: with isolation on, that frame gets a renderer of
+its own that never receives the budget, so it sits pending, the page's `load`
+never fires, and the harness waits out the clock on a page that is already laid
+out. In one process it loads like any other frame. The cases themselves stay on
+this side of the frame — its `src`, its `name`, the armed random link, and the
+CSS each mode puts on it — because nothing can read into another origin.
+
 ## What a browser cannot check here
 
 The resume page embeds a PDF, which the browser paints through its own viewer.

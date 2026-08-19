@@ -657,6 +657,18 @@ body[a="purple"] {
     border-color: rgba(0, 0, 0, .12);
   }
 
+  // The framed xkcd is the same problem in a different box: a page from
+  // another origin, black ink on white, that none of the rules above can
+  // reach into. So it takes the resume's treatment verbatim -- invert to get
+  // a dark comic, tint it violet, then screen the result over the page.
+  .xkcd-embed {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+    border-color: rgba(0, 0, 0, .12);
+  }
+
+  .xkcd-note { color: $purple-dim; }
+
   // Only the faceplate around the dial changes — the spectrum band is the same
   // band in every mode, since it is the thing being chosen from.
   .theme-slider__panel {
@@ -679,6 +691,29 @@ body[a="purple"] {
   min-height: 30rem;
   margin: 0 0 1.6rem;
   border: 1px solid rgba(0, 0, 0, .25);
+}
+
+// xkcd itself is framed on /xkcd/, and its layout wants more room than this
+// theme's 640px column gives it -- held to the column the comic scrolls
+// sideways inside the frame. So the frame alone steps outside the column,
+// centred on it, up to the width xkcd actually lays out at. Dark mode needs
+// no rule here: the theme already re-inverts <iframe> along with <img>, so
+// the comic keeps its true tone the way every other image on the site does.
+.xkcd-embed {
+  display: block;
+  width: min(100vw - 2rem, 46rem);
+  margin: 0 0 1.2rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  height: 80vh;
+  min-height: 30rem;
+  border: 1px solid rgba(0, 0, 0, .25);
+}
+
+.xkcd-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
 }
 
 // ---------------------------------------------------------------------------

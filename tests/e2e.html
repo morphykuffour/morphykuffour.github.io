@@ -25,10 +25,17 @@ function check(name, ok, detail) {
 
 // Resolves once the framed page has loaded and had a moment to lay out, with
 // its document handed back for inspection.
+// The cap matters for /xkcd/: that page frames another origin, and a headless
+// Chrome with site isolation on can leave that subframe pending forever, so
+// the outer load event never arrives. The page's own markup is laid out long
+// before then, so carrying on after the cap costs nothing.
 function load(url) {
   return new Promise(res => {
     const f = document.getElementById('f');
-    f.onload = () => setTimeout(() => res(f.contentDocument), 300);
+    let done = false;
+    const finish = () => { if (!done) { done = true; res(f.contentDocument); } };
+    f.onload = () => setTimeout(finish, 300);
+    setTimeout(finish, 8000);
     f.src = url;
   });
 }
@@ -192,6 +199,65 @@ function loadNarrow(url, width) {
     check('thesis: advisor Tabor is linked',
           links.indexOf('https://earthsciences.uconn.edu/person/clay_tabor/') !== -1, links.join(' '));
     check('thesis: advisor Ding is linked', links.indexOf('https://cse.umn.edu/cs/caiwen-ding') !== -1);
+
+    // --- xkcd: the framed comic and the random roll -------------------------
+    // Nothing here reaches into the frame: it is another origin, and a headless
+    // Chrome with site isolation on will not even finish a scripted navigation
+    // into it. What is checkable from this side is the wiring -- the frame is
+    // named, the buttons target that name, and the random link is armed with a
+    // real comic URL before any click reaches it.
+    localStorage.setItem('appearance', 'light');
+    d = await load('/xkcd/');
+    const frame = d.querySelector('.xkcd-embed');
+    check('xkcd: the frame is pointed at xkcd', frame && frame.src === 'https://xkcd.com/', frame && frame.src);
+    check('xkcd: the frame carries the name the buttons target',
+          frame && frame.name === 'xkcd-frame', frame && frame.name);
+    const acts = Array.from(d.querySelectorAll('.paper-actions a'));
+    check('xkcd: the two in-page buttons target the frame',
+          acts.filter(x => x.target === 'xkcd-frame').length === 2,
+          acts.map(x => x.textContent + ':' + (x.target || '-')).join(' '));
+    const rnd = d.getElementById('xkcd-random');
+    check('xkcd: random is armed with a comic before any click',
+          /^https:\/\/xkcd\.com\/\d+\/$/.test(rnd.href), rnd.href);
+    // Two rolls in a row landing on the same comic would be a stuck arm, not
+    // luck: the draw is over thousands.
+    const first = rnd.href;
+    rnd.dispatchEvent(new d.defaultView.Event('click'));
+    check('xkcd: the click re-arms it for the next jump', rnd.href !== first, first + ' -> ' + rnd.href);
+    // The roll stays on https, because xkcd's own random button redirects to
+    // http and the browser blocks that as mixed content on this site.
+    let https = true;
+    for (let i = 0; i < 200; i++) {
+      rnd.dispatchEvent(new d.defaultView.Event('click'));
+      if (rnd.href.indexOf('https://xkcd.com/') !== 0 || rnd.href === 'https://xkcd.com/404/') https = false;
+    }
+    check('xkcd: 200 rolls stay on https and skip the missing comic 404', https, rnd.href);
+
+    // Purple has no page-wide invert, so the frame -- another site's white
+    // page -- takes the same treatment the resume PDF does.
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/xkcd/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.xkcd-embed'));
+    check('xkcd/purple: frame is inverted, tinted and screened',
+          cs.filter === 'invert(1) sepia(0.4) hue-rotate(220deg) saturate(1.3)' &&
+          cs.mixBlendMode === 'screen', cs.filter + '/' + cs.mixBlendMode);
+
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/xkcd/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.xkcd-embed'));
+    // The theme inverts the whole page and then inverts <iframe> back, the same
+    // deal <img> gets, so the comic keeps its true tone on the dark page.
+    check('xkcd/dark: the frame is re-inverted back to true tone',
+          cs.filter === 'invert(1)' && cs.mixBlendMode === 'normal' &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          cs.filter + '/' + cs.mixBlendMode);
+    localStorage.setItem('appearance', 'light');
+
+    // --- the menu carries the xkcd page ------------------------------------
+    d = await load('/');
+    const menuHrefs = Array.from(d.querySelectorAll('header + ul > li > a')).map(x => x.getAttribute('href'));
+    check('home: xkcd sits in the menu under përi',
+          menuHrefs.indexOf('/xkcd/') === menuHrefs.indexOf('/about/') + 1, menuHrefs.join(' '));
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }

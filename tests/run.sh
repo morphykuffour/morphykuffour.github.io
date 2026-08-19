@@ -64,7 +64,14 @@ done
 
 # --virtual-time-budget lets the harness's awaited page loads finish before the
 # DOM is dumped; the <pre> it fills is the whole report.
+#
+# Site isolation is turned off for the run because /xkcd/ frames another
+# origin. Virtual time is per-renderer, and a cross-origin frame gets its own
+# renderer that never receives the budget: the subframe then sits pending, the
+# page's load event never fires, and the harness waits out the clock on a page
+# that is in fact laid out. In one process the frame loads like any other.
 output=$("$CHROME" --headless=new --disable-gpu --virtual-time-budget=20000 \
+  --disable-site-isolation-trials --disable-features=IsolateOrigins,site-per-process \
   --dump-dom "http://localhost:$PORT/e2e.html" 2>/dev/null |
   sed -n '/<pre id="out">/,/<\/pre>/p' | sed 's/<[^>]*>//g')
 
