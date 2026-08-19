@@ -1,0 +1,15 @@
+# Hand-kept, unlike _data/music.yml: tracks put on the page directly rather
+# than picked up from the watch history. They live in a second file because
+# scripts/youtube-music.py rewrites music.yml wholesale on every run, so an
+# entry added to it by hand survives until the next update and no longer.
+#
+# Same shape as music.yml. These sit at the top of the grid, and /music/ skips
+# a pulled entry pointing at the same video so a track added here does not
+# appear twice once the history catches up with it.
+
+- file: 'cpbeS15sHZ0.jpg'
+  title: 'Last Call'
+  channel: 'Kanye West'
+  channel_url: 'https://www.youtube.com/channel/UCRY5dYsbIN5TylSbd7gVnZg'
+  duration: '12:41'
+  link: 'https://www.youtube.com/watch?v=cpbeS15sHZ0'

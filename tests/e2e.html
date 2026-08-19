@@ -487,6 +487,27 @@ function loadNarrow(url, width) {
     const tracks = Array.from(d.querySelectorAll('.music-track'));
     check('music: the grid has tracks in it', tracks.length > 0, tracks.length + ' tracks');
 
+    // The two halves of editing this page by hand. A track added to
+    // _data/music_local.yml leads the grid and appears exactly once even after
+    // the history catches up with it; a track dropped from the page has to be
+    // in the script's DROPPED set too, or the next run brings it back and only
+    // this case would notice.
+    const hrefs = tracks.map(t => t.querySelector('a.music-cover').getAttribute('href'));
+    const added = hrefs.filter(h => h.indexOf('v=cpbeS15sHZ0') !== -1);
+    check('music: a hand-kept track leads the grid, once',
+          added.length === 1 && hrefs[0].indexOf('v=cpbeS15sHZ0') !== -1,
+          added.length + ' copies, first is ' + hrefs[0]);
+    check('music: a dropped track stays off the page',
+          hrefs.every(h => h.indexOf('v=Sbcq7TZLQA4') === -1),
+          hrefs.length + ' tracks, none of them Sbcq7TZLQA4');
+
+    // The note counts what the grid holds; the two lists behind it overlap, so
+    // a count taken from their sizes would drift the moment one did.
+    const note = d.querySelector('.music-note');
+    check('music: the note counts the covers actually shown',
+          note.textContent.trim().indexOf(tracks.length + ' tracks') === 0,
+          note.textContent.trim().slice(0, 24) + ' vs ' + tracks.length + ' rendered');
+
     check('music: every cover links to its video',
           tracks.every(t => {
             const a = t.querySelector('a.music-cover');

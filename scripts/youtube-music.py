@@ -63,6 +63,7 @@ FIELDS = "%(.{id,title,channel,channel_url,categories,duration})j"
 # these from a real track -- only a person looking at them.
 DROPPED = {
     "-oW3k3RxUr4",  # a Vancouver breakup vlog, categorised Music
+    "Sbcq7TZLQA4",  # a DAC calibration walkthrough, categorised Music
 }
 
 
