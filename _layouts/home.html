@@ -3,7 +3,7 @@ layout: default
 ---
 {%- comment -%}
 Shadows the theme's own home layout so the title line can carry a tagline
-after the alias, and the name can be respelled here -- slashed o, open e --
+after the alias, and the name can be respelled here -- circumflex o, open e, eta u --
 without those letters leaking into <title>, the feed, or any other page's
 heading, and so the përi portrait can sit beside the alias, linked to the
 GitHub account it is served from.
@@ -16,7 +16,7 @@ Everything else is the upstream layout verbatim.
       <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
            alt="{{ site.author }}">
     </a>
-    <h1>{{ site.title | replace_first: 'o', 'ø' | replace_first: 'e', 'ɛ' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+    <h1>{{ site.title | replace_first: 'o', 'ô' | replace_first: 'e', 'ɛ' | replace_first: 'u', 'η' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
   </div>
   {%-if site.theme_config.show_description-%}
     <p>{{ site.description }}</p>
