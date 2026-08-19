@@ -41,3 +41,9 @@ entries:
       - title: instagram
         url: https://www.instagram.com/morp.k/
         icon: instagram
+      - title: pinterest
+        url: https://www.pinterest.com/morphykuffour/
+        icon: pinterest
+      - title: youtube
+        url: https://www.youtube.com/@morpheus_k
+        icon: youtube

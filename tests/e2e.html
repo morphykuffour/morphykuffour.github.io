@@ -90,7 +90,9 @@ function loadNarrow(url, width) {
 
     const elsewhere = Array.from(d.querySelectorAll('li a')).map(x => x.href);
     for (const profile of ['https://www.reddit.com/user/JediMasterMorphy/',
-                           'https://www.instagram.com/morp.k/']) {
+                           'https://www.instagram.com/morp.k/',
+                           'https://www.pinterest.com/morphykuffour/',
+                           'https://www.youtube.com/@morpheus_k']) {
       check('home: elsewhere carries ' + profile.split('/')[2].replace('www.', ''),
             elsewhere.indexOf(profile) !== -1,
             elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
@@ -102,7 +104,7 @@ function loadNarrow(url, width) {
     // anchor it passes under the mark too.
     const marked = Array.from(d.querySelectorAll('li a.menu-link'));
     check('home: every elsewhere link carries an icon',
-          marked.length === 7 && marked.every(x => x.querySelector('svg.menu-icon')),
+          marked.length === 9 && marked.every(x => x.querySelector('svg.menu-icon')),
           marked.length + ' marked links');
     const oneIcon = marked[0].querySelector('svg.menu-icon');
     const iconCS = d.defaultView.getComputedStyle(oneIcon);
