@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'R_S559P5sm4.jpg'
+  title: 'sunset house mix'
+  channel: 'vascoprod'
+  channel_url: 'https://www.youtube.com/channel/UCDQeWlRUGoslTxkJR7ZZAqw'
+  duration: '24:41'
+  link: 'https://www.youtube.com/watch?v=R_S559P5sm4'
 - file: '4do4jRinmvk.jpg'
   title: 'Childish Gambino - Redbone [432hz]'
   channel: '432 Unlimited'
