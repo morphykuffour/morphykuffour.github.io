@@ -1091,3 +1091,15 @@ header .creed {
   font-size: .9em;
   opacity: .7;
 }
+
+// A page can hang a short marker off its title -- `marker` in the front
+// matter, rendered by _layouts/page.html. It rides on the heading's own line
+// at half its size, colour inherited and knocked back with opacity, which is
+// what keeps it right in all three modes without a per-mode override.
+h1 .title-marker {
+  font-size: .5em;
+  font-weight: normal;
+  opacity: .55;
+  margin-left: .8em;
+  letter-spacing: .05em;
+}

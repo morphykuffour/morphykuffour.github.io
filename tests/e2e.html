@@ -314,6 +314,20 @@ function loadNarrow(url, width) {
     // and the page has to hold together in each, so the shape is asserted here
     // and the scroll behaviour only where there are slides to scroll.
     d = await load('/art/');
+    // The marker rides inside the h1, so it has to sit on the heading's line
+    // rather than under it -- the failure of shadowing the theme's page layout
+    // wrongly is a marker that has broken out onto its own row.
+    const h1art = d.querySelector('h1');
+    const marker = h1art && h1art.querySelector('.title-marker');
+    check('art: the title carries its marker on the same line',
+          !!marker && marker.textContent.trim() === '~2' &&
+            marker.getBoundingClientRect().top < h1art.getBoundingClientRect().bottom &&
+            marker.getBoundingClientRect().left > h1art.getBoundingClientRect().left,
+          marker ? marker.textContent.trim() + ' at ' +
+            Math.round(marker.getBoundingClientRect().left) + ',' +
+            Math.round(marker.getBoundingClientRect().top) +
+            ' in h1 ' + Math.round(h1art.getBoundingClientRect().left) + ',' +
+            Math.round(h1art.getBoundingClientRect().top) : 'no .title-marker');
     const track = d.querySelector('.carousel-track');
     const slides = track ? track.querySelectorAll('.carousel-slide') : [];
     check('art: the page renders a track or says why it cannot',

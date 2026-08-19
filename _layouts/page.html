@@ -1,0 +1,16 @@
+---
+layout: default
+---
+{%- comment -%}
+Shadows the theme's own page layout for one reason: a page can now hang a short
+marker off its title, via `marker` in its front matter. Everything else here is
+the upstream layout verbatim -- the up-link, the heading, the content -- so a
+page without a marker builds byte for byte as it did before.
+
+The marker sits inside the h1 rather than after it so it shares the heading's
+baseline and wraps with it; it is aria-hidden because it is decoration, and a
+screen reader announcing the title should read the title.
+{%- endcomment -%}
+<a href="{{ site.baseurl }}/">..</a>{% if page.title %}<h1>{{ page.title }}{% if page.marker %} <span class="title-marker" aria-hidden="true">{{ page.marker }}</span>{% endif %}</h1>{% endif %}
+
+{{ content }}

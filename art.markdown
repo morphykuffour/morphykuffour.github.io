@@ -1,6 +1,8 @@
 ---
 layout: page
 title: art
+# Sits beside the heading, decoration only -- see .title-marker.
+marker: '~2'
 permalink: /art/
 description: >-
   Pins saved from Pinterest and a few picked up elsewhere, mirrored here at
