@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'WifI7lOUI-o.jpg'
+  title: 'MF DOOM & Nujabes - Metaphorical Villainy (Full Album)'
+  channel: 'A-OK All Day'
+  channel_url: 'https://www.youtube.com/channel/UCkQXSwp780Kp8XcegVOpfSQ'
+  duration: '27:30'
+  link: 'https://www.youtube.com/watch?v=WifI7lOUI-o'
 - file: 'pTCp0kJYF30.jpg'
   title: 'OMEGAH RED feat. MF DOOM and RZA - Books of War'
   channel: 'Importan Joe'
