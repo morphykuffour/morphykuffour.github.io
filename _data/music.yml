@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: '9WOrpbszcIk.jpg'
+  title: 'Shatta Wale - Ayoo (Official Video)'
+  channel: 'Shatta Wale'
+  channel_url: 'https://www.youtube.com/channel/UCb5XPdFG5KC05hy4mv0zi_A'
+  duration: '2:46'
+  link: 'https://www.youtube.com/watch?v=9WOrpbszcIk'
 - file: 'nuXHEYrdu2Q.jpg'
   title: 'MF DOOM + SADE SADEVILLAIN FULL ALBUM'
   channel: 'METAL FACE'
