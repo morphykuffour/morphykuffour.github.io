@@ -3,6 +3,18 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'cmc8q2dcIMs.jpg'
+  title: 'Jaden - Icon'
+  channel: 'Jaden'
+  channel_url: 'https://www.youtube.com/channel/UCvIl8gBxIiMd5pN8G8Bl_XQ'
+  duration: '3:22'
+  link: 'https://www.youtube.com/watch?v=cmc8q2dcIMs'
+- file: 'Kbj2Zss-5GY.jpg'
+  title: 'A$AP Rocky - Praise The Lord (Da Shine) (Official Video) ft. Skepta'
+  channel: 'ASAPROCKYUPTOWN'
+  channel_url: 'https://www.youtube.com/channel/UCHE7rAi1Fw1CBmQXFtvJmrw'
+  duration: '3:47'
+  link: 'https://www.youtube.com/watch?v=Kbj2Zss-5GY'
 - file: 'e1vlLJCr9Lo.jpg'
   title: 'Dave (ft. Alex) - Thiago Silva'
   channel: 'BBC Music'
