@@ -1,0 +1,136 @@
+{%- comment -%}
+The carousel behind /art/ and /unc/. It began as the art page's own markup and
+was lifted here when the second page wanted it: the two differ only in what
+they are showing, and a hundred lines of scroll logic copied twice is a hundred
+lines that drift apart at the first fix.
+
+Parameters:
+  items  list of {file, alt, title, caption, link, width, height}; only `file`
+         is required. `link` makes the picture a link, `caption` writes a line
+         under it, and the pair of dimensions reserves the space so the strip
+         does not reflow as lazy images land.
+  base   URL the file names hang off, e.g. "/images/unc/"
+  label  aria-label for the strip, e.g. "Saved pins"
+  unit   singular noun for the arrows, e.g. "pin" -> "Previous pin"
+
+The track is a scroll container with scroll-snap, not a JS slider: with the
+script off it is still a swipeable, keyboard-scrollable strip of pictures, and
+with it on the arrows only call scrollTo on that same box. So the carousel has
+no state of its own to get out of step -- where it is *is* its scroll offset,
+which is also what a swipe, a trackpad and a focus ring all already move.
+{%- endcomment -%}
+{%- assign unit = include.unit | default: 'image' -%}
+<div class="carousel" data-carousel>
+  <ul class="carousel-track" tabindex="0" aria-label="{{ include.label | default: 'Images' | escape }}">
+    {%- for item in include.items -%}
+    {%- assign alt = item.alt | default: item.title | default: unit -%}
+    <li class="carousel-slide">
+      <figure>
+        {%- if item.link -%}
+        <a href="{{ item.link }}" rel="noopener nofollow" title="{{ item.title | default: alt | escape }}">
+        {%- endif -%}
+        <img src="{{ include.base }}{{ item.file }}"
+             alt="{{ alt | escape }}"
+             {% if item.width and item.height %}width="{{ item.width }}" height="{{ item.height }}"{% endif %}
+             loading="lazy" decoding="async">
+        {%- if item.link -%}</a>{%- endif -%}
+        {%- if item.caption -%}
+        <figcaption>{{ item.caption }}</figcaption>
+        {%- endif -%}
+      </figure>
+    </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- comment -%}
+  Authored hidden and revealed by the script below. A button that does nothing
+  is worse than no button, and without JS these do nothing -- the strip is
+  swipeable on its own, so nothing is lost by leaving them out of that case.
+  {%- endcomment -%}
+  <div class="carousel-controls" hidden>
+    <button type="button" class="carousel-prev" aria-label="Previous {{ unit }}">&larr;</button>
+    <span class="carousel-count" aria-live="polite">1 / {{ include.items | size }}</span>
+    <button type="button" class="carousel-next" aria-label="Next {{ unit }}">&rarr;</button>
+  </div>
+</div>
+
+<script>
+// Everything the arrows do, a swipe already did. They move the same scroll box
+// by exactly one slide, and the counter is read back out of the scroll offset
+// rather than kept alongside it -- so a swipe, a trackpad flick, a keyboard
+// scroll and an arrow click all end up reporting the same number, and there is
+// no "current index" to fall out of sync with where the strip actually is.
+//
+// Written to wire every carousel on the page rather than the first one, and to
+// skip any it has already wired: the include carries its own script, so a page
+// holding two of them runs this twice, and a second pass over a live carousel
+// would leave two handlers on each arrow and step it two slides per click.
+(function () {
+  var roots = document.querySelectorAll('[data-carousel]');
+  for (var i = 0; i < roots.length; i++) wire(roots[i]);
+
+  function wire(root) {
+    if (root.dataset.carouselWired) return;
+    var track = root.querySelector('.carousel-track');
+    var slides = track.querySelectorAll('.carousel-slide');
+    var controls = root.querySelector('.carousel-controls');
+    var count = root.querySelector('.carousel-count');
+    if (!slides.length) return;
+    root.dataset.carouselWired = '1';
+
+    controls.hidden = false;
+
+    function step() {
+      // The slide's own width, not the track's: they are the same today, but
+      // reading the slide keeps this honest if the CSS ever shows a peek of
+      // the next one at a wide viewport.
+      return slides[0].getBoundingClientRect().width;
+    }
+
+    function index() {
+      return Math.min(slides.length - 1,
+                      Math.max(0, Math.round(track.scrollLeft / step())));
+    }
+
+    function report() {
+      count.textContent = (index() + 1) + ' / ' + slides.length;
+    }
+
+    // Someone who has asked their system for less motion gets the jump rather
+    // than the glide. Read per call, not once: the setting can change under a
+    // running page, and there is nothing to invalidate if it is never cached.
+    function motion() {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ? 'auto' : 'smooth';
+    }
+
+    function go(delta) {
+      // Snapping to a computed offset rather than scrollBy: at the ends a
+      // partial scroll would otherwise leave the track between two snap points.
+      track.scrollTo({
+        left: Math.min(slides.length - 1, Math.max(0, index() + delta)) * step(),
+        behavior: motion(),
+      });
+    }
+
+    root.querySelector('.carousel-prev').addEventListener('click', function () { go(-1); });
+    root.querySelector('.carousel-next').addEventListener('click', function () { go(1); });
+
+    // The track is focusable so it can be scrolled from the keyboard at all;
+    // the browser's own left/right on a scroll container moves by a scroll step
+    // rather than a slide, so those two keys are taken over here.
+    track.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    });
+
+    // The browser already coalesces scroll to once per frame, so this needs no
+    // throttle of its own -- and reading the offset back here, rather than
+    // setting a number when an arrow is clicked, is what keeps a swipe, a
+    // trackpad flick and a keyboard scroll all reporting correctly too.
+    track.addEventListener('scroll', report, { passive: true });
+
+    report();
+  }
+})();
+</script>

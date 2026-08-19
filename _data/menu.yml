@@ -11,6 +11,9 @@ entries:
   - title: xkcd
     url: /xkcd/
 
+  - title: unc
+    url: /unc/
+
   - title: honors thesis
     url: /thesis/
 

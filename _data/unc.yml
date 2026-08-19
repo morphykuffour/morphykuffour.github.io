@@ -1,0 +1,37 @@
+# The five photographs behind /unc/, in the order they are shown. Written by
+# hand, unlike _data/art.yml -- there is no script for this one, because the
+# source is a camera roll rather than an API.
+#
+# `caption` is what appears under the picture; `alt` is what is read out in
+# place of it. They are deliberately different: a caption is a remark about a
+# photo you can already see, and an alt is a description of one you cannot.
+
+- file: 'under-the-oak.jpg'
+  width: 1006
+  height: 1353
+  caption: 'shade, borrowed from an oak'
+  alt: 'Close selfie shot from below, sunlit, against an oak canopy and blue sky.'
+
+- file: 'husky-hoodie.jpg'
+  width: 762
+  height: 1353
+  caption: 'husky on the chest, sunglasses indoors'
+  alt: 'Selfie indoors in sunglasses and a grey UConn husky hoodie.'
+
+- file: 'ray-bans.jpg'
+  width: 1006
+  height: 1353
+  caption: 'the clouds doing most of the work'
+  alt: 'Selfie in Ray-Bans under a concrete stair, cumulus clouds filling the rest of the frame.'
+
+- file: 'kitchen-kit.jpg'
+  width: 560
+  height: 1001
+  caption: 'full kit, glass of milk, no match on'
+  alt: 'Standing in a kitchen drinking a glass of milk, wearing a red Bayern Munich kit.'
+
+- file: 'catacombs.jpg'
+  width: 1006
+  height: 1353
+  caption: 'a passage about one person wide'
+  alt: 'Standing in a narrow vaulted stone passage, another visitor on the steps behind.'

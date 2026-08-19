@@ -669,11 +669,11 @@ body[a="purple"] {
 
   .xkcd-note { color: $purple-dim; }
 
-  // The pins keep their own colour in purple mode -- they are photographs, not
-  // ink-on-white diagrams, so inverting or tinting them would be vandalism.
+  // The pictures keep their own colour in purple mode -- they are photographs,
+  // not ink-on-white diagrams, so inverting or tinting them would be vandalism.
   // Only the hairline needs restating: the authored black is invisible here.
-  .art-slide img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
-  .art-note { color: $purple-dim; }
+  .carousel-slide img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
+  .carousel-slide figcaption, .art-note, .unc-note { color: $purple-dim; }
 
   // Only the faceplate around the dial changes — the spectrum band is the same
   // band in every mode, since it is the thing being chosen from.
@@ -744,27 +744,30 @@ body[a="purple"] {
 }
 
 // ---------------------------------------------------------------------------
-// Art carousel
+// Carousel
 // ---------------------------------------------------------------------------
-// Saved pins, one at a time. The track is a plain horizontal scroll container
+// Pictures one at a time, on /art/ and /unc/ alike. The track is a plain
+// horizontal scroll container
 // with scroll-snap on it -- no transform, no translated inner rail, no index
 // held in JS. That is what makes a swipe, a trackpad flick, a keyboard scroll
 // and the arrow buttons all the same gesture: they move scrollLeft, and the
 // snap points decide where it comes to rest.
 //
-// The frame steps outside the theme's 640px column the way /xkcd/ does. Pins
-// are overwhelmingly portrait, and at 640px a whole one is either postage-stamp
-// small or taller than the viewport; `min()` rather than a media query gives a
-// phone the full width less its gutters and never a horizontal page scroll.
+// Shared by /art/ and /unc/, which is why the classes are not named for either.
+// The frame steps outside the theme's 640px column the way /xkcd/ does. Both
+// pages are overwhelmingly portrait, and at 640px a whole picture is either
+// postage-stamp small or taller than the viewport; `min()` rather than a media
+// query gives a phone the full width less its gutters and never a horizontal
+// page scroll.
 
-.art-carousel {
+.carousel {
   width: min(56rem, calc(100vw - 2rem));
   margin: 1.5rem 0 1rem;
   margin-left: 50%;
   transform: translateX(-50%);
 }
 
-.art-track {
+.carousel-track {
   display: flex;
   // The theme puts list markers and padding on every <ul>; across a row of
   // slides that is a bullet hanging in the gutter of each one.
@@ -780,7 +783,7 @@ body[a="purple"] {
   &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 }
 
-.art-slide {
+.carousel-slide {
   // Exactly one slide per view: no basis on flex-grow/shrink, so the width is
   // the track's and the snap lands whole pictures rather than halves.
   flex: 0 0 100%;
@@ -788,6 +791,24 @@ body[a="purple"] {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  // /unc/ captions its pictures and /art/ does not, so the figure is what the
+  // slide actually centres: picture and caption together, as one block, rather
+  // than the caption hanging off the bottom of a centred image.
+  figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .45rem;
+  }
+
+  figcaption {
+    font-size: .82rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, .6);
+    text-align: center;
+  }
 
   a {
     display: block;
@@ -799,10 +820,11 @@ body[a="purple"] {
   img {
     display: block;
     max-width: 100%;
-    // Pins are tall. Without a ceiling a portrait one is taller than the
+    // These are tall. Without a ceiling a portrait one is taller than the
     // window and the carousel becomes a scroll-down-to-see-it, which defeats
-    // stepping through them.
-    max-height: 70vh;
+    // stepping through them. 66 rather than 70 leaves the captioned slides on
+    // /unc/ room for their line without pushing the arrows off the fold.
+    max-height: 66vh;
     width: auto;
     height: auto;
     margin: 0 auto;
@@ -814,7 +836,7 @@ body[a="purple"] {
   }
 }
 
-.art-controls {
+.carousel-controls {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -842,10 +864,11 @@ body[a="purple"] {
 
   // Tabular figures so the counter does not jostle the arrows either side of
   // it as it steps from 9 to 10.
-  .art-count { font-variant-numeric: tabular-nums; opacity: .75; }
+  .carousel-count { font-variant-numeric: tabular-nums; opacity: .75; }
 }
 
-.art-note {
+// The standing line under each carousel: what the pictures are and whose.
+.art-note, .unc-note {
   font-size: .82rem;
   line-height: 1.6;
   color: rgba(0, 0, 0, .6);

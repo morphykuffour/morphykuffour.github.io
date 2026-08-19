@@ -295,8 +295,8 @@ function loadNarrow(url, width) {
     // and the page has to hold together in each, so the shape is asserted here
     // and the scroll behaviour only where there are slides to scroll.
     d = await load('/art/');
-    const track = d.querySelector('.art-track');
-    const slides = track ? track.querySelectorAll('.art-slide') : [];
+    const track = d.querySelector('.carousel-track');
+    const slides = track ? track.querySelectorAll('.carousel-slide') : [];
     check('art: the page renders a track or says why it cannot',
           !!track || !!d.querySelector('.art-note'),
           track ? slides.length + ' slides' : 'note only');
@@ -323,22 +323,22 @@ function loadNarrow(url, width) {
             shown.getBoundingClientRect().height + ' of ' + d.defaultView.innerHeight);
       // The controls are authored hidden and revealed by the page's own
       // script, so a visible pair of arrows is also proof the script ran.
-      const controls = d.querySelector('.art-controls');
+      const controls = d.querySelector('.carousel-controls');
       check('art: the arrows appear once the script has wired them',
             !!controls && !controls.hidden, controls ? 'shown' : 'missing');
       // The arrows move the same scroll box a swipe would, one whole slide at
       // a time, and stop at the ends rather than running past them. run.sh
       // forces reduced motion so the scroll lands inside this task -- see the
       // note there for why a smooth one never would.
-      d.querySelector('.art-next').click();
+      d.querySelector('.carousel-next').click();
       await new Promise(r => setTimeout(r, 250));
       check('art: next steps one whole slide',
             Math.abs(track.scrollLeft - slideW) < 2, 'scrollLeft=' + track.scrollLeft);
-      d.querySelector('.art-prev').click();
+      d.querySelector('.carousel-prev').click();
       await new Promise(r => setTimeout(r, 250));
       check('art: prev steps back',
             Math.abs(track.scrollLeft) < 2, 'scrollLeft=' + track.scrollLeft);
-      d.querySelector('.art-prev').click();
+      d.querySelector('.carousel-prev').click();
       await new Promise(r => setTimeout(r, 250));
       check('art: prev at the first pin stays put rather than wrapping',
             Math.abs(track.scrollLeft) < 2, 'scrollLeft=' + track.scrollLeft);
@@ -364,16 +364,73 @@ function loadNarrow(url, width) {
     // track's -- two nested horizontal scrolls is the failure mode here.
     if (slides.length > 1) {
       d = await loadNarrow('/art/', 420);
-      const narrowTrack = d.querySelector('.art-track');
+      const narrowTrack = d.querySelector('.carousel-track');
       const page = d.documentElement.scrollWidth - d.defaultView.innerWidth;
       check('art/narrow: the page itself does not scroll sideways', page <= 0,
             'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
       check('art/narrow: the carousel still shows one whole pin',
-            Math.abs(narrowTrack.querySelector('.art-slide').getBoundingClientRect().width
+            Math.abs(narrowTrack.querySelector('.carousel-slide').getBoundingClientRect().width
                      - narrowTrack.clientWidth) < 2,
             narrowTrack.clientWidth + 'px track');
       document.getElementById('f').style.width = '1100px';
     }
+
+    // --- the unc carousel ---------------------------------------------------
+    // Same include as /art/, so the mechanism is already covered above; what is
+    // asserted here is what this page adds -- its own pictures, its own
+    // captions -- plus the one thing sharing a strip cannot guarantee, that
+    // both copies were actually wired.
+    d = await load('/unc/');
+    const uncTrack = d.querySelector('.carousel-track');
+    const uncSlides = uncTrack ? uncTrack.querySelectorAll('.carousel-slide') : [];
+    check('unc: every photo is a slide', uncSlides.length === 5, uncSlides.length + ' slides');
+
+    // A file named in _data/unc.yml that is not in images/unc/ fails only in a
+    // browser, as a broken image -- the build links at it perfectly happily.
+    await new Promise(r => setTimeout(r, 600));
+    const uncImgs = Array.from(uncTrack.querySelectorAll('img'));
+    const decoded = uncImgs.filter(i => i.complete && i.naturalWidth > 0);
+    check('unc: the photos actually loaded',
+          decoded.length > 0 && uncImgs[0].naturalWidth > 0,
+          decoded.length + '/' + uncImgs.length + ' decoded so far');
+
+    // The caption is this page's whole difference from /art/, and it has to
+    // travel with the picture rather than sit under the strip.
+    const uncCaps = Array.from(uncTrack.querySelectorAll('.carousel-slide figcaption'));
+    check('unc: every slide carries its caption', uncCaps.length === 5,
+          uncCaps.length + ' captions');
+    check('unc: the caption sits under its own photo',
+          uncCaps[0].getBoundingClientRect().top >=
+          uncImgs[0].getBoundingClientRect().bottom - 1,
+          'caption top ' + Math.round(uncCaps[0].getBoundingClientRect().top) +
+          ' vs image bottom ' + Math.round(uncImgs[0].getBoundingClientRect().bottom));
+
+    // A captioned slide is picture plus line; both together have to stay inside
+    // the fold, or the arrows underneath are off-screen.
+    check('unc: a captioned slide is held inside the viewport',
+          uncSlides[0].getBoundingClientRect().height <= d.defaultView.innerHeight,
+          uncSlides[0].getBoundingClientRect().height + ' of ' + d.defaultView.innerHeight);
+
+    // The script ships inside the include, so this is the case that would catch
+    // a second copy of it failing to wire its own carousel.
+    const uncControls = d.querySelector('.carousel-controls');
+    check('unc: the arrows were wired here too',
+          !!uncControls && !uncControls.hidden, uncControls ? 'shown' : 'missing');
+    const uncStep = uncSlides[0].getBoundingClientRect().width;
+    d.querySelector('.carousel-next').click();
+    await new Promise(r => setTimeout(r, 250));
+    check('unc: next steps one whole photo',
+          Math.abs(uncTrack.scrollLeft - uncStep) < 2, 'scrollLeft=' + uncTrack.scrollLeft);
+    // One click, one slide: a doubly-wired carousel would have moved two.
+    check('unc: the arrows are wired exactly once',
+          Math.abs(uncTrack.scrollLeft - uncStep) < 2,
+          uncTrack.scrollLeft + ' vs one step ' + uncStep);
+
+    d = await loadNarrow('/unc/', 420);
+    check('unc/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
 
     // --- the menu carries the art and xkcd pages ----------------------------
     d = await load('/');
@@ -382,6 +439,8 @@ function loadNarrow(url, width) {
           menuHrefs.indexOf('/art/') === menuHrefs.indexOf('/about/') + 1, menuHrefs.join(' '));
     check('home: xkcd sits in the menu under art',
           menuHrefs.indexOf('/xkcd/') === menuHrefs.indexOf('/art/') + 1, menuHrefs.join(' '));
+    check('home: unc sits in the menu under xkcd',
+          menuHrefs.indexOf('/unc/') === menuHrefs.indexOf('/xkcd/') + 1, menuHrefs.join(' '));
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }
