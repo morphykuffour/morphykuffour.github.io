@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'vvtfSYmjFXc.jpg'
+  title: 'Next Levels'
+  channel: 'King Geedorah - Topic'
+  channel_url: 'https://www.youtube.com/channel/UCwaXD5VFPaeHCpceWbipEIQ'
+  duration: '3:49'
+  link: 'https://www.youtube.com/watch?v=vvtfSYmjFXc'
 - file: 'bIHa1L19XYk.jpg'
   title: 'Sade, MF DOOM - Kiss of Life / Doomsday (Sample Mashup)'
   channel: 'personpeople'
