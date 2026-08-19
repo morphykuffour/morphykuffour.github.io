@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'pTCp0kJYF30.jpg'
+  title: 'OMEGAH RED feat. MF DOOM and RZA - Books of War'
+  channel: 'Importan Joe'
+  channel_url: 'https://www.youtube.com/channel/UC22kRWPoCfbfPL6Lqkislfw'
+  duration: '5:54'
+  link: 'https://www.youtube.com/watch?v=pTCp0kJYF30'
 - file: '9WOrpbszcIk.jpg'
   title: 'Shatta Wale - Ayoo (Official Video)'
   channel: 'Shatta Wale'
@@ -333,12 +339,6 @@
   channel_url: 'https://www.youtube.com/channel/UCI49VO9_0LM9mydUYhXJ3xw'
   duration: '2:00:00'
   link: 'https://www.youtube.com/watch?v=jsLX0Kp1Zpg'
-- file: 'FMfPYdts_yI.jpg'
-  title: 'Here''s what I’m listening to right now:'
-  channel: 'Derrick Gee'
-  channel_url: 'https://www.youtube.com/channel/UC_QyCbGyl1toX2T5FIgVCmg'
-  duration: '1:07:41'
-  link: 'https://www.youtube.com/watch?v=FMfPYdts_yI'
 - file: 'RujQisJwyuw.jpg'
   title: 'BANKERS'' HOURS | 1960s Spy Jazz & City Noir Lounge | Focus, Work & Calm'
   channel: 'Cinema After Hours'
