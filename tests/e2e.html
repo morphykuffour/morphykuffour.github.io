@@ -432,6 +432,63 @@ function loadNarrow(url, width) {
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
 
+    // --- the music grid -----------------------------------------------------
+    // The list is generated from a watch history, so its length is whatever the
+    // last run found; what has to hold is that every entry is complete and
+    // clickable, which is the part a bad run breaks silently.
+    d = await load('/music/');
+    const tracks = Array.from(d.querySelectorAll('.music-track'));
+    check('music: the grid has tracks in it', tracks.length > 0, tracks.length + ' tracks');
+
+    check('music: every cover links to its video',
+          tracks.every(t => {
+            const a = t.querySelector('a.music-cover');
+            return a && /youtube\.com\/watch\?v=/.test(a.getAttribute('href'));
+          }),
+          tracks[0].querySelector('a.music-cover').getAttribute('href'));
+
+    // A cover named in _data/music.yml but missing from images/music/ fails
+    // only in a browser, as a broken image -- the build links at it happily.
+    await new Promise(r => setTimeout(r, 800));
+    const covers = tracks.map(t => t.querySelector('img'));
+    const live = covers.filter(i => i.complete && i.naturalWidth > 0);
+    check('music: the covers actually loaded', live.length === covers.length,
+          live.length + '/' + covers.length + ' decoded');
+
+    // Thumbnails arrive at more than one shape; the grid crops them to one, or
+    // a 4:3 cover among 16:9 neighbours reads as a broken cell.
+    const shape = covers[0].getBoundingClientRect();
+    check('music: covers are cropped to a single shape',
+          Math.abs(shape.width / shape.height - 16 / 9) < 0.05,
+          (shape.width / shape.height).toFixed(3));
+    check('music: the covers in a row are the same height',
+          new Set(covers.slice(0, 3).map(i => Math.round(i.getBoundingClientRect().height))).size === 1,
+          covers.slice(0, 3).map(i => Math.round(i.getBoundingClientRect().height)).join(' '));
+
+    // More than one column is the whole reason the grid steps outside the text
+    // column; at 1100px a single column would mean the escape bought nothing.
+    const grid = d.querySelector('.music-grid');
+    check('music: the grid runs in more than one column',
+          d.defaultView.getComputedStyle(grid).gridTemplateColumns.split(' ').length > 1,
+          d.defaultView.getComputedStyle(grid).gridTemplateColumns);
+
+    // The badge is the only thing that separates a three-minute single from a
+    // three-hour mix at a glance, and it has to sit on the cover, not under it.
+    const badge = tracks.map(t => t.querySelector('.music-time')).filter(Boolean);
+    check('music: durations are stamped on the covers', badge.length === tracks.length,
+          badge.length + '/' + tracks.length + ' stamped');
+    check('music: the badge sits inside its cover',
+          badge[0].getBoundingClientRect().bottom <=
+          covers[0].getBoundingClientRect().bottom + 1,
+          'badge ' + Math.round(badge[0].getBoundingClientRect().bottom) +
+          ' vs cover ' + Math.round(covers[0].getBoundingClientRect().bottom));
+
+    d = await loadNarrow('/music/', 420);
+    check('music/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+
     // --- the menu carries the art and xkcd pages ----------------------------
     d = await load('/');
     const menuHrefs = Array.from(d.querySelectorAll('header + ul > li > a')).map(x => x.getAttribute('href'));
@@ -441,6 +498,8 @@ function loadNarrow(url, width) {
           menuHrefs.indexOf('/xkcd/') === menuHrefs.indexOf('/art/') + 1, menuHrefs.join(' '));
     check('home: unc sits in the menu under xkcd',
           menuHrefs.indexOf('/unc/') === menuHrefs.indexOf('/xkcd/') + 1, menuHrefs.join(' '));
+    check('home: music sits in the menu under unc',
+          menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }

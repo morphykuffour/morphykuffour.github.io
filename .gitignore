@@ -11,5 +11,12 @@ vendor
 # scraper needs a signed-in cookie; it must never reach a commit.
 .pinterest-cookie
 
+# A YouTube session for scripts/youtube-music.py. The watch history is a
+# signed-in page, so the script reads cookies from a browser profile or from a
+# file exported by hand; either way the exported file must never reach a commit.
+cookies.txt
+*.cookies.txt
+.youtube-cookies
+
 # scripts/pinterest-art.py leaves these behind when imported.
 __pycache__/
