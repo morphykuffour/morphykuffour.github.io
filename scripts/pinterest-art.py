@@ -59,6 +59,14 @@ UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
 ORIGINAL_EXTS = ("jpg", "png", "webp", "gif")
 
 
+# Pins saved to the board but not wanted on the page. The board is the source
+# of truth for what has been saved; this is the source of truth for what gets
+# published, and without it every run would restore anything removed by hand.
+DROPPED_PINS = {
+    "117797346494526541",  # an ad for a monitor mount, not art
+}
+
+
 def parse_cookies(raw):
     """`a=1; b=2` -> {'a': '1', 'b': '2'}, ignoring blank and comment lines."""
     jar = {}
@@ -359,6 +367,12 @@ def main():
                 continue
             pin_id = str(pin.get("id") or "")
             if not pin_id or pin_id in seen_pins:
+                continue
+            # A pin dropped from the page by hand has to be dropped here too,
+            # or the next run downloads it again and puts it back.
+            if pin_id in DROPPED_PINS:
+                if verbose:
+                    print(f"  skipping {pin_id} (on the drop list)")
                 continue
             seen_pins.add(pin_id)
             name = download(client, pin, verbose)
