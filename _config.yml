@@ -1,6 +1,9 @@
 title: morpheus
 # Markup is safe here: the homepage h1 is the only thing that renders it.
-tagline: <a href="https://barbend.com/skull-crushers/">skull crusher</a>, head toucher, <a href="https://www.pa.uky.edu/sciworks/xtra/shy.htm">shadow bender</a>
+# Each epithet points at where it comes from: the lift, the Wu-Tang bar
+# (Method Man opens GZA's "Shadowboxin'" with "the head toucher, industry
+# party bum rusher"), and the physics of bending a shadow.
+tagline: <a href="https://barbend.com/skull-crushers/">skull crusher</a>, <a href="https://en.wikipedia.org/wiki/Shadowboxin%27">head toucher</a>, <a href="https://www.pa.uky.edu/sciworks/xtra/shy.htm">shadow bender</a>
 author: Morphy Kuffour
 description: >-
   nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming
