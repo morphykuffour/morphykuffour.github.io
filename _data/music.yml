@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'nuXHEYrdu2Q.jpg'
+  title: 'MF DOOM + SADE SADEVILLAIN FULL ALBUM'
+  channel: 'METAL FACE'
+  channel_url: 'https://www.youtube.com/channel/UCr1PAgIXd4DXEv_GaPFjquw'
+  duration: '21:01'
+  link: 'https://www.youtube.com/watch?v=nuXHEYrdu2Q'
 - file: 'uSIuHYAa7yM.jpg'
   title: '(Caravan) Whiplash Last Scene - HD'
   channel: 'Mina Elias'
