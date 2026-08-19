@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'NHZXCzKGDQc.jpg'
+  title: 'Life before Social Media - CHILL BRAZIL | Samba, Luxury Bossa Nova, Work, Study'
+  channel: 'Golden Smile'
+  channel_url: 'https://www.youtube.com/channel/UCjQr0ZSg5ZL07zfeXVemqQw'
+  duration: '2:32:25'
+  link: 'https://www.youtube.com/watch?v=NHZXCzKGDQc'
 - file: 'tm4d9zb_o5c.jpg'
   title: 'Positive Morning Jazz in a Green Home | Soft Jazz for Work, Reading & Restoring Balance'
   channel: 'Indoor Jazz Music'
