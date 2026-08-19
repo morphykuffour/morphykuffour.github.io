@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'OU_7RpE5Nb0.jpg'
+  title: 'quiet house jazz for deep concentration.'
+  channel: 'SILEO'
+  channel_url: 'https://www.youtube.com/channel/UCI49VO9_0LM9mydUYhXJ3xw'
+  duration: '2:00:00'
+  link: 'https://www.youtube.com/watch?v=OU_7RpE5Nb0'
 - file: 'NHZXCzKGDQc.jpg'
   title: 'Life before Social Media - CHILL BRAZIL | Samba, Luxury Bossa Nova, Work, Study'
   channel: 'Golden Smile'
