@@ -69,26 +69,36 @@ function loadNarrow(url, width) {
           'avatar.right=' + Math.round(ar.right) + ' h1.left=' + Math.round(hr.left));
     check('home: alias keeps its respelling',
           h1.textContent.indexOf('môrphɛηs') === 0, h1.textContent.slice(0, 12));
-    // Each epithet in the tagline carries its source -- the lift, the Wu-Tang
-    // bar it is lifted from, the physics of a bent shadow, and the colour dial
-    // itself -- so a bare word here means one of the four lost its link in
-    // _config.yml.
-    const epithets = Array.from(d.querySelectorAll('.tagline a'));
-    check('home: all four epithets are sourced',
-          epithets.length === 4 && epithets.map(x => x.textContent).join(', ') ===
-            'skull crusher, head toucher, shadow bender, mind wiper',
+    // The first three epithets carry their source -- the lift, the Wu-Tang bar
+    // they are lifted from, the physics of a bent shadow -- so a bare word
+    // among them means one lost its link in _config.yml.
+    const tagline = d.querySelector('.tagline');
+    const epithets = Array.from(tagline.querySelectorAll('a'));
+    check('home: the sourced epithets keep their links',
+          epithets.length === 3 && epithets.map(x => x.textContent).join(', ') ===
+            'skull crusher, head toucher, shadow bender',
           epithets.map(x => x.textContent + ' -> ' + x.href).join(' | '));
     check('home: head toucher points at the bar it comes from',
           epithets[1] && epithets[1].href.indexOf('Shadowboxin') !== -1,
           epithets[1] && epithets[1].href);
-    // The last epithet names the dial rather than an outside source, so the
-    // thing it points at has to be on the page. A fragment that resolves to
-    // nothing looks identical in the markup and dead in the browser.
-    const wiper = epithets[3] && d.getElementById(
-      decodeURIComponent(new URL(epithets[3].href).hash.slice(1)));
-    check('home: mind wiper lands on the colour dial',
-          !!wiper && wiper.classList.contains('theme-slider'),
-          wiper ? wiper.className : 'no element for ' + (epithets[3] && epithets[3].hash));
+    // The last epithet names the dial on the page rather than an outside
+    // source, so it is plain text: still in the row, but nothing to click.
+    check('home: mind wiper reads as plain text',
+          tagline.textContent.indexOf('mind wiper') !== -1 &&
+            !epithets.some(x => x.textContent.indexOf('mind wiper') !== -1),
+          tagline.textContent.trim());
+
+    // The creed is its own line under the description, not a run-on of it, and
+    // it has to come before the menu -- a stray order here reads as part of the
+    // link list.
+    const creed = d.querySelector('header .creed');
+    const firstMenuLink = d.querySelector('li a');
+    check('home: the creed sits under the description, above the menu',
+          !!creed && creed.textContent.indexOf('extremely difficult problems') !== -1 &&
+            creed.getBoundingClientRect().bottom <=
+              firstMenuLink.getBoundingClientRect().top,
+          creed ? creed.textContent + ' @ ' + Math.round(creed.getBoundingClientRect().bottom)
+                : 'no .creed in the header');
 
     check('home: description sits below the row, not beside it',
           !!d.querySelector('header > p') && d.querySelector('header > p').textContent.indexOf('nixos') === 0);

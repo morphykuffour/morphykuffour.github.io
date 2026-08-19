@@ -1082,3 +1082,12 @@ header h1 .tagline a {
     white-space: normal;
   }
 }
+
+// The creed sits directly under the description rather than reading as a
+// second paragraph of it: pulled up tight against the line above, and knocked
+// back the same way the tagline is so it stays correct in all three modes.
+header .creed {
+  margin-top: -.6em;
+  font-size: .9em;
+  opacity: .7;
+}

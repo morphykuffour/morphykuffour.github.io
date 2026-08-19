@@ -21,6 +21,9 @@ Everything else is the upstream layout verbatim.
   {%-if site.theme_config.show_description-%}
     <p>{{ site.description }}</p>
   {%-endif-%}
+  {%-if site.creed-%}
+    <p class="creed">{{ site.creed }}</p>
+  {%-endif-%}
 </header>
 
 {%-include menu_item.html collection=site.data.menu.entries-%}
