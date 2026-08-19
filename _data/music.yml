@@ -3,6 +3,12 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'T1tcUfUhR5U.jpg'
+  title: '¥ØU$UK€ ¥UK1MAT$U | Boiler Room: Tokyo'
+  channel: 'Boiler Room'
+  channel_url: 'https://www.youtube.com/channel/UCGBpxWJr9FNOcFYA5GkKrMg'
+  duration: '59:55'
+  link: 'https://www.youtube.com/watch?v=T1tcUfUhR5U'
 - file: 'OU_7RpE5Nb0.jpg'
   title: 'quiet house jazz for deep concentration.'
   channel: 'SILEO'
