@@ -12,6 +12,11 @@ domain: morphykuffour.github.io
 url: https://morphykuffour.github.io
 github_username: morph-k
 
+# The theme's head renders this as the tab icon. It is the same portrait the
+# homepage shows beside the alias, kept here as a local copy so the tab does
+# not depend on avatars.githubusercontent.com being reachable.
+favicon: /images/avatar.png
+
 remote_theme: riggraz/no-style-please
 
 theme_config:
