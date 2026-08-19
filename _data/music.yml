@@ -3,6 +3,18 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'e1vlLJCr9Lo.jpg'
+  title: 'Dave (ft. Alex) - Thiago Silva'
+  channel: 'BBC Music'
+  channel_url: 'https://www.youtube.com/channel/UCZtDUmC3W7j25XHZWFT_XgQ'
+  duration: '6:11'
+  link: 'https://www.youtube.com/watch?v=e1vlLJCr9Lo'
+- file: 'mb6Jc4juSF8.jpg'
+  title: 'Vince Staples - Norf Norf (Explicit)'
+  channel: 'Vince Staples'
+  channel_url: 'https://www.youtube.com/channel/UCHgLVtyFHY0UFXHw0NkpCjg'
+  duration: '3:03'
+  link: 'https://www.youtube.com/watch?v=mb6Jc4juSF8'
 - file: 'VWoIpDVkOH0.jpg'
   title: 'Sheck Wes - Mo Bamba'
   channel: 'Sheck Wes'
