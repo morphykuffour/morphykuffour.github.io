@@ -1,0 +1,17 @@
+# Hand-kept, unlike _data/art.yml: images saved from somewhere other than
+# Pinterest. They live in a second file because scripts/pinterest-art.py
+# rewrites art.yml wholesale from the API on every run, so anything added
+# to it by hand is gone at the next update.
+#
+# Same shape as art.yml, minus `link` -- there is no pin to point back at.
+# Everything here is still someone else's work; `title` is the credit that
+# can be given.
+
+- file: 'pixel-temple-window.gif'
+  title: 'Pixel-art temple at dusk, seen through a shoji window -- Lennart Butz'
+  width: 1580
+  height: 725
+- file: 'koi-pair.jpg'
+  title: 'Two koi circling in dark water, oriental banner illustration'
+  width: 1920
+  height: 960

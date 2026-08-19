@@ -3,8 +3,8 @@ layout: page
 title: art
 permalink: /art/
 description: >-
-  Pins saved from Pinterest, mirrored here at full resolution and shown one at
-  a time, each one linked back to where it came from.
+  Pins saved from Pinterest and a few picked up elsewhere, mirrored here at
+  full resolution and shown one at a time.
 ---
 
 {%- comment -%}
@@ -13,22 +13,38 @@ sitting in images/art/, because the file alone cannot say where a picture came
 from. Each entry carries the pin it was saved from, so every image keeps a link
 home; scripts/pinterest-art.py writes both the folder and the file in one pass.
 
+_data/art_local.yml is the hand-kept half, for images saved from somewhere
+other than Pinterest. It is a second file rather than more entries in art.yml
+because that script rewrites art.yml wholesale on every run. Those come first
+in the strip, since they were put there deliberately rather than scraped.
+
 Nothing here is authored by me. The images are other people's work, saved to a
 Pinterest board and mirrored so the page keeps working when a pin is deleted --
-which is the usual fate of a pin. The link on each one is the credit.
+which is the usual fate of a pin. The link on each one, or its title where
+there is no pin to point at, is the credit.
 
 The strip itself lives in _includes/carousel.html, shared with /unc/.
 {%- endcomment -%}
-{%- assign art = site.data.art -%}
+{%- assign pins = site.data.art -%}
+{%- assign local = site.data.art_local -%}
+{%- comment -%}
+Built up rather than written as one concat so that either file being absent or
+empty is simply fewer slides, not a page that fails to render.
+{%- endcomment -%}
+{%- assign art = "" | split: "" -%}
+{%- if local -%}{%- assign art = art | concat: local -%}{%- endif -%}
+{%- if pins -%}{%- assign art = art | concat: pins -%}{%- endif -%}
 {%- capture art_base -%}{{ site.baseurl }}/images/art/{%- endcapture -%}
-{%- if art and art.size > 0 -%}
+{%- if art.size > 0 -%}
 {% include carousel.html items=art base=art_base label="Saved pins" unit="pin" %}
 
 <p class="art-note">
-  {{ art.size }} pins, saved from
+  {{ art.size }} images{% if pins.size > 0 %}: {{ pins.size }} saved from
   <a href="https://www.pinterest.com/morphykuffour/">pinterest.com/morphykuffour</a>
-  and mirrored here so they outlive the originals. Each image links back to its
-  pin; the work is its author's, not mine.
+  and mirrored here so they outlive the originals, each linking back to its
+  pin{% endif %}{% if local.size > 0 %}, and {{ local.size }} picked up
+  elsewhere, credited in the title{% endif %}. The work is its author's, not
+  mine.
 </p>
 {%- else -%}
 <p class="art-note">

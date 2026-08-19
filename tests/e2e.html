@@ -374,6 +374,18 @@ function loadNarrow(url, width) {
       check('art: the pins in view actually loaded',
             loaded.length > 0 && shownImgs[0].naturalWidth > 0,
             loaded.length + '/' + shownImgs.length + ' decoded so far');
+      // The hand-kept images come from _data/art_local.yml rather than the
+      // scraped art.yml, and they lead the strip. A wiring mistake there drops
+      // them without breaking anything else on the page, so they are named.
+      const localFiles = ['pixel-temple-window.gif', 'koi-pair.jpg'];
+      const localImgs = localFiles.map(
+        f => shownImgs.filter(i => i.src.indexOf(f) !== -1)[0]);
+      check('art: the hand-kept images lead the strip and decoded',
+            localImgs.every(i => i && i.naturalWidth > 0) &&
+              shownImgs.indexOf(localImgs[0]) === 0,
+            localImgs.map((i, n) => localFiles[n] + ': ' +
+              (i ? '#' + shownImgs.indexOf(i) + ' ' + i.naturalWidth + 'px'
+                 : 'missing')).join(', '));
     } else {
       results.push('SKIP art: carousel behaviour — no pins mirrored into images/art/ yet');
     }
