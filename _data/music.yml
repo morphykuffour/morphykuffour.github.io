@@ -3,6 +3,18 @@
 # the cover under images/music/, what it is, and the video it was
 # played from so each cover keeps a way back to the source.
 
+- file: 'VWoIpDVkOH0.jpg'
+  title: 'Sheck Wes - Mo Bamba'
+  channel: 'Sheck Wes'
+  channel_url: 'https://www.youtube.com/channel/UCkHiy32HGV0qaB9nV9afdnQ'
+  duration: '3:06'
+  link: 'https://www.youtube.com/watch?v=VWoIpDVkOH0'
+- file: 'XuEx6lNHZjM.jpg'
+  title: 'Chief Keef "Faneto" (WSHH Exclusive - Official Music Video)'
+  channel: 'WORLDSTARHIPHOP'
+  channel_url: 'https://www.youtube.com/channel/UC-yXuc1__OzjwpsJPlxYUCQ'
+  duration: '3:26'
+  link: 'https://www.youtube.com/watch?v=XuEx6lNHZjM'
 - file: 'BoEKWtgJQAU.jpg'
   title: 'JAŸ-Z, Kanye West - Otis ft. Otis Redding'
   channel: 'Kanye West'
