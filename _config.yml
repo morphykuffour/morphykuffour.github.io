@@ -12,6 +12,7 @@ description: >-
 # Sits under the description as its own line on the homepage. The list above
 # says what the interests are; this says what they are all in service of.
 creed: I have a passion for solving extremely difficult problems
+creed: "I'm a nightmare dressed like a daydream" - Taylor Swift - Blank Space
 
 # baseurl: "" # the subpath of your site, e.g. /blog
 domain: morphykuffour.github.io
