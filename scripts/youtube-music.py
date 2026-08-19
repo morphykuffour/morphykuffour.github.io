@@ -130,7 +130,13 @@ def cover(video_id, verbose):
     keeps serving a thumbnail only as long as the video exists, and a page of
     live thumbnail URLs goes to grey boxes the day one is taken down.
     """
+    # Jekyll skips any file whose name starts with an underscore, so an id
+    # like _ABk7TmjnVk would be mirrored here and then never copied into
+    # _site -- a broken cover with the file sitting right there. Ids are
+    # always 11 characters, so the "v" prefix cannot collide with a real one.
     name = f"{video_id}.jpg"
+    if name.startswith("_"):
+        name = "v" + name
     path = os.path.join(IMAGE_DIR, name)
     if os.path.exists(path):
         return name
