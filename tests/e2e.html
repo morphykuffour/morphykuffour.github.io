@@ -503,7 +503,8 @@ function loadNarrow(url, width) {
     // single id at the top was not: it broke the next time one was added above
     // it, which is the ordinary case rather than a regression.
     const handKept = ['1s40J0N5CxE', '3DxPnr48fKc', 'yoYZf-lBF_U',
-                      '01yUzXQctcM', 'lMTZa82UVqE', 'SmqXKbxDoJ0', 'cpbeS15sHZ0'];
+                      '01yUzXQctcM', 'lMTZa82UVqE', 'SmqXKbxDoJ0', 'cpbeS15sHZ0',
+                      'x-D4MfFLo_0', '-51pxiN4NBA', 'eeTnog5RRQo', 'WTDuXSyINLo'];
     const hrefs = tracks.map(t => t.querySelector('a.music-cover').getAttribute('href'));
     check('music: the hand-kept tracks lead the grid, in order',
           handKept.every((id, i) => hrefs[i] && hrefs[i].indexOf('v=' + id) !== -1),
