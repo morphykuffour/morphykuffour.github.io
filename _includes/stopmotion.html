@@ -20,6 +20,11 @@ Parameters:
            these crossing want three different paces, which is the other half of
            what this parameter is for: in step they are one animation of three
            panels, out of step they are three sequences that happen to overlap
+  phase    optional, and negative: how far into its own pass the reel starts.
+           Where the same clip is on the board twice, two copies at one phase
+           are identical twins holding the same frame at the same moment; half
+           a pass apart they are one sequence seen at two points in it, which is
+           the trick the cascade upstairs plays with three copies of a video
   label    what the sequence shows, for anyone who cannot see it
 
 It emits a reel and nothing around it -- no heading, no caption, no section.
@@ -34,7 +39,7 @@ Ten JPEGs also weigh about a third of what the same ten seconds encodes to, and
 being <img> they take the theme's dark-mode handling for free: main.scss carries
 a rule to undo the page invert on <video>, and needs none for these.
 {%- endcomment -%}
-<div class="stop-motion" style="--frames: {{ include.count }}; --pace: {{ include.pace }}">
+<div class="stop-motion" style="--frames: {{ include.count }}; --pace: {{ include.pace }}{% if include.phase %}; --phase: {{ include.phase }}{% endif %}">
   {%- comment -%}
   The label is on the window rather than spread over the stills. Ten frames each
   saying "the same thing, slightly later" is ten interruptions for one idea, so

@@ -1039,11 +1039,12 @@ function loadNarrow(url, width) {
     localStorage.setItem('appearance', 'light');
 
     // --- the shoal -----------------------------------------------------------
-    // Three stop motions laid over each other at the foot of the page. Two
-    // things are being asserted at once here and they are worth separating:
-    // that each sequence works -- ten stills, a reel ten windows wide, one
-    // window a step -- and that the three of them cross rather than sit in a
-    // row, which is a fact about the board and nothing to do with the reels.
+    // Six reels for three clips, laid along two diagonals that cross over the
+    // hill. Three things are being asserted and they are worth keeping apart:
+    // that each reel works -- ten stills, a reel ten windows wide, one window a
+    // step -- that the six of them make two crossing strokes rather than a
+    // scatter, and that the ground behind them is a picture rather than a
+    // background, which is the whole reason it survives dark mode.
     d = await load('/');
     const shoal = d.querySelector('.shoal');
     const boardBox = d.querySelector('.shoal-board').getBoundingClientRect();
@@ -1052,13 +1053,19 @@ function loadNarrow(url, width) {
           !!shoal && boardBox.top >
             d.querySelector('.skull-roll').getBoundingClientRect().bottom,
           shoal ? 'board @' + Math.round(boardBox.top) : 'no board');
-    check('home/shoal: all three sequences are on it', flips.length === 3,
-          flips.length + ' sequences');
 
-    const SEQUENCES = ['manta', 'whale', 'whaleshark'];
+    // Read off the files rather than trusted from a list: the order along each
+    // diagonal is the arrangement, and a slot given the wrong clip is a mistake
+    // no geometry case would notice.
+    const dirs = flips.map(f => f.querySelector('img').getAttribute('src')
+                                 .split('/').slice(-2)[0]);
+    check('home/shoal: two diagonals, each carrying all three clips',
+          dirs.join(' ') === 'manta whale whaleshark whaleshark whale manta',
+          dirs.join(' '));
+
     const flipBoxes = [];
-    for (let n = 0; n < SEQUENCES.length; n++) {
-      const dir = SEQUENCES[n], tag = 'home/' + dir + ': ';
+    for (let n = 0; n < flips.length; n++) {
+      const dir = dirs[n], tag = 'home/' + dir + '[' + n + ']: ';
       const flip = flips[n];
       const flipWindow = flip.querySelector('.stop-motion-window');
       const reel = flip.querySelector('.stop-motion-reel');
@@ -1086,10 +1093,6 @@ function loadNarrow(url, width) {
             frames.every(i => Math.abs(i.getBoundingClientRect().width - winBox.width) < 1),
             frames.map(i => Math.round(i.getBoundingClientRect().width)).join(' ') +
             ' in ' + Math.round(winBox.width));
-
-      // The window is shaped before any frame arrives -- they are lazy and well
-      // below the fold, and a window with no height of its own would collapse
-      // and then shove the board's contents around when the first one lands.
       check(tag + 'the window takes one frame\'s shape',
             Math.abs(winBox.width / winBox.height - 480 / 854) < 0.01,
             (winBox.width / winBox.height).toFixed(3) + ' vs ' + (480 / 854).toFixed(3));
@@ -1105,37 +1108,18 @@ function loadNarrow(url, width) {
             'window ' + Math.round(winBox.left) + ',' + Math.round(winBox.top) +
             ' board ' + Math.round(boardBox.left) + ',' + Math.round(boardBox.top));
 
-      const asked3 = flip.parentElement.style;
+      const slot = flip.parentElement.style;
       const pct = [
         ['left',  (winBox.left - boardBox.left) / boardBox.width * 100,
-                  asked3.getPropertyValue('--slot-left')],
+                  slot.getPropertyValue('--slot-left')],
         ['top',   (winBox.top - boardBox.top) / boardBox.height * 100,
-                  asked3.getPropertyValue('--slot-top')],
+                  slot.getPropertyValue('--slot-top')],
         ['width', winBox.width / boardBox.width * 100,
-                  asked3.getPropertyValue('--slot-width')],
+                  slot.getPropertyValue('--slot-width')],
       ];
       check(tag + 'the window sits where the markup placed it on the board',
             pct.every(([, got, want]) => Math.abs(got - parseFloat(want)) < 0.5),
             pct.map(([k, got, want]) => k + ' ' + got.toFixed(1) + '% vs ' + want.trim()).join(' '));
-
-      // Sampled rather than probed in full, the same call the roll above makes:
-      // these are lazy and below the fold, all ten are the same size, and a
-      // declared box that disagrees with the file shifts the reel when the frame
-      // lands -- a mistake made per sequence, so the ends of each are enough.
-      const sampled = [frames[0], frames[frames.length - 1]];
-      const flipSizes = await Promise.all(sampled.map(i => new Promise(res => {
-        const probe = new Image();
-        probe.onload = () => res([probe.naturalWidth, probe.naturalHeight]);
-        probe.onerror = () => res(null);
-        probe.src = i.src;
-      })));
-      check(tag + 'every frame declares the box it actually fills',
-            flipSizes.every((size, k) => size &&
-              Number(sampled[k].getAttribute('width')) === size[0] &&
-              Number(sampled[k].getAttribute('height')) === size[1]),
-            sampled.map((i, k) => i.getAttribute('src').split('/').pop() + ' declared ' +
-              i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
-              (flipSizes[k] ? flipSizes[k].join('x') : 'unreachable')).join(', '));
 
       // Forced reduced motion, and the same answer the roll gives: stopped, the
       // reel holds frame one -- where the manta is a speck -- so the window has
@@ -1150,42 +1134,124 @@ function loadNarrow(url, width) {
             flipWindow.scrollWidth + ' of ' + flipWindow.clientWidth + ' visible');
     }
 
-    // The arrangement itself, which is the thing the percentages are for and the
-    // one claim no single slot can make on its own. Three portrait clips in a
-    // row is a strip of panels; what is wanted is three that cross, so each has
-    // to overlap the next along both axes rather than merely sit beside it.
-    check('home/shoal: each sequence crosses the next rather than standing beside it',
-          flipBoxes.every((box, n) => {
-            const next = flipBoxes[n + 1];
-            if (!next) return true;
-            return next.left > box.left && next.left < box.right &&
-                   next.top !== box.top &&
-                   Math.min(box.bottom, next.bottom) > Math.max(box.top, next.top);
-          }),
-          flipBoxes.map(b => Math.round(b.left) + ',' + Math.round(b.top) +
-            ' ' + Math.round(b.width) + 'x' + Math.round(b.height)).join(' | '));
+    // Sampled rather than probed in full, the same call the roll above makes:
+    // these are lazy and below the fold, all thirty are the same size, and a
+    // declared box that disagrees with the file shifts the reel when the frame
+    // lands -- a mistake made per clip, so one frame from each of the three is
+    // enough and the second copy of each adds nothing.
+    const shoalSampled = [flips[0], flips[1], flips[2]]
+      .map(f => f.querySelectorAll('img')[0]);
+    const shoalSizes = await Promise.all(shoalSampled.map(i => new Promise(res => {
+      const size = new Image();
+      size.onload = () => res([size.naturalWidth, size.naturalHeight]);
+      size.onerror = () => res(null);
+      size.src = i.src;
+    })));
+    check('home/shoal: every frame declares the box it actually fills',
+          shoalSizes.every((size, k) => size &&
+            Number(shoalSampled[k].getAttribute('width')) === size[0] &&
+            Number(shoalSampled[k].getAttribute('height')) === size[1]),
+          shoalSampled.map((i, k) => i.getAttribute('src').split('/').pop() + ' declared ' +
+            i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
+            (shoalSizes[k] ? shoalSizes[k].join('x') : 'unreachable')).join(', '));
 
-    // In step the three are one animation of three panels, all changing on the
-    // same beat. Different paces is what makes them three sequences that happen
-    // to overlap -- so the paces have to be different, and the count they are
-    // divided by is the same for all three, which is what makes that true of the
-    // frames rather than only of the passes.
-    const paces = flips.map(f => f.style.getPropertyValue('--pace').trim());
-    check('home/shoal: no two sequences step on the same beat',
-          new Set(paces).size === 3 &&
+    // The arrangement, which is what the percentages are for and the one claim
+    // no single slot can make on its own. Two diagonals: the first descends
+    // left to right, the second descends right to left, and they have to cross
+    // rather than run parallel -- which is a statement about the pair of them
+    // and about the middle two, whose spans must overlap.
+    const strokeA = flipBoxes.slice(0, 3), strokeB = flipBoxes.slice(3);
+    check('home/shoal: the first diagonal falls to the right',
+          strokeA.every((b, k) => !strokeA[k + 1] ||
+            (strokeA[k + 1].left > b.left && strokeA[k + 1].top > b.top)),
+          strokeA.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+    check('home/shoal: the second diagonal falls to the left',
+          strokeB.every((b, k) => !strokeB[k + 1] ||
+            (strokeB[k + 1].left < b.left && strokeB[k + 1].top > b.top)),
+          strokeB.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+    check('home/shoal: the two strokes cross rather than run beside each other',
+          strokeA[1].left < strokeB[1].right && strokeB[1].left < strokeA[1].right &&
+          Math.abs(strokeA[1].top - strokeB[1].top) < 1 &&
+          Math.abs(strokeA[1].left - strokeB[1].left) > 1,
+          'middles at ' + Math.round(strokeA[1].left) + ' and ' +
+          Math.round(strokeB[1].left) + ', ' + Math.round(strokeA[1].width) + ' wide');
+
+    // Each clip is on the board twice. At one phase the two copies hold the same
+    // frame at the same moment, which reads as a duplicated tile rather than as
+    // a sequence -- so the second copy of each is offset, and by half its own
+    // pass, which is the furthest from its twin it can be.
+    const phased = ['manta', 'whale', 'whaleshark'].map(name => {
+      const pair = flips.filter((f, k) => dirs[k] === name);
+      const pace = parseFloat(pair[0].style.getPropertyValue('--pace'));
+      const offsets = pair.map(f =>
+        Math.abs(parseFloat(f.style.getPropertyValue('--phase') || '0')));
+      return { name, pace, offsets, ok: pair.length === 2 &&
+        new Set(pair.map(f => f.style.getPropertyValue('--pace').trim())).size === 1 &&
+        Math.abs(Math.abs(offsets[0] - offsets[1]) - pace / 2) < 0.01 };
+    });
+    check('home/shoal: each clip\'s two copies are half a pass apart',
+          phased.every(p => p.ok),
+          phased.map(p => p.name + ' ' + p.pace + 's ' + p.offsets.join('/')).join(' | '));
+
+    // In step the six would change together every quarter second. Three paces
+    // over one frame count is what makes them sequences that happen to overlap.
+    check('home/shoal: no two clips step on the same beat',
+          new Set(flips.map(f => f.style.getPropertyValue('--pace').trim())).size === 3 &&
           new Set(flips.map(f => f.style.getPropertyValue('--frames').trim())).size === 1,
-          paces.join(' '));
+          flips.map(f => f.style.getPropertyValue('--pace').trim()).join(' '));
 
-    // The edge is what keeps three dark blue clips lying on each other from
-    // reading as one smeared picture. currentColor rather than a colour of its
-    // own is what makes it right in every mode without a rule for any of them,
-    // so the value that matters is that it resolves to the text colour.
-    const edge = d.defaultView.getComputedStyle(
+    // The hill. An <img> and not a background, which is the whole reason it
+    // survives dark mode: the theme inverts the page whole and re-inverts <img>,
+    // so a background would be the one thing on the board with an orange sky.
+    // Positioned rather than in the flow, so the board's ratio still shapes it,
+    // and behind everything since it is written before the slots.
+    const ground = d.querySelector('.shoal-ground');
+    const groundBox = ground && ground.getBoundingClientRect();
+    check('home/shoal: the hill is a picture, not a background',
+          !!ground && ground.tagName === 'IMG' &&
+          d.defaultView.getComputedStyle(
+            d.querySelector('.shoal-board')).backgroundImage === 'none',
+          ground ? ground.tagName + '/' + ground.getAttribute('src').split('/').pop()
+                 : 'no ground');
+    check('home/shoal: it covers the board and adds no height to it',
+          !!groundBox && Math.abs(groundBox.width - boardBox.width) < 1 &&
+          Math.abs(groundBox.height - boardBox.height) < 1 &&
+          d.defaultView.getComputedStyle(ground).objectFit === 'cover',
+          groundBox ? Math.round(groundBox.width) + 'x' + Math.round(groundBox.height) +
+            ' board ' + Math.round(boardBox.width) + 'x' + Math.round(boardBox.height)
+            : 'no ground');
+    check('home/shoal: the reels are laid over the hill, not under it',
+          !!ground && flips.every(f =>
+            ground.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING),
+          ground ? 'ground first of ' + (flips.length + 1) : 'no ground');
+
+    // Dark mode is where a background would have given itself away. The page
+    // inverts whole; the hill has to be inverted back, which is the treatment
+    // every other photograph on the site gets and the one <video> had to be
+    // given a rule for.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    // Re-inverted rather than left alone: the theme's dark mode inverts the page
+    // whole, and cancelling that on the picture is an invert of its own. The
+    // skulls' `ioda` opt-out is the other case -- invert(0), staying flipped --
+    // and a ground that took it would be an orange sky under blue grass.
+    check('home/shoal: dark mode leaves the hill in true tone',
+          d.defaultView.getComputedStyle(d.querySelector('.shoal-ground')).filter
+            === 'invert(1)' &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          d.defaultView.getComputedStyle(d.querySelector('.shoal-ground')).filter);
+    localStorage.setItem('appearance', 'light');
+    d = await load('/');
+
+    // The shoalEdge is what keeps six clips lying on each other and on a photograph
+    // from reading as one picture. currentColor rather than a colour of its own
+    // is what makes it right in every mode without a rule for any of them.
+    const shoalEdge = d.defaultView.getComputedStyle(
       d.querySelector('.stop-motion-window'));
     check('home/shoal: every window is outlined in the page\'s own ink',
-          edge.outlineStyle === 'solid' && parseFloat(edge.outlineWidth) >= 1 &&
-          edge.outlineColor === d.defaultView.getComputedStyle(d.body).color,
-          edge.outlineWidth + ' ' + edge.outlineStyle + ' ' + edge.outlineColor);
+          shoalEdge.outlineStyle === 'solid' && parseFloat(shoalEdge.outlineWidth) >= 1 &&
+          shoalEdge.outlineColor === d.defaultView.getComputedStyle(d.body).color,
+          shoalEdge.outlineWidth + ' ' + shoalEdge.outlineStyle + ' ' + shoalEdge.outlineColor);
 
     // The step count is the one part of the mechanism that cannot be read back
     // off this run: reduced motion is forced, which resets the whole animation
@@ -1194,27 +1260,33 @@ function loadNarrow(url, width) {
     // with no fallback, since a browser that dropped it would slide smoothly
     // instead of stepping -- is put to a probe of the same shape in the same
     // engine.
-    let declaredSteps = null;
-    for (const sheet of Array.from(d.styleSheets)) {
-      let rules;
-      try { rules = Array.from(sheet.cssRules); } catch (e) { continue; }
-      for (const rule of rules) {
-        if (rule.selectorText !== '.stop-motion-reel') continue;
-        // The inner var() has parentheses of its own, so the capture has to
-        // allow for them rather than stop at the first close.
-        const m = /steps\(((var\([^)]*\))|[^)]*)\)/.exec(rule.style.animation ||
-                                                        rule.style.animationTimingFunction || '');
-        if (m) declaredSteps = m[1].trim();
-      }
-    }
+    // Read out of the compiled stylesheet rather than through the CSSOM. An
+    // `animation` shorthand carrying var() is a pending substitution: with a
+    // longhand set beside it, neither rule.style.animation nor the longhands it
+    // covers serialise -- and Chrome drops the shorthand from rule.cssText
+    // altogether, so the declaration is simply not there to read. The file is
+    // same-origin, and what is being asserted is what was authored.
+    const sheetHref = d.querySelector('link[rel="stylesheet"][href*="main"]');
+    const sheetText = sheetHref ? await (await fetch(sheetHref.href)).text() : '';
+    const reelRule = /\.stop-motion-reel\s*\{([^}]*)\}/.exec(sheetText);
+    const declared = reelRule ? reelRule[1] : '';
+    const stepsMatch = /steps\(((var\([^)]*\))|[^)]*)\)/.exec(declared);
+    const declaredSteps = stepsMatch ? stepsMatch[1].trim() : null;
+    const delayMatch = /animation-delay:\s*([^;]+)/.exec(declared);
+    const declaredDelay = delayMatch ? delayMatch[1].trim() : null;
+
     check('home/shoal: the step count is the frame count, not a number of its own',
           declaredSteps === 'var(--frames)', 'steps(' + declaredSteps + ')');
+    // The shorthand resets every longhand it does not name, delay included, so a
+    // phase written inside it would be wiped by the declaration carrying it.
+    check('home/shoal: the phase is set after the shorthand, not inside it',
+          declaredDelay === 'var(--phase, 0s)', 'animation-delay: ' + declaredDelay);
 
-    const probe = d.createElement('div');
-    probe.style.cssText = '--frames: 7; animation-timing-function: steps(var(--frames))';
-    d.body.appendChild(probe);
-    const substituted = d.defaultView.getComputedStyle(probe).animationTimingFunction;
-    probe.remove();
+    const stepProbe = d.createElement('div');
+    stepProbe.style.cssText = '--frames: 7; animation-timing-function: steps(var(--frames))';
+    d.body.appendChild(stepProbe);
+    const substituted = d.defaultView.getComputedStyle(stepProbe).animationTimingFunction;
+    stepProbe.remove();
     check('home/shoal: the browser substitutes the frame count into steps()',
           substituted === 'steps(7)', substituted);
 
@@ -1225,10 +1297,11 @@ function loadNarrow(url, width) {
     const shoalNarrowBoard = d.querySelector('.shoal-board').getBoundingClientRect();
     const narrowFlips = Array.from(d.querySelectorAll('.stop-motion'));
     check('home/shoal/narrow: the crossing keeps its proportions',
-          narrowFlips.length === 3 && narrowFlips.every(f => {
+          narrowFlips.length === 6 && narrowFlips.every(f => {
             const b = f.getBoundingClientRect();
             const want = parseFloat(f.parentElement.style.getPropertyValue('--slot-left'));
-            return Math.abs((b.left - shoalNarrowBoard.left) / shoalNarrowBoard.width * 100 - want) < 0.5;
+            return Math.abs((b.left - shoalNarrowBoard.left) /
+                            shoalNarrowBoard.width * 100 - want) < 0.5;
           }),
           narrowFlips.map(f => {
             const b = f.getBoundingClientRect();

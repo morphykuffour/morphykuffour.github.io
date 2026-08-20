@@ -1669,14 +1669,17 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 // The board is the containing block and nothing else. Where each reel sits on
 // it is not in this file -- three percentages set on each slot in
 // index.markdown, where the arrangement is composed, exactly as the clips over
-// the collage are placed on the picture. So a fourth fish is three more numbers
-// there rather than another rule down here, and the crossing holds at every
-// width instead of coming apart as the column narrows.
+// the collage are placed on the picture. So a seventh reel is three more
+// numbers there rather than another rule down here, and the crossing holds at
+// every width instead of coming apart as the column narrows.
 //
-// The board needs a ratio of its own because everything inside it is out of the
-// flow and contributes no height. Square is what the arrangement asks for: a
-// slot 40% of the width is 71% of it tall at the stills' 9:16, which leaves
-// about a quarter of the board's height to stagger three of them down.
+// The board needs a ratio of its own because everything on it is out of the
+// flow and contributes no height -- the hill behind them included. 4:3 is what
+// the two of them together ask for. The arrangement wants room across for the
+// arms of an X to clear each other, and the photograph behind it is 16:9, so a
+// squarer board crops more of the hill's sweep away than it is worth: at 4:3,
+// `cover` keeps three quarters of the width and all of the height, which is a
+// gentle crop that leaves the sky on top and the grass under the bottom.
 
 .shoal {
   margin: 3rem 0 0;
@@ -1696,8 +1699,32 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 
 .shoal-board {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 3;
   margin-bottom: .8rem;
+}
+
+// The hill behind them. An <img> rather than a background image, which is the
+// whole reason it comes out in true tone: the theme's dark mode is a whole-page
+// `filter: invert(1)` with <img> re-inverted, and a CSS background is not an
+// <img> -- it would be the one thing on the board showing an orange sky. The
+// cascades needed a rule of their own for exactly this, because <video> is not
+// in that list either; being a picture, this needs none.
+//
+// Absolutely positioned, so it sets no height and the board's own ratio is
+// still what shapes it, and `cover` because the photograph is 16:9 and the
+// board is square -- which crops the sides and keeps the full height, so the
+// sky stays at the top and the grass under the bottom.
+.shoal-ground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  // Against the theme, which centres every image in the column and holds it to
+  // the column's width. This one is a ground rather than a picture in the flow.
+  margin: 0;
+  max-width: none;
 }
 
 .shoal-slot {
@@ -1751,6 +1778,12 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   width: calc(var(--frames) * 100%);
   height: 100%;
   animation: stop-motion var(--pace) steps(var(--frames)) infinite;
+
+  // After the shorthand, not inside it: `animation` resets every longhand it
+  // does not name, delay included, so a phase written into the shorthand above
+  // would be reset by the very declaration carrying it. The default is no
+  // offset, which is what a reel that is the only copy of its clip wants.
+  animation-delay: var(--phase, 0s);
 }
 
 .stop-motion-reel img {

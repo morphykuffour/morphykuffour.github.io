@@ -152,62 +152,103 @@ white box with a drawing in it.
 
 {%- comment -%}
 The shoal that closes the page: three stop motions -- a manta rising, a humpback
-turning, a whale shark feeding -- laid over each other rather than stacked down
-the column. Ten stills off a clip each, held about a quarter second and
-replaced. Stills rather than the footage they were cut from, which is the
-opposite of the call the five cascades upstairs make; the reasoning is in
-_includes/stopmotion.html, next to the mechanism it explains.
+turning, a whale shark feeding -- crossed over the Windows XP hill. Ten stills
+off a clip each, held about a quarter second and replaced. Stills rather than
+the footage they were cut from, which is the opposite of the call the five
+cascades upstairs make; the reasoning is in _includes/stopmotion.html, next to
+the mechanism it explains.
 
-Crossing rather than in a row, which is the whole point of putting them
-together. Three portrait clips side by side is a strip of three panels and reads
-as one video in three columns; overlapped and staggered they read as what they
-are, three separate sequences that happen to share a piece of water. The board
-is the containing block and each reel is placed on it by three percentages, the
-way the clips over the collage are placed on the picture -- authored here, where
-the arrangement they are measured against is, rather than as a rule per reel a
-file away in main.scss. Being percentages, the crossing holds at every width:
-they ride the board down as it narrows instead of drifting across it.
+Six reels for three clips, laid along two diagonals that cross in the middle.
+One runs manta, whale, whale shark from the top left down to the bottom right;
+the other runs whale shark, whale, manta from the top right down to the bottom
+left. So each clip sits at two opposite corners of the board and each diagonal
+carries all three -- the crossing is between the animals rather than merely
+between two lines, which is the whole reason for six rather than three.
 
-Three paces rather than one, which is the other half of the mix. In step they
-would be one animation of three panels, changing together every quarter second;
-at 2.5, 3.1 and 3.7 seconds a pass no two land at the same moment and the
-combination does not come back round for minutes.
+The two middles are pulled apart rather than left on top of each other. Dead
+centre both diagonals want the same square, and one reel exactly behind another
+is a reel you cannot see; a few points either side and the X pinches in the
+middle instead, which is the shape it is copied from.
 
-Ten stills each is a number picked for the clips rather than for the code. They
-run ten to fifteen seconds, so ten is roughly one a second, and a second apart
-is the interval at which these read as a sequence of drawings instead of a video
-someone dropped frames from. It is not baked in anywhere: the count is a
-parameter, written into the markup as a custom property and read back by the
-stylesheet for both the reel's width and its step count.
+Six reels at a quarter of the board leave the arms clear of each other, which
+matters here more than it would on a plain ground: the hill is meant to be seen
+between them. Wider and they tile the board and it is a mosaic with a strip of
+sky at the top; at this size the X reads as an X and the sweep of the hill runs
+under it.
 
-The clips are other people's, saved the way the ones on /art/ were. Two carry
-their maker's line burnt into the picture, which is a caption I did not write
-and will not crop off; the caption under the board says so.
+Each clip's two copies are half a pass out of phase. At one phase they are
+identical twins holding the same frame at the same moment, which reads as a
+mistake; half a pass apart they are one sequence seen at two points in it --
+the trick the cascade upstairs plays with three copies of a video, played here
+with two copies of a reel.
+
+Where each reel sits is authored here rather than in the stylesheet, three
+percentages to a slot, the way the clips over the collage are placed on the
+picture. Being percentages, the crossing holds at every width: the reels ride
+the board down as it narrows instead of drifting across it, and a seventh is
+three more numbers rather than another rule in main.scss.
+
+The hill behind them is an <img> rather than a background, which is what gets it
+the theme's dark-mode handling for free -- the page inverts whole and re-inverts
+<img> back to true tone, and a CSS background would be the one thing on the
+board coming out in negative. It is absolutely positioned and covers the square,
+so it sets no height of its own; the board's ratio does that.
+
+The clips are other people's, and so is the hill. Two of the clips carry their
+maker's line burnt into the picture, which is a caption I did not write and will
+not crop off; the caption under the board says all of it.
 {%- endcomment -%}
 <section class="shoal">
   <h2>Three, crossing</h2>
   <figure>
     <div class="shoal-board">
-      <div class="shoal-slot" style="--slot-left: 0%; --slot-top: 0%; --slot-width: 40%">
+      <img class="shoal-ground" src="{{ site.baseurl }}/images/bliss.jpg" alt=""
+           width="2048" height="1152" loading="lazy" decoding="async">
+
+      {%- comment -%}
+      The first diagonal, top left down to bottom right.
+      {%- endcomment -%}
+      <div class="shoal-slot" style="--slot-left: 0%; --slot-top: 0%; --slot-width: 24%">
         {%- include stopmotion.html
               dir="manta" count=10 width=480 height=854 pace="2.5s"
               label="Ten frames of a manta ray rising through blue water towards the surface, from a distant speck to a white underside filling the frame." -%}
       </div>
-      <div class="shoal-slot" style="--slot-left: 30%; --slot-top: 28%; --slot-width: 40%">
+      <div class="shoal-slot" style="--slot-left: 31%; --slot-top: 21.55%; --slot-width: 24%">
         {%- include stopmotion.html
               dir="whale" count=10 width=480 height=854 pace="3.1s"
               label="Ten frames of a humpback whale turning through deep blue water below a broken surface, trailing a long cloud of bubbles behind it." -%}
       </div>
-      <div class="shoal-slot" style="--slot-left: 60%; --slot-top: 6%; --slot-width: 40%">
+      <div class="shoal-slot" style="--slot-left: 76%; --slot-top: 43.1%; --slot-width: 24%">
         {%- include stopmotion.html
               dir="whaleshark" count=10 width=480 height=854 pace="3.7s"
               label="Ten frames of a whale shark: a pale open mouth filling the frame head-on, then the spotted back and tail passing overhead through a cloud of small fish." -%}
       </div>
+
+      {%- comment -%}
+      The second, top right down to bottom left, carrying the same three the
+      other way round and each of them half a pass behind its own first copy.
+      {%- endcomment -%}
+      <div class="shoal-slot" style="--slot-left: 76%; --slot-top: 0%; --slot-width: 24%">
+        {%- include stopmotion.html
+              dir="whaleshark" count=10 width=480 height=854 pace="3.7s" phase="-1.85s"
+              label="The same whale shark sequence, half a pass further on." -%}
+      </div>
+      <div class="shoal-slot" style="--slot-left: 45%; --slot-top: 21.55%; --slot-width: 24%">
+        {%- include stopmotion.html
+              dir="whale" count=10 width=480 height=854 pace="3.1s" phase="-1.55s"
+              label="The same humpback sequence, half a pass further on." -%}
+      </div>
+      <div class="shoal-slot" style="--slot-left: 0%; --slot-top: 43.1%; --slot-width: 24%">
+        {%- include stopmotion.html
+              dir="manta" count=10 width=480 height=854 pace="2.5s" phase="-1.25s"
+              label="The same manta sequence, half a pass further on." -%}
+      </div>
     </div>
     <figcaption>
-      Thirty stills off three clips, ten each -- a manta rising, a humpback
-      turning, a whale shark feeding. None of the footage is mine, and neither
-      are the lines written across two of them.
+      Thirty stills off three clips, ten each &mdash; a manta rising, a humpback
+      turning, a whale shark feeding &mdash; crossed twice over Bliss, the hill
+      Charles O&rsquo;Rear photographed for Windows XP. None of it is mine: not
+      the footage, not the lines written across two of the clips, not the hill.
     </figcaption>
   </figure>
 </section>
