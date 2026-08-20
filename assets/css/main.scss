@@ -1102,6 +1102,22 @@ body[a="purple"] {
   .home-avatar img { width: 2.8rem; height: 2.8rem; }
 }
 
+// The alias is a link now, to the song it points at. It keeps the heading's own
+// colour rather than taking the page's link colour: at this size an alias in
+// link blue is the loudest thing on the page and reads as navigation, which is
+// the opposite of what a name is doing at the top of it. The underline is left
+// to carry it, which is the same call the tagline's own links make below.
+//
+// `from-font` rather than a thickness of this file's choosing: the rule scales
+// with the alias, which is around three times the body size, and a fixed
+// hairline under it reads as a rendering fault while a fixed thick one reads as
+// a strikethrough that missed.
+header h1 .home-alias {
+  color: inherit;
+  text-decoration-thickness: from-font;
+  text-underline-offset: .12em;
+}
+
 // The tagline rides on the same line as the alias, at a third of its size so
 // it reads as a subtitle rather than a second title. Colour is inherited and
 // knocked back with opacity, which keeps it correct in all three modes without

@@ -2,12 +2,19 @@
 layout: default
 ---
 {%- comment -%}
-Shadows the theme's own home layout so the title line can carry a tagline
-after the alias, and the name can be respelled here -- circumflex o, open e, eta u --
-without those letters leaking into <title>, the feed, or any other page's
-heading, and so the përi portrait can sit beside the alias, linked to the
-GitHub account it is served from.
-Everything else is the upstream layout verbatim.
+Shadows the theme's own home layout so the title line can carry a tagline after
+the alias, so the përi portrait can sit beside it, linked to the GitHub account
+it is served from, and so the alias itself can be a link -- none of which the
+upstream layout has anywhere to put. Everything else is that layout verbatim.
+
+The alias used to be respelled here -- circumflex o, open e, eta u -- so those
+letters could not leak into <title>, the feed, or any other page's heading. It
+is spelled plainly now, which is the one thing the respelling could not be:
+readable. site.title was always the plain word, so nothing downstream changes.
+
+Where it points is a song rather than a profile, which is the whole reason it is
+authored here rather than added to _data/menu.yml with the rest of the elsewhere
+links. Those are places to find me; this is not one.
 {%- endcomment -%}
 <header>
   <div class="home-id">
@@ -16,7 +23,8 @@ Everything else is the upstream layout verbatim.
       <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
            alt="{{ site.author }}">
     </a>
-    <h1>{{ site.title | replace_first: 'o', 'ô' | replace_first: 'e', 'ɛ' | replace_first: 'u', 'η' }}{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+    <h1><a class="home-alias" href="https://www.youtube.com/watch?v=wEBlaMOmKV4"
+           title="Sam Cooke, A Change Is Gonna Come">{{ site.title }}</a>{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
   </div>
   {%-if site.theme_config.show_description-%}
     <p>{{ site.description }}</p>
