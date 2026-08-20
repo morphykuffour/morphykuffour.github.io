@@ -120,10 +120,6 @@ photograph on a dark page is leave its colours alone.
         {%- endfor -%}
       </div>
     </div>
-    <figcaption>
-      Ten pictures saved off other people&rsquo;s feeds. None of them are mine,
-      and I do not know whose they are.
-    </figcaption>
   </figure>
 </section>
 
