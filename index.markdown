@@ -91,36 +91,86 @@ screenshots had their bars cut off before the pictures were cut to height --
 chrome is not picture -- and two more had a mute badge trimmed off the corner
 for the same reason. Nothing else in any of the ten was touched.
 
-The strip is written out twice. The loop walks it exactly one pass to the left
-and starts over, which puts the copy where the original stood -- so there is no
-jump to hide, and no script is needed to hide one.
+The strip itself is _includes/roll.html: the doubled track, the loop that walks
+it one pass and starts over, and the reasons for both. The skulls under this
+one run through the same include, which is why neither this section nor that
+one says anything about how a roll is made.
 
-The images carry no alt text of their own, deliberately: ten of them each
-describing a different picture is ten interruptions in the middle of a page,
-and none of them is load-bearing -- the strip is a mood, not an argument. The
-caption below names what the strip is, once.
-
-They take the theme's own dark-mode handling rather than opting out of it with
-`ioda`, which is the opposite of the call the skulls here made before them.
-Those were pencil on white and wanted to be the light half of an inverted page;
-these are photographs and paintings, and the only right thing to do to a
-photograph on a dark page is leave its colours alone.
+These take the theme's own dark-mode handling rather than the include's `ioda`
+opt-out, which is the opposite of the call the skulls below make. Those are
+pencil on white and want to be the light half of an inverted page; these are
+photographs and paintings, and the only right thing to do to a photograph on a
+dark page is leave its colours alone.
 {%- endcomment -%}
-<section class="frieze">
+<section class="roll frieze">
   <h2>Frieze</h2>
   <figure>
-    <div class="frieze-window">
-      <div class="frieze-track">
-        {%- for pass in (1..2) -%}
-        {%- for picture in site.data.frieze -%}
-        <img src="{{ site.baseurl }}/images/frieze/{{ picture.file }}"
-             alt="" width="{{ picture.width }}" height="{{ picture.height }}"
-             loading="lazy" decoding="async">
-        {%- endfor -%}
-        {%- endfor -%}
-      </div>
-    </div>
+    {%- include roll.html data=site.data.frieze dir="frieze" -%}
+    <figcaption>
+      Ten pictures saved off other people&rsquo;s feeds. None of them are mine,
+      and I do not know whose they are.
+    </figcaption>
   </figure>
+</section>
+
+{%- comment -%}
+The skulls under the frieze: sixteen studies of one skull from sixteen angles,
+rolling past in a strip of their own under the strip of photographs. They are
+Jeff Searle's, sliced out of one sheet of his and listed in _data/skulls.yml,
+which carries each one's own width -- the drawings are not all the same shape.
+
+Two rolls rather than one mixed strip, and this is the whole of why: these are
+sixteen views of a single object and those are ten unrelated pictures. Run
+together they would read as one grab bag in which the skulls happen to recur;
+kept apart, each strip is the kind of thing it is, and only the second one can
+carry a credit and a line about the cut.
+
+The credit is in the caption because the sheet's own signature sat in the
+margin under the bottom-left drawing, and a margin is the one part of a sheet
+that does not survive being cut into sixteen; said in words under the strip it
+is legible, which at this size it never was.
+
+The `ioda` on the images is the include's opt-out from the theme's dark mode,
+and it is what keeps that mode from inverting these back to ink-on-white --
+pencil lines on a dark page want to be the light half, not a white box with a
+drawing in it.
+{%- endcomment -%}
+<section class="roll skull-roll">
+  <h2>Heads will roll</h2>
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+    <figcaption>
+      Sixteen studies of one skull by
+      <a href="https://jeffsearle.blogspot.co.uk/" rel="noopener">Jeff Searle</a>,
+      off a single sheet of his. The drawings are his, not mine.
+    </figcaption>
+  </figure>
+
+  {%- comment -%}
+  The line under the roll, which is there because it describes the cut. The
+  sixteen were sliced out of one sheet on the gutters between the drawings
+  rather than on an even quarter grid -- he drew them where they fit rather than
+  to a ruler, and a quarter cut takes the jaw off four of them. That is the
+  passage exactly: along the joints, not through them.
+
+  It is Searle's own quotation as well as Plato's. He is the man whose sheet was
+  cut, and it is his post on Plato's dialectic that the line is lifted from --
+  which is why the attribution goes by way of him rather than straight to a
+  translation, and why this sits inside the roll's section rather than off on
+  its own between two things.
+
+  Inside .skull-roll rather than between it and the shoal, for the same reason:
+  it belongs to the drawings above it. The gap below is the shoal's own top
+  margin, so nothing here needs to make one.
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <p>&ldquo;&hellip;to be able to cut up each kind according to its species
+      along its natural joints, and to try not to splinter any part, as a bad
+      butcher might do.&rdquo;</p>
+    <cite>&mdash; Plato, <i>Phaedrus</i> 265e, quoted by Searle in
+      <a href="https://jeffsearle.blogspot.com/2021/06/dialectics-part-3-plato.html"
+         rel="noopener">Dialectics, part 3</a></cite>
+  </blockquote>
 </section>
 
 {%- comment -%}
