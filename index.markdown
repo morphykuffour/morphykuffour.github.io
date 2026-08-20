@@ -48,3 +48,33 @@ three more tiles on it rather than as something dropped over the pictures.
           label="A cartoon of four frogs riding in a cream-coloured car along a road." -%}
   </div>
 </figure>
+
+{%- comment -%}
+The rain that closes the page, under the board. Pure CSS: there is no script
+behind it and no <canvas> -- an integer is animated in the stylesheet, read back
+through counters, and printed as glyphs, after the technique in
+https://dev.to/tetragius/pure-css-matrix-code-effect-5b6k. What falls is older
+than the film's katakana; the alphabets are in main.scss, where a counter style
+is just a list of symbols.
+
+The columns are written out rather than drawn, because each one has to carry
+three numbers of its own: how long its fall takes, how far into that fall it
+starts, and where it parks when the reader has asked for less motion. Without
+the middle one they fall in step, which is a curtain rather than rain; without
+the last one they park above the band, which is a black box with nothing in it.
+The numbers come off the loop counter rather than being written out one by one
+-- three multipliers, each coprime to its modulus, so no two columns get the
+same pair and the pattern does not repeat across the band.
+
+Twenty-six of them. They divide whatever width the band has between them, so
+this is the count at every screen size; it is a number picked for how it looks
+rather than for anything the layout needs.
+{%- endcomment -%}
+<div class="matrix-rain" aria-hidden="true">
+  {%- for column in (1..26) -%}
+  {%- assign pace = forloop.index0 | times: 7 | modulo: 9 | times: 5 | plus: 40 -%}
+  {%- assign lag = forloop.index0 | times: 13 | modulo: 19 | times: 4 -%}
+  {%- assign rest = forloop.index0 | times: 11 | modulo: 7 | times: 12 | minus: 30 -%}
+  <span style="--pace: {{ pace | divided_by: 10.0 }}s; --lag: -{{ lag | divided_by: 10.0 }}s; --rest: {{ rest }}%"></span>
+  {%- endfor -%}
+</div>

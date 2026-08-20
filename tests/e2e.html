@@ -783,6 +783,91 @@ function loadNarrow(url, width) {
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
+
+    // --- the rain ------------------------------------------------------------
+    // The band under the board. There is no script behind it: an integer is
+    // animated in the stylesheet, read back through counters and printed as
+    // glyphs. Which is exactly why it belongs here rather than in a grep --
+    // whether @property registers the integer, whether mod() resolves inside
+    // it, and whether a counter prints anything at all are questions only a
+    // browser answers, and the failure mode of any of them is an empty box.
+    d = await load('/');
+    const rain = d.querySelector('.matrix-rain');
+    const columns = Array.from(d.querySelectorAll('.matrix-rain span'));
+    check('home/rain: the band closes the page',
+          !!rain && rain.getBoundingClientRect().top >
+            d.querySelector('.home-collage').getBoundingClientRect().top,
+          rain ? 'band @' + Math.round(rain.getBoundingClientRect().top) : 'no band');
+    check('home/rain: every column is there', columns.length === 26,
+          columns.length + ' columns');
+
+    // A column with nothing in it still has a box; one with glyphs in it has a
+    // tall, narrow one, because the writing mode turns the line downward. So
+    // the shape is the evidence that the counters printed.
+    const strips = columns.map(c => c.getBoundingClientRect());
+    check('home/rain: the counters print a column of glyphs',
+          strips.every(b => b.height > 60 && b.height > b.width),
+          Math.round(strips[0].width) + 'x' + Math.round(strips[0].height));
+
+    // The registered property is what the whole effect hangs on: the timer is
+    // an <integer>, and each glyph is that integer walked forward and wrapped
+    // with mod(). A browser that drops either hands back something that is not
+    // a number in range, and the band goes quietly blank.
+    const gs = d.defaultView.getComputedStyle(columns[0]);
+    const timer = parseFloat(gs.getPropertyValue('--rain-t'));
+    const glyphs = [1, 6, 12].map(n => parseFloat(gs.getPropertyValue('--rain-g' + n)));
+    check('home/rain: the timer resolves to an integer',
+          Number.isInteger(timer) && timer >= 1 && timer <= 26, '--rain-t=' + timer);
+    check('home/rain: each glyph is the timer wrapped into the alphabet',
+          glyphs.every(v => Number.isInteger(v) && v >= 1 && v <= 26),
+          glyphs.join(' '));
+
+    // This run forces reduced motion, so what is testable is the still frame:
+    // the animations are off, and every column is parked somewhere on the band
+    // rather than at the start of its fall, which is above the band and out of
+    // sight. Without the resting offsets that is a black box and nothing in it.
+    const band = rain.getBoundingClientRect();
+    check('home/rain: reduced motion stops the fall',
+          d.defaultView.getComputedStyle(columns[0]).animationName === 'none',
+          d.defaultView.getComputedStyle(columns[0]).animationName);
+    check('home/rain: every column is parked in view of the band',
+          strips.every(b => b.top < band.bottom && b.bottom > band.top),
+          strips.filter(b => b.top >= band.bottom || b.bottom <= band.top).length + ' off the band');
+    check('home/rain: the columns park at different heights',
+          new Set(strips.map(b => Math.round(b.top))).size > 3,
+          new Set(strips.map(b => Math.round(b.top))).size + ' distinct offsets');
+
+    // The band is authored black-on-green like the code blocks, so it takes the
+    // same exemption from the whole-page invert; purple mode filters nothing and
+    // is given the colours outright instead.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    check('home/rain: the band is re-inverted back to true tone in dark mode',
+          d.defaultView.getComputedStyle(d.querySelector('.matrix-rain')).filter === 'invert(1)',
+          d.defaultView.getComputedStyle(d.querySelector('.matrix-rain')).filter);
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    const purple = d.defaultView.getComputedStyle(d.querySelector('.matrix-rain'));
+    check('home/rain: purple mode restrikes the band rather than filtering it',
+          purple.filter === 'none' && purple.backgroundColor === 'rgb(20, 7, 34)',
+          purple.filter + ' / ' + purple.backgroundColor);
+    localStorage.setItem('appearance', 'light');
+
+    // The columns divide the band between them, so a phone gets the same
+    // twenty-six in less room rather than a band that overflows the column.
+    d = await loadNarrow('/', 420);
+    const narrowBand = d.querySelector('.matrix-rain').getBoundingClientRect();
+    const narrowColumns = Array.from(d.querySelectorAll('.matrix-rain span'));
+    check('home/rain/narrow: the columns still fit inside the band',
+          narrowColumns.length === 26 && narrowColumns.every(c => {
+            const b = c.getBoundingClientRect();
+            return b.left >= narrowBand.left - 1 && b.right <= narrowBand.right + 1;
+          }),
+          Math.round(narrowBand.width) + 'px band');
+    check('home/rain/narrow: the band adds no sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }

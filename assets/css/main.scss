@@ -692,6 +692,31 @@ body[a="purple"] {
 
   .theme-slider__marks { color: $purple-base; }
   .theme-slider__range:focus-visible { outline-color: $purple-base; }
+
+  // The rain is authored in the phosphor green, which is the one colour purple
+  // mode has no way to reach: it sets no filter on the page, so a green band
+  // would simply stay green among the violets. It is re-struck here in this
+  // palette's own colours rather than filtered into them.
+  .matrix-rain {
+    background: $purple-code-bg;
+    border-color: rgba(199, 125, 255, .35);
+  }
+
+  // The fade over the ends of the fall is the ground colour laid back over the
+  // columns, so it has to be restruck whenever the ground changes.
+  .matrix-rain::after {
+    background-image: linear-gradient(to bottom,
+      $purple-code-bg 0%, rgba(20, 7, 34, 0) 16%,
+      rgba(20, 7, 34, 0) 82%, $purple-code-bg 100%);
+  }
+
+  .matrix-rain span {
+    background-image: linear-gradient(to bottom,
+      rgba(199, 125, 255, 0) 0%,
+      rgba(199, 125, 255, .45) 40%,
+      $purple-base 88%,
+      $purple-string 100%);
+  }
 }
 
 // The resume is a PDF rather than prose, so it gets an inline viewer sized to
@@ -1223,4 +1248,246 @@ body[a="dark"] .cascade-layer { filter: invert(1); }
     width: min(74%, 14rem);
     margin: 1.4rem auto 1.6rem;
   }
+}
+
+// ---------------------------------------------------------------------------
+// Matrix rain
+// ---------------------------------------------------------------------------
+// The band that closes the homepage. The technique is the one in
+// https://dev.to/tetragius/pure-css-matrix-code-effect-5b6k -- an integer
+// animated in CSS, read back through counters, printed as glyphs -- written out
+// here rather than lifted, because what falls and what it falls in is this
+// page's rather than that article's.
+//
+// Worth doing in counters at all because the alternative is a <canvas> and a
+// rAF loop: a second animation clock on a page that already has five video
+// decoders on it, and one that keeps running when nobody is looking at the tab.
+// This one is style, so the browser drops it on its own terms and it holds
+// still for a reader who has asked for less motion, with no script to make
+// either decision.
+//
+// What falls is older than the film's katakana: hieroglyphs, cuneiform,
+// Phoenician, Old Italic, Linear B, runes and Greek, mixed down each column.
+// A counter prints whatever counter style it is handed, and a counter style is
+// just a list of symbols -- so every script below is the same mechanism as the
+// original's a-b-c, with a different alphabet behind it.
+//
+// The one cost of that: unlike letters, these need a font that carries them.
+// macOS and Windows do; a bare Linux install may not, and the miss shows as
+// boxes rather than as a fallback, so the historic faces are named ahead of
+// monospace and a reader without any of them gets tofu. Nothing here is text
+// anyone is reading, which is the only reason that is an acceptable trade.
+
+// The symbols. Each style is `cyclic`, so it maps any integer onto its list by
+// wrapping -- which is all a counter needs to be an alphabet.
+@counter-style rain-hieroglyph {
+  system: cyclic;
+  // Seated man, walking man, arms raised, the eye of Horus, a crocodile, a
+  // horned viper, an owl, a falcon, water, the ankh, a boat, a jar.
+  symbols: "\13000" "\1301C" "\13045" "\13080" "\130A7" "\13100"
+           "\13124" "\13139" "\13153" "\131CB" "\1325A" "\132F9";
+}
+
+@counter-style rain-cuneiform {
+  system: cyclic;
+  symbols: "\12000" "\1200A" "\12014" "\1202D" "\1203C"
+           "\12050" "\1207A" "\120A0" "\120FB" "\1214E";
+}
+
+@counter-style rain-phoenician {
+  system: cyclic;
+  symbols: "\10900" "\10902" "\10904" "\10906" "\10908"
+           "\1090A" "\1090C" "\1090E" "\10910" "\10912";
+}
+
+@counter-style rain-old-italic {
+  system: cyclic;
+  symbols: "\10300" "\10302" "\10304" "\10306" "\10308"
+           "\1030A" "\1030C" "\1030E" "\10310" "\10312";
+}
+
+@counter-style rain-linear-b {
+  system: cyclic;
+  symbols: "\10000" "\10002" "\10004" "\10006" "\10008"
+           "\1000A" "\1000D" "\10010" "\10012" "\10014";
+}
+
+@counter-style rain-runic {
+  system: cyclic;
+  symbols: "\16A0" "\16A6" "\16AB" "\16B1" "\16B7"
+           "\16BE" "\16C1" "\16C8" "\16D2" "\16DF";
+}
+
+// One animated value per column. Every glyph on the strip is derived from it,
+// so a column is a single running animation rather than a dozen.
+@property --rain-t {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 1;
+}
+
+// The strip, top to bottom. Twelve positions, each with the script it is
+// printed in; lower-greek is the one style already in every browser, and the
+// hieroglyphs recur because they are what this was asked for.
+$rain-scripts:
+  rain-hieroglyph, lower-greek, rain-cuneiform, rain-hieroglyph,
+  rain-phoenician, rain-linear-b, rain-hieroglyph, rain-old-italic,
+  lower-greek, rain-hieroglyph, rain-runic, rain-cuneiform;
+$rain-glyphs: length($rain-scripts);
+$rain-turn: 26; // how far the timer walks before it starts over
+
+@for $i from 1 through $rain-glyphs {
+  @property --rain-g#{$i} {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 1;
+  }
+}
+
+.matrix-rain {
+  --rain-height: 15rem;
+
+  display: flex;
+  height: var(--rain-height);
+  margin: 3rem 0 0;
+  overflow: hidden;
+  background: $matrix-bg;
+  border: 1px solid rgba(0, 255, 65, .35); // the edge the code blocks carry
+
+  // For the fade that hides the ends of the fall, which is painted over the
+  // columns rather than into them.
+  position: relative;
+
+  // So the columns can size their glyphs against the band rather than against
+  // the viewport. The band is not the viewport -- it is the text column, which
+  // stops growing at 640px and keeps shrinking below that -- and it is the band
+  // the twenty-six of them have to divide.
+  container-type: inline-size;
+
+  // A counter printing glyphs a dozen times a second is not text anyone is
+  // meant to read, and a cursor dragged down the page should not pick up a
+  // word of it.
+  user-select: none;
+}
+
+// So the strips run past the top and bottom edges instead of appearing and
+// vanishing at them. A mask on the band would have taken the band with it --
+// its black ground fading out to the page at both ends, which turns a box with
+// rain in it into a grey smear. This is the band's own colour laid back over
+// the columns instead, so only the glyphs go and the edges stay square.
+.matrix-rain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to bottom,
+    $matrix-bg 0%, rgba(0, 0, 0, 0) 16%,
+    rgba(0, 0, 0, 0) 82%, $matrix-bg 100%);
+}
+
+.matrix-rain span {
+  // Every column takes an equal share of whatever width the band has, so the
+  // count in the markup is the count on the page at any size.
+  flex: 1 1 0;
+
+  // What turns a line of glyphs into a column: the inline direction runs
+  // downward, and `upright` keeps each glyph the right way up on the way.
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+
+  // Named ahead of monospace so a system that carries the historic faces uses
+  // them; the browser walks this list per glyph, not per element, so the Greek
+  // and the hieroglyphs can come from different files in the same column.
+  font-family: "Noto Sans Egyptian Hieroglyphs", "Noto Sans Cuneiform",
+               "Noto Sans Phoenician", "Noto Sans Old Italic",
+               "Noto Sans Linear B", "Noto Sans Runic", "Segoe UI Historic",
+               "Aegyptus", monospace;
+  // A glyph is about one em across, and each column has a twenty-sixth of the
+  // band to stand in -- so on a narrow screen the em has to come down or the
+  // columns grow wider than their share and the band overflows the page. Below
+  // roughly 27rem of band the glyph is a fixed fraction of it instead, which
+  // keeps twenty-six columns fitting at any width without a breakpoint or a
+  // second count in the markup.
+  font-size: min(.9rem, 3.4cqw);
+  line-height: 1;
+
+  // The trail. A strip falls head-down, so its last glyph is the leading one:
+  // the gradient runs from nothing at the top to a near-white glyph at the
+  // bottom, painted through the glyphs rather than behind them.
+  background-image: linear-gradient(to bottom,
+    rgba(0, 255, 65, 0) 0%,
+    rgba(0, 255, 65, .45) 40%,
+    $matrix-base 88%,
+    $matrix-string 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  // Pace and head start are per column, handed over from the markup: a dozen
+  // identical columns falling in step is a curtain, not rain.
+  animation: matrix-fall var(--pace) linear var(--lag) infinite,
+             matrix-cycle 2.6s linear var(--lag) infinite;
+
+  // Each glyph is the timer a little further along, wrapped back into the
+  // alphabet -- so the strip reads as twelve glyphs turning over at twelve
+  // different moments rather than one glyph twelve times.
+  @for $i from 1 through $rain-glyphs {
+    --rain-g#{$i}: calc(mod(var(--rain-t) + #{$i}, #{$rain-turn}) + 1);
+  }
+
+  $rain-reset: "";
+  @for $i from 1 through $rain-glyphs {
+    $rain-reset: $rain-reset + "rain-g#{$i} var(--rain-g#{$i}) ";
+  }
+  counter-reset: #{unquote($rain-reset)};
+}
+
+// The scripts are dealt out three ways, one per column in turn, so the same
+// row of scripts does not run straight across the band. The glyphs already
+// differ column to column -- the timers are out of phase -- but the alphabets
+// would have lined up, and a rain with a grain in it reads as a pattern.
+@for $r from 0 through 2 {
+  $rain-print: "";
+  @for $i from 1 through $rain-glyphs {
+    $rain-print: $rain-print +
+      "counter(rain-g#{$i}, #{nth($rain-scripts, (($i + $r) % $rain-glyphs) + 1)}) ";
+  }
+  .matrix-rain span:nth-child(3n + #{$r + 1})::before {
+    content: #{unquote($rain-print)};
+  }
+}
+
+// The fall is the height of the band plus the strip's own, so a column is out
+// of sight at both ends of the pass rather than blinking out.
+@keyframes matrix-fall {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(var(--rain-height)); }
+}
+
+// And the glyphs turn over under it. One walk of the timer per cycle: the
+// property is an integer, so the tween lands on whole glyphs on its own.
+@keyframes matrix-cycle {
+  from { --rain-t: 1; }
+  to   { --rain-t: #{$rain-turn}; }
+}
+
+// Asked for less motion, the rain stops being rain: each column parks at the
+// offset the markup gives it, which leaves a still, ragged field of glyphs --
+// what a frozen frame of it looks like anyway. Without a resting place they
+// would all sit at the start of the fall, which is above the band and out of
+// sight: a black box and nothing in it.
+@media (prefers-reduced-motion: reduce) {
+  .matrix-rain span {
+    animation: none;
+    transform: translateY(var(--rest));
+  }
+}
+
+// The band is authored black-on-green like the code blocks, so it needs the
+// same exemption from the theme's whole-page invert; without it the band is the
+// one white box on a dark page. Purple mode sets no filter at all and takes its
+// own colours instead, with the rest of that palette.
+body[a="dark"] .matrix-rain { filter: invert(1); }
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] .matrix-rain { filter: invert(1); }
 }
