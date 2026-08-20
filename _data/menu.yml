@@ -26,6 +26,15 @@ entries:
       show_more: false
 
   - title: elsewhere
+    # The second stack, floated beside this sub-list. It hangs off the entry
+    # rather than off the layout because a float only moves what comes after it
+    # in the source, and only _includes/menu_item.html gets to write anything
+    # between an entry and its own children.
+    cascade:
+      file: dragon
+      width: 480
+      height: 480
+      label: A dragon over a burning castle at night, in black and white.
     # Each icon: names a file in _includes/icons. It is drawn in currentColor
     # at 1em, so it follows the link colour of whichever mode is on.
     entries:

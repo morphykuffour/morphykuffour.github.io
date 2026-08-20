@@ -587,88 +587,135 @@ function loadNarrow(url, width) {
     check('home: music sits in the menu under unc',
           menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
 
-    // --- the homepage cascade -----------------------------------------------
+    // --- the cascades --------------------------------------------------------
     // Three copies of one clip stepped down and right of each other, floated
-    // beside the menu. What is worth asserting is what only a laid-out page
-    // can answer: that the stack really is offset rather than stacked flat,
-    // that the float really does move the menu's lines, and that the three
-    // are running a third of the clip apart instead of in lockstep.
+    // beside the text next to them: one against the menu, one against the
+    // elsewhere list. What is worth asserting is what only a laid-out page can
+    // answer -- that each stack is really offset rather than stacked flat,
+    // that it takes the shape of its own clip, and that the float really does
+    // move the lines beside it.
     localStorage.setItem('appearance', 'light');
     d = await load('/');
-    const cascade = d.querySelector('.home-cascade');
-    const layers = Array.from(d.querySelectorAll('.home-cascade-layer'));
-    check('home: the cascade has three layers', layers.length === 3, layers.length + ' layers');
-    check('home: the clip carries no audio track',
-          layers.every(v => v.muted && !(v.mozHasAudio || v.webkitAudioDecodedByteCount > 0)),
-          'muted=' + layers.map(v => v.muted).join(',') +
-          ' decodedAudioBytes=' + layers.map(v => v.webkitAudioDecodedByteCount).join(','));
+    const stacks = Array.from(d.querySelectorAll('.cascade'));
+    check('home: the page carries both cascades', stacks.length === 2, stacks.length + ' stacks');
 
-    const boxes = layers.map(v => v.getBoundingClientRect());
-    check('home: each layer is stepped down and to the right of the one behind',
-          boxes[1].left > boxes[0].left && boxes[1].top > boxes[0].top &&
-          boxes[2].left > boxes[1].left && boxes[2].top > boxes[1].top,
-          boxes.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
-    // The offsets are derived from the box, so the stack should end up filling
-    // it exactly: back layer flush with the left edge, front flush with the
-    // right, and the same on the vertical.
-    const cbox = cascade.getBoundingClientRect();
-    check('home: the stack fills its reserved box',
-          Math.abs(boxes[0].left - cbox.left) < 2 && Math.abs(boxes[2].right - cbox.right) < 2 &&
-          Math.abs(boxes[0].top - cbox.top) < 2 && Math.abs(boxes[2].bottom - cbox.bottom) < 2,
-          'box ' + Math.round(cbox.width) + 'x' + Math.round(cbox.height) +
-          ' stack ' + Math.round(boxes[2].right - boxes[0].left) + 'x' +
-          Math.round(boxes[2].bottom - boxes[0].top));
-    // A float moves line boxes, not block boxes, so the menu <ul> still spans
-    // the column while the entry inside it stops short of the video.
-    const firstEntry = d.querySelector('header ~ ul > li > a').getBoundingClientRect();
-    check('home: the cascade sits beside the menu rather than above it',
-          firstEntry.right <= cbox.left + 1 && firstEntry.top < cbox.bottom,
-          'entry.right=' + Math.round(firstEntry.right) + ' cascade.left=' + Math.round(cbox.left));
+    // Each stack, the clip it plays, its file's aspect ratio, and the first
+    // line of the list it is floated against.
+    const CASCADES = [
+      { name: 'crown',  ratio: 480 / 854,
+        neighbour: () => d.querySelector('header ~ ul > li > a') },
+      { name: 'dragon', ratio: 480 / 480,
+        neighbour: () => d.querySelector('a.menu-link') },
+    ];
 
-    // Autoplay is not in the markup -- the page's own script grants it, and
-    // declines to when the reader has asked for less motion. This whole run is
-    // driven with --force-prefers-reduced-motion, so what is testable here is
-    // that refusal, and it is the half worth pinning: a <video autoplay> would
-    // have started before any script could consult the setting. The playing
-    // case cannot be asserted under the same flags anyway -- virtual time
-    // never runs the rendering lifecycle, so currentTime would not advance.
-    await new Promise(r => setTimeout(r, 1200));
-    check('home: reduced motion leaves the stack still',
-          layers.every(v => v.paused && v.currentTime === 0),
-          layers.map(v => (v.paused ? 'paused' : 'playing') + '@' + v.currentTime).join(' '));
-    // Which is only a sight worth having because there is a frame to hold:
-    // the poster is what a reader sees when the clip does not play, here or
-    // with scripting off entirely.
-    check('home: every layer carries a poster frame',
-          layers.every(v => (v.poster || '').indexOf('/videos/cascade-poster.jpg') !== -1),
-          layers.map(v => v.poster).join(' '));
+    for (let n = 0; n < CASCADES.length; n++) {
+      const spec = CASCADES[n], tag = 'home/' + spec.name + ': ';
+      const stack = stacks[n];
+      const layers = Array.from(stack.querySelectorAll('.cascade-layer'));
+      check(tag + 'the stack has three layers', layers.length === 3, layers.length + ' layers');
+      check(tag + 'every layer plays the same clip',
+            layers.length === 3 &&
+            layers.every(v => v.currentSrc.indexOf('/videos/' + spec.name + '.mp4') !== -1),
+            layers.map(v => v.currentSrc.split('/').pop()).join(' '));
+      check(tag + 'the clip carries no audio track',
+            layers.every(v => v.muted && !(v.mozHasAudio || v.webkitAudioDecodedByteCount > 0)),
+            'muted=' + layers.map(v => v.muted).join(',') +
+            ' decodedAudioBytes=' + layers.map(v => v.webkitAudioDecodedByteCount).join(','));
+
+      const boxes = layers.map(v => v.getBoundingClientRect());
+      check(tag + 'each layer is stepped down and to the right of the one behind',
+            boxes[1].left > boxes[0].left && boxes[1].top > boxes[0].top &&
+            boxes[2].left > boxes[1].left && boxes[2].top > boxes[1].top,
+            boxes.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+
+      // The offsets are derived from the box, so the stack should fill it
+      // exactly: back layer flush with the left and top, front flush with the
+      // right and bottom. Which only works out if the box carries the clip's
+      // own ratio -- the two assertions are halves of the same arithmetic, so
+      // the ratio is checked here too, against the file rather than a constant.
+      const cbox = stack.getBoundingClientRect();
+      check(tag + 'the stack fills its reserved box',
+            Math.abs(boxes[0].left - cbox.left) < 2 && Math.abs(boxes[2].right - cbox.right) < 2 &&
+            Math.abs(boxes[0].top - cbox.top) < 2 && Math.abs(boxes[2].bottom - cbox.bottom) < 2,
+            'box ' + Math.round(cbox.width) + 'x' + Math.round(cbox.height) +
+            ' stack ' + Math.round(boxes[2].right - boxes[0].left) + 'x' +
+            Math.round(boxes[2].bottom - boxes[0].top));
+      check(tag + 'the box takes the shape of its own clip',
+            Math.abs(cbox.width / cbox.height - spec.ratio) < 0.01,
+            (cbox.width / cbox.height).toFixed(3) + ' vs ' + spec.ratio.toFixed(3));
+
+      // A float moves line boxes, not block boxes, so the list beside it still
+      // spans the column while the entries inside it stop short of the video.
+      const line = spec.neighbour().getBoundingClientRect();
+      check(tag + 'the stack sits beside its list rather than above it',
+            line.right <= cbox.left + 1 && line.top < cbox.bottom && line.bottom > cbox.top,
+            'line.right=' + Math.round(line.right) + ' stack.left=' + Math.round(cbox.left));
+
+      // Autoplay is not in the markup -- the include's script grants it, and
+      // declines to when the reader has asked for less motion. This whole run
+      // is driven with --force-prefers-reduced-motion, so what is testable
+      // here is that refusal, and it is the half worth pinning: a <video
+      // autoplay> would have started before any script could consult the
+      // setting. The playing case cannot be asserted under the same flags
+      // anyway -- virtual time never runs the rendering lifecycle, so
+      // currentTime would not advance.
+      check(tag + 'reduced motion leaves the stack still',
+            layers.every(v => v.paused && v.currentTime === 0),
+            layers.map(v => (v.paused ? 'paused' : 'playing') + '@' + v.currentTime).join(' '));
+      // Which is only a sight worth having because there is a frame to hold:
+      // the poster is what a reader sees when the clip does not play, here or
+      // with scripting off entirely.
+      check(tag + 'every layer carries a poster frame',
+            layers.every(v => (v.poster || '').indexOf('/videos/' + spec.name + '-poster.jpg') !== -1),
+            layers.map(v => v.poster.split('/').pop()).join(' '));
+    }
+
+    // The second stack is hung off its menu entry, which is the only place
+    // anything can be written between an entry and its own children -- so it
+    // has to land above the elsewhere links, not below them or after the list.
+    const dragonBox = stacks[1].getBoundingClientRect();
+    const marks = Array.from(d.querySelectorAll('a.menu-link'));
+    check('home/dragon: the stack starts level with the elsewhere list',
+          Math.abs(dragonBox.top - marks[0].getBoundingClientRect().top) < 12,
+          'stack.top=' + Math.round(dragonBox.top) +
+          ' first elsewhere link @' + Math.round(marks[0].getBoundingClientRect().top));
 
     // The theme re-inverts <img> and <iframe> under its whole-page invert but
-    // not <video>; without the rule in main.scss this clip would be the one
-    // negative on a dark page.
+    // not <video>; without the rule in main.scss these clips would be the only
+    // negatives on a dark page. One rule covers both stacks, so both are read.
     localStorage.setItem('appearance', 'dark');
     d = await load('/');
-    cs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade-layer'));
-    check('home/dark: the cascade is re-inverted back to true tone',
-          cs.filter === 'invert(1)' &&
+    let filters = Array.from(d.querySelectorAll('.cascade-layer'))
+      .map(v => d.defaultView.getComputedStyle(v).filter);
+    check('home/dark: both cascades are re-inverted back to true tone',
+          filters.length === 6 && filters.every(f => f === 'invert(1)') &&
           d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
-          cs.filter);
+          filters.join(' '));
     localStorage.setItem('appearance', 'purple');
     d = await load('/');
-    cs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade-layer'));
-    check('home/purple: the cascade is left alone',
-          cs.filter === 'none' && d.defaultView.getComputedStyle(d.body).filter === 'none',
-          cs.filter);
+    filters = Array.from(d.querySelectorAll('.cascade-layer'))
+      .map(v => d.defaultView.getComputedStyle(v).filter);
+    check('home/purple: both cascades are left alone',
+          filters.length === 6 && filters.every(f => f === 'none') &&
+          d.defaultView.getComputedStyle(d.body).filter === 'none',
+          filters.join(' '));
     localStorage.setItem('appearance', 'light');
 
     // Narrow: half the column is more than a phone can spare, so the float is
-    // dropped and the stack centres on its own line above the menu.
+    // dropped and each stack centres on its own line above the list it was
+    // floated against.
     d = await loadNarrow('/', 420);
-    const ncs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade'));
-    check('home/narrow: the cascade un-floats and centres',
-          ncs.float === 'none' && ncs.marginLeft === ncs.marginRight &&
-          parseFloat(ncs.marginLeft) > 0,
-          ncs.float + '/' + ncs.marginLeft + '/' + ncs.marginRight);
+    const narrowStacks = Array.from(d.querySelectorAll('.cascade'));
+    check('home/narrow: both cascades un-float and centre',
+          narrowStacks.length === 2 && narrowStacks.every(el => {
+            const c = d.defaultView.getComputedStyle(el);
+            return c.float === 'none' && c.marginLeft === c.marginRight &&
+                   parseFloat(c.marginLeft) > 0;
+          }),
+          narrowStacks.map(el => {
+            const c = d.defaultView.getComputedStyle(el);
+            return c.float + '/' + c.marginLeft;
+          }).join(' '));
     check('home/narrow: the page does not scroll sideways',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);

@@ -6,6 +6,13 @@ the title wrapped so the underline can be held to the word -- run across the
 whole anchor it passes under the mark and the gap, and reads as a stray dash.
 Entries without an icon render exactly as upstream, so the nested post list and
 the plain top-level entries are untouched.
+
+An entry can also carry a `cascade:` block -- file, width, height, label --
+which is rendered just above its nested entries. That position is the whole
+reason it is here rather than in the layout: the stack is a float, and a float
+only moves what follows it in the source, so a stack meant to sit beside a
+sub-list has to be written immediately before that sub-list. Nothing outside
+this loop can get between an entry and its own children.
 {%- endcomment -%}
 <ul>
   {%-for item in include.collection-%}
@@ -31,6 +38,14 @@ the plain top-level entries are untouched.
           show_more_text=item.post_list.show_more_text
           show_more_url=item.post_list.show_more_url
      -%}
+    {%-endif-%}
+
+    {%-if item.cascade-%}
+      {%-include cascade.html
+           file=item.cascade.file
+           width=item.cascade.width
+           height=item.cascade.height
+           label=item.cascade.label-%}
     {%-endif-%}
 
     {%-if item.entries-%}

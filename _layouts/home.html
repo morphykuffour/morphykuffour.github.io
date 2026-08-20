@@ -27,88 +27,18 @@ Everything else is the upstream layout verbatim.
 </header>
 
 {%- comment -%}
-The cascade beside the menu. One clip, three copies of it, each stepped down
-and to the right of the one behind: the same crown coming down three times,
-a beat apart, so the movement reads as a fall rather than a loop.
+The cascade beside the menu. It is authored here rather than in index.markdown
+because it is a float, and a float only pushes the content that comes *after*
+it in the source. The menu is written by the include below, so anything meant
+to sit beside the menu has to be authored above it -- from index.markdown,
+which lands after the include, it could only ever float past the post list.
 
-It lives here rather than in index.markdown because it is a float, and a float
-only pushes the content that comes *after* it in the source. The menu is
-written by the include below, so anything meant to sit beside the menu has to
-be authored above it -- from index.markdown, which lands after the include, it
-could only ever float past the post list.
-
-There is no audio to mute: the file was encoded without an audio track at all,
-and `muted` is here as well because an autoplaying video needs the attribute to
-be allowed to start, track or no track. The trailing two copies are hidden from
-assistive tech -- they are the same six seconds as the first, and announcing
-the clip three times says nothing the once does not.
+The one further down, beside the elsewhere list, cannot be reached from here
+for the same reason; it is hung off its own entry in _data/menu.yml instead.
 {%- endcomment -%}
-<figure class="home-cascade" role="img"
-        aria-label="Jewelled hands lowering a crown onto a leopard's head, in black and white.">
-  {%- for layer in (1..3) -%}
-  <video class="home-cascade-layer" data-cascade-layer
-         src="{{ site.baseurl }}/videos/cascade.mp4"
-         poster="{{ site.baseurl }}/videos/cascade-poster.jpg"
-         width="480" height="854"
-         muted loop playsinline preload="metadata"
-         {% unless forloop.last %}aria-hidden="true"{% endunless %}></video>
-  {%- endfor -%}
-</figure>
-
-<script>
-// The stack is three copies of the same six seconds, and if they all start at
-// zero they stay in lockstep forever -- one clip drawn three times, not a
-// cascade. What makes it a cascade is the phase: each layer is set a third of
-// the clip behind the one in front of it, so the crown that has already landed
-// on the front copy is still coming down on the one behind.
-//
-// Autoplay is not in the markup, it is granted here. A <video autoplay> starts
-// before any script runs, which would leave nothing to honour a reduced-motion
-// setting with; authored paused, the poster frame is what a reader gets when
-// they have asked for less motion, and when scripting is off entirely.
-(function () {
-  var layers = document.querySelectorAll('[data-cascade-layer]');
-  if (!layers.length) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  for (var i = 0; i < layers.length; i++) phase(layers[i], i);
-
-  function phase(video, i) {
-    // Depth from the front: the last element in the source is the copy on top.
-    var behind = layers.length - 1 - i;
-
-    function seek() {
-      // Duration is needed before the offset can be taken off the end of the
-      // clip, which is why this waits for metadata rather than seeking at once.
-      var step = video.duration / layers.length;
-      video.currentTime = (video.duration - behind * step) % video.duration;
-      play();
-    }
-
-    function play() {
-      // A rejected play() is a normal outcome -- a browser that declines to
-      // autoplay, a tab opened in the background -- and the poster is a fine
-      // thing to be left looking at, so it is caught and dropped.
-      var p = video.play();
-      if (p && p.catch) p.catch(function () {});
-    }
-
-    if (video.readyState >= 1) seek();
-    else video.addEventListener('loadedmetadata', seek, { once: true });
-
-    // Three video decoders running against a page nobody is looking at is a
-    // laptop fan for nothing. The stack sits at the top of the homepage, so
-    // scrolling to the posts is enough to leave it behind -- pause it there
-    // and pick it up on the way back, phases intact, since pausing does not
-    // move currentTime.
-    if (!window.IntersectionObserver) return;
-    new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting) play();
-      else video.pause();
-    }).observe(video);
-  }
-})();
-</script>
+{%- include cascade.html
+      file="crown" width=480 height=854
+      label="Jewelled hands lowering a crown onto a leopard's head, in black and white." -%}
 
 {%-include menu_item.html collection=site.data.menu.entries-%}
 

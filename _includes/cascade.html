@@ -1,0 +1,116 @@
+{%- comment -%}
+A clip played three times over itself, each copy stepped down and to the right
+of the one behind and running a third of the clip late. It began beside the
+homepage menu and was lifted here when the elsewhere list wanted one too: the
+two differ only in which file they play, and the phase logic copied twice is
+logic that drifts apart at the first fix.
+
+Parameters:
+  file    basename under /videos/, without extension: "crown" plays
+          /videos/crown.mp4 and posters it with /videos/crown-poster.jpg
+  width   the file's own pixel dimensions. Both are required -- the stack's
+  height  geometry is derived from them (see below), so a wrong pair here is
+          a box of the wrong shape, not merely a hint
+  label   what the clip shows, for anyone who cannot see it
+
+The stack's geometry is one number and two that fall out of it. Each layer is
+78% of the box wide and the two behind it are offset 11% twice, so 78 + 22 =
+100 fills the width exactly. The height then follows without being chosen: a
+layer is 0.78w wide and 0.78w*r tall for the file's ratio r, and the front one
+starts 0.22h down, so h = 0.78w*r + 0.22h, which is h = w*r. The box's own
+aspect ratio is the file's -- so it is handed to the CSS from here, where the
+dimensions are known, rather than written into a stylesheet that would need a
+new rule per clip.
+
+Stating it at all is what reserves the space before the first frame arrives,
+so the text beside the stack does not jump when the video loads.
+{%- endcomment -%}
+<figure class="cascade" role="img"
+        style="--cascade-ratio: {{ include.width }} / {{ include.height }}"
+        aria-label="{{ include.label | escape }}">
+  {%- comment -%}
+  Three copies of one <video>, not three files: the two behind are the same
+  clip a beat earlier, which is the whole point of the arrangement. Only the
+  front one is announced -- the other two have nothing to add to what it said.
+
+  There is no audio to mute: these files are encoded without an audio track at
+  all, and `muted` is here as well because an autoplaying video needs the
+  attribute to be allowed to start, track or no track.
+  {%- endcomment -%}
+  {%- for layer in (1..3) -%}
+  <video class="cascade-layer" data-cascade-layer
+         src="{{ site.baseurl }}/videos/{{ include.file }}.mp4"
+         poster="{{ site.baseurl }}/videos/{{ include.file }}-poster.jpg"
+         width="{{ include.width }}" height="{{ include.height }}"
+         muted loop playsinline preload="metadata"
+         {% unless forloop.last %}aria-hidden="true"{% endunless %}></video>
+  {%- endfor -%}
+</figure>
+
+<script>
+// If all three copies start at zero they stay in lockstep forever -- one clip
+// drawn three times, not a cascade. What makes it a cascade is the phase: each
+// layer is set a third of the clip behind the one in front of it, so what has
+// already happened on the front copy is still happening on the one behind.
+//
+// Autoplay is not in the markup, it is granted here. A <video autoplay> starts
+// before any script runs, which would leave nothing to honour a reduced-motion
+// setting with; authored paused, the poster frame is what a reader gets when
+// they have asked for less motion, and when scripting is off entirely.
+//
+// Written to wire every stack on the page and to skip any it has already
+// wired: the include carries its own script, so a page holding two of them
+// runs this twice, and the second pass would re-seek a stack that is already
+// playing -- a visible stutter, and the phases reset under it.
+(function () {
+  var roots = document.querySelectorAll('.cascade');
+  for (var i = 0; i < roots.length; i++) wire(roots[i]);
+
+  function wire(root) {
+    if (root.dataset.cascadeWired) return;
+    var layers = root.querySelectorAll('[data-cascade-layer]');
+    if (!layers.length) return;
+    root.dataset.cascadeWired = '1';
+
+    // Read per call rather than cached: the setting can change under a running
+    // page, and a stack that is already still has nothing to invalidate.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    for (var i = 0; i < layers.length; i++) phase(layers[i], i, layers.length);
+  }
+
+  function phase(video, i, total) {
+    // Depth from the front: the last element in the source is the copy on top.
+    var behind = total - 1 - i;
+
+    function seek() {
+      // Duration is needed before the offset can be taken off the end of the
+      // clip, which is why this waits for metadata rather than seeking at once.
+      var step = video.duration / total;
+      video.currentTime = (video.duration - behind * step) % video.duration;
+      play();
+    }
+
+    function play() {
+      // A rejected play() is a normal outcome -- a browser that declines to
+      // autoplay, a tab opened in the background -- and the poster is a fine
+      // thing to be left looking at, so it is caught and dropped.
+      var p = video.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+
+    if (video.readyState >= 1) seek();
+    else video.addEventListener('loadedmetadata', seek, { once: true });
+
+    // Three video decoders running against a page nobody is looking at is a
+    // laptop fan for nothing. Pause a stack that has been scrolled past and
+    // pick it up on the way back, phases intact, since pausing does not move
+    // currentTime.
+    if (!window.IntersectionObserver) return;
+    new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) play();
+      else video.pause();
+    }).observe(video);
+  }
+})();
+</script>

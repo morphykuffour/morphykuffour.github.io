@@ -1130,34 +1130,34 @@ h1 .title-marker {
 }
 
 // ---------------------------------------------------------------------------
-// Homepage cascade
+// Cascades
 // ---------------------------------------------------------------------------
 // Three copies of one clip, stepped down and to the right, floated beside the
-// menu. The geometry is one number chosen and two derived from it: each layer
-// is 78% of the box wide, and the two behind the front one are offset by 11%
-// twice, so 78 + 22 = 100 and the stack fills the box exactly on the width.
+// text next to them: one against the homepage menu, one against the elsewhere
+// list further down. Each layer is 78% of the box wide and the two behind it
+// are offset 11% twice, so 78 + 22 = 100 and the stack fills the box exactly.
 //
-// The box's own aspect ratio then falls out of that rather than being guessed.
-// A layer is 0.78w wide and, at the file's 480x854, 1.388w tall; the front one
-// starts 0.22h down, so h = 1.388w + 0.22h, i.e. h = 1.778w -- which is 9/16.
-// Stating it as an aspect-ratio is what reserves the space before the first
-// frame arrives, so the menu beside it does not jump when the video loads.
+// The box's shape is not set here. It is the clip's own aspect ratio -- the
+// arithmetic is in _includes/cascade.html, which is where the file's pixel
+// dimensions are known -- handed over as a custom property so a second clip of
+// a different shape needs no second rule. The fallback is the first stack's
+// portrait, for a browser that drops the property rather than the ratio.
 
-.home-cascade {
+.cascade {
   float: right;
   position: relative;
   width: min(46%, 16rem);
-  aspect-ratio: 9 / 16;
+  aspect-ratio: var(--cascade-ratio, 9 / 16);
   margin: .3rem 0 1rem 1.6rem;
 }
 
-.home-cascade-layer {
+.cascade-layer {
   position: absolute;
   width: 78%;
   height: auto;
   display: block;
 
-  // The two behind are knocked back rather than merely covered: the clip is
+  // The two behind are knocked back rather than merely covered: the clips are
   // black-on-black, so without a difference in weight the three read as one
   // smeared shape instead of a stack with a front to it.
   &:nth-child(1) { left: 0;   top: 0;   opacity: .4; }
@@ -1167,24 +1167,24 @@ h1 .title-marker {
 
 // The theme re-inverts <img> and <iframe> under its whole-page `filter:
 // invert(1)` so pictures keep true tone in dark mode -- but not <video>, which
-// predates none of it and simply was not in the list. Left alone this clip
-// would be the one negative on the page, and a negative of black-and-white
-// footage is exactly as wrong as it sounds. So it takes the same treatment
+// predates none of it and simply was not in the list. Left alone these clips
+// would be the only negatives on the page, and a negative of black-and-white
+// footage is exactly as wrong as it sounds. So they take the same treatment
 // <img> already gets, in both places the theme applies it.
 //
 // Purple mode needs no rule: it sets no filter on the page at all, so the
 // video is already showing its own tone there.
-body[a="dark"] .home-cascade-layer { filter: invert(1); }
+body[a="dark"] .cascade-layer { filter: invert(1); }
 @media (prefers-color-scheme: dark) {
-  body[a="auto"] .home-cascade-layer { filter: invert(1); }
+  body[a="auto"] .cascade-layer { filter: invert(1); }
 }
 
 // Below this the column is too narrow to give half of itself away -- the menu
 // entries would wrap a word at a time down the left. So the float is dropped
-// and the stack takes the middle of its own line, between the header and the
-// menu, which is where it already sits in the source.
+// and the stack takes the middle of its own line, which on both counts is
+// where it already sits in the source.
 @media (max-width: 34rem) {
-  .home-cascade {
+  .cascade {
     float: none;
     width: min(74%, 14rem);
     margin: 1.4rem auto 1.6rem;
