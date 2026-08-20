@@ -397,7 +397,8 @@ function loadNarrow(url, width) {
       // The hand-kept images come from _data/art_local.yml rather than the
       // scraped art.yml, and they lead the strip. A wiring mistake there drops
       // them without breaking anything else on the page, so they are named.
-      const localFiles = ['pixel-temple-window.gif', 'koi-pair.jpg'];
+      const localFiles = ['balotelli-headphones.jpg', 'pixel-temple-window.gif',
+                          'koi-pair.jpg', 'ald-flight-jacket.jpg'];
       const localImgs = localFiles.map(
         f => shownImgs.filter(i => i.src.indexOf(f) !== -1)[0]);
       check('art: the hand-kept images lead the strip and decoded',
