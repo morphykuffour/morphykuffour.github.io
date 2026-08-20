@@ -78,3 +78,48 @@ rather than for anything the layout needs.
   <span style="--pace: {{ pace | divided_by: 10.0 }}s; --lag: -{{ lag | divided_by: 10.0 }}s; --rest: {{ rest }}%"></span>
   {%- endfor -%}
 </div>
+
+{%- comment -%}
+The skulls under the rain: sixteen studies of one skull from sixteen angles,
+rolling past in a single endless strip. They are Jeff Searle's, sliced out of
+one sheet of his and listed in _data/skulls.yml, which carries each one's own
+width -- the drawings are not all the same shape, and a lazy image without its
+size reserves the wrong box and shifts the strip when it lands. The credit is
+in the caption
+because the sheet's own signature sat in the margin under the bottom-left
+drawing, and a margin is the one part of a sheet that does not survive being
+cut into sixteen; said in words under the strip it is legible, which at this
+size it never was.
+
+The strip is written out twice. The loop walks it exactly one pass to the left
+and starts over, which puts the copy where the original stood -- so there is no
+jump to hide, and no script is needed to hide one.
+
+The images carry no alt text of their own, deliberately: sixteen of them saying
+"a skull, from a slightly different angle" is sixteen interruptions for one
+idea, and the caption below says the whole of it once. The class on them is the
+theme's, and it is what keeps the page's dark mode from inverting them back to
+ink-on-white -- pencil lines on a dark page want to be the light half, not a
+white box with a drawing in it.
+{%- endcomment -%}
+<section class="skull-roll">
+  <h2>Heads will roll</h2>
+  <figure>
+    <div class="skull-roll-window">
+      <div class="skull-roll-track">
+        {%- for pass in (1..2) -%}
+        {%- for skull in site.data.skulls -%}
+        <img class="ioda" src="{{ site.baseurl }}/images/skulls/{{ skull.file }}"
+             alt="" width="{{ skull.width }}" height="{{ skull.height }}"
+             loading="lazy" decoding="async">
+        {%- endfor -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <figcaption>
+      Sixteen studies of one skull by
+      <a href="https://jeffsearle.blogspot.co.uk/" rel="noopener">Jeff Searle</a>,
+      off a single sheet of his. The drawings are his, not mine.
+    </figcaption>
+  </figure>
+</section>

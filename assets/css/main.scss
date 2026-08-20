@@ -710,6 +710,22 @@ body[a="purple"] {
       rgba(20, 7, 34, 0) 82%, $purple-code-bg 100%);
   }
 
+  // The skulls are pencil on white, which is the resume's problem and the
+  // xkcd's: ink-on-paper on a page that has no white on it. So they take the
+  // same treatment -- inverted to draw in light, tinted violet, and screened
+  // over the page so the paper they were drawn on drops out entirely.
+  //
+  // On the window rather than on each drawing, which is not a tidying-up: the
+  // window is masked at both ends, and a mask isolates everything inside it
+  // into a group of its own. An image blending inside that group has only the
+  // group's own transparent backdrop to screen against, so the paper stays --
+  // sixteen black cards on a violet page. Moved up here the blend happens where
+  // the page is, which is the only place the paper can drop out.
+  .skull-roll-window {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+  }
+
   .matrix-rain span {
     background-image: linear-gradient(to bottom,
       rgba(199, 125, 255, 0) 0%,
@@ -1490,4 +1506,94 @@ $rain-turn: 26; // how far the timer walks before it starts over
 body[a="dark"] .matrix-rain { filter: invert(1); }
 @media (prefers-color-scheme: dark) {
   body[a="auto"] .matrix-rain { filter: invert(1); }
+}
+
+// ---------------------------------------------------------------------------
+// Heads will roll
+// ---------------------------------------------------------------------------
+// The skulls that follow the rain: sixteen studies of the same skull from
+// sixteen angles, rolling past the page in one endless strip.
+//
+// Sixteen files rather than the one sheet they were sliced from, which is the
+// opposite of the call made for the collage above. There the arrangement was
+// the point and a grid could not have held it; here the arrangement is only how
+// the artist happened to fill a page, and what is wanted is each drawing on its
+// own -- cut on the gutters between them, trimmed to its ink, and set to one
+// height so a roll of them keeps a steady line instead of bobbing.
+//
+// The loop is the strip printed twice and walked exactly one pass to the left
+// before it starts over, which lands the copy where the original stood: there
+// is no jump to hide because nothing jumps. The gap between skulls is a margin
+// on each rather than a gap on the track, so a pass is exactly half the strip
+// -- with `gap` it is half a gap more than that, and the seam shows.
+
+.skull-roll {
+  margin: 3rem 0 0;
+}
+
+.skull-roll h2 {
+  // The theme puts 3rem above every h2, which is for headings that break up
+  // prose. This one is a label on the thing directly under it.
+  margin: 0 0 .8rem;
+  font-size: 1rem;
+  letter-spacing: .08em;
+}
+
+.skull-roll figure {
+  margin: 0;
+}
+
+// The window the strip runs through. The fade at both ends is a mask rather
+// than a painted overlay -- unlike the rain, what is behind here is the page
+// itself, whatever colour the mode has made it, so there is nothing to paint
+// back over the skulls with.
+.skull-roll-window {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.skull-roll-track {
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  animation: skull-roll 52s linear infinite;
+}
+
+.skull-roll-track img {
+  display: block;
+  height: 9rem;
+  width: auto;
+
+  // Both against the theme, which centres every image in the column and holds
+  // it to the column's width. Here they are a row, and each is as wide as its
+  // own drawing.
+  margin: 0 1.2rem 0 0;
+  max-width: none;
+}
+
+// A hovered or focused strip stops, which is the only way to look at one of
+// these for longer than it takes to pass.
+.skull-roll:hover .skull-roll-track,
+.skull-roll:focus-within .skull-roll-track {
+  animation-play-state: paused;
+}
+
+@keyframes skull-roll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+// Asked for less motion, the roll stops and becomes a strip that scrolls by
+// hand: the skulls are still all there and still all reachable, which a frozen
+// animation on its own would not leave true -- the far end would sit off the
+// edge of the window with no way to bring it back.
+@media (prefers-reduced-motion: reduce) {
+  .skull-roll-window {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .skull-roll-track {
+    animation: none;
+  }
 }

@@ -868,6 +868,103 @@ function loadNarrow(url, width) {
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
+
+    // --- heads will roll -----------------------------------------------------
+    // Sixteen skulls in an endless strip under the rain. The loop is the strip
+    // printed twice and walked exactly one pass left, which only comes out
+    // seamless if the second pass repeats the first in order and a pass is
+    // exactly half the track. Both are laid-out facts rather than source ones:
+    // the widths differ drawing to drawing, so half the track is a number only
+    // the browser has.
+    d = await load('/');
+    const roll = d.querySelector('.skull-roll');
+    const skulls = Array.from(d.querySelectorAll('.skull-roll-track img'));
+    check('home/skulls: the roll follows the rain',
+          !!roll && roll.getBoundingClientRect().top >
+            d.querySelector('.matrix-rain').getBoundingClientRect().bottom,
+          roll ? 'roll @' + Math.round(roll.getBoundingClientRect().top) : 'no roll');
+    check('home/skulls: the strip is all sixteen, twice', skulls.length === 32,
+          skulls.length + ' tiles');
+
+    const names = skulls.map(i => i.getAttribute('src').split('/').pop());
+    check('home/skulls: the second pass repeats the first in order',
+          names.slice(0, 16).join(' ') === names.slice(16).join(' ') &&
+          new Set(names.slice(0, 16)).size === 16,
+          new Set(names).size + ' distinct of ' + names.length);
+
+    // What the -50% in the keyframe rests on: the seventeenth tile has to stand
+    // exactly where the first one did, or the loop jumps once a pass.
+    // `rollTrack` rather than `track`: the /art/ carousel above already has one,
+    // and both are top-level in this one long function.
+    const rollTrack = d.querySelector('.skull-roll-track').getBoundingClientRect();
+    const firstLeft = skulls[0].getBoundingClientRect().left;
+    const seamLeft = skulls[16].getBoundingClientRect().left;
+    check('home/skulls: one pass is exactly half the strip',
+          Math.abs((seamLeft - firstLeft) - rollTrack.width / 2) < 1,
+          'pass ' + Math.round(seamLeft - firstLeft) +
+          ' vs half ' + Math.round(rollTrack.width / 2));
+
+    // Every drawing is a different width, and each carries its own so the strip
+    // does not shift when a lazy image lands. A wrong number in _data/skulls.yml
+    // is invisible until the file arrives and the row jumps under it -- which
+    // is what reading the declared box back against the real one catches.
+    //
+    // Three of them rather than all thirty-two, and fetched deliberately rather
+    // than by forcing the strip to load: these sit well below the fold and are
+    // lazy, so making the page pull every one of them costs the run more than
+    // the extra twenty-nine are worth. A wrong number is a mistake made per
+    // entry, and three entries is enough to catch the shape of it.
+    const sampled = [skulls[0], skulls[6], skulls[15]];
+    const sizes = await Promise.all(sampled.map(i => new Promise(res => {
+      const probe = new Image();
+      probe.onload = () => res([probe.naturalWidth, probe.naturalHeight]);
+      probe.onerror = () => res(null);
+      probe.src = i.src;
+    })));
+    check('home/skulls: every drawing declares the box it actually fills',
+          sizes.every((size, n) => size &&
+            Number(sampled[n].getAttribute('width')) === size[0] &&
+            Number(sampled[n].getAttribute('height')) === size[1]),
+          sampled.map((i, n) => i.getAttribute('src').split('/').pop() + ' declared ' +
+            i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
+            (sizes[n] ? sizes[n].join('x') : 'unreachable')).join(', '));
+
+    // This run forces reduced motion, where the roll stops and the strip has to
+    // become scrollable instead: frozen and unscrollable, everything past the
+    // third skull would sit off the edge with no way to reach it.
+    const window_ = d.querySelector('.skull-roll-window');
+    check('home/skulls: reduced motion stops the roll',
+          d.defaultView.getComputedStyle(skulls[0].parentElement).animationName === 'none',
+          d.defaultView.getComputedStyle(skulls[0].parentElement).animationName);
+    check('home/skulls: a stopped roll can still be walked through by hand',
+          d.defaultView.getComputedStyle(window_).overflowX === 'auto' &&
+          window_.scrollWidth > window_.clientWidth,
+          window_.scrollWidth + ' of ' + window_.clientWidth + ' visible');
+
+    // Pencil on white, so the modes each need something different: dark leaves
+    // the page's own invert on them -- light lines on a dark page is what the
+    // drawings want to be -- and purple, which filters nothing, is given the
+    // ink-on-paper treatment the resume and the xkcd take, on the window rather
+    // than the images so the paper has the page to drop out against.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    check('home/skulls: dark mode leaves the drawings inverted',
+          d.defaultView.getComputedStyle(d.querySelector('.skull-roll-track img')).filter
+            === 'invert(0)',
+          d.defaultView.getComputedStyle(d.querySelector('.skull-roll-track img')).filter);
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    const win = d.defaultView.getComputedStyle(d.querySelector('.skull-roll-window'));
+    check('home/skulls: purple screens the paper out',
+          win.mixBlendMode === 'screen' && win.filter.indexOf('invert(1)') === 0,
+          win.mixBlendMode + ' / ' + win.filter);
+    localStorage.setItem('appearance', 'light');
+
+    d = await loadNarrow('/', 420);
+    check('home/skulls/narrow: the roll adds no sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }
