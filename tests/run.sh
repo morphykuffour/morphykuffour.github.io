@@ -63,7 +63,11 @@ for _ in $(seq 1 50); do
 done
 
 # --virtual-time-budget lets the harness's awaited page loads finish before the
-# DOM is dumped; the <pre> it fills is the whole report.
+# DOM is dumped; the <pre> it fills is the whole report. Set well above what the
+# run needs: too small and the dump lands mid-run, which reports itself not as a
+# timeout but as the <pre> still reading "running" -- and then as whatever the
+# sed below makes of a document whose report never arrived. Virtual time costs
+# nothing to overshoot, so it is not tuned close.
 #
 # Site isolation is turned off for the run because /xkcd/ frames another
 # origin. Virtual time is per-renderer, and a cross-origin frame gets its own
@@ -76,7 +80,7 @@ done
 # `behavior: smooth` scroll is simply inert and the box never moves at all --
 # the /art/ carousel could not be driven otherwise. Nothing here asserts an
 # animation, so no case loses anything by it.
-output=$("$CHROME" --headless=new --disable-gpu --virtual-time-budget=20000 \
+output=$("$CHROME" --headless=new --disable-gpu --virtual-time-budget=60000 \
   --force-prefers-reduced-motion \
   --disable-site-isolation-trials --disable-features=IsolateOrigins,site-per-process \
   --dump-dom "http://localhost:$PORT/e2e.html" 2>/dev/null |
