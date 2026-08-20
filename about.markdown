@@ -6,12 +6,16 @@ permalink: /about/
 
 <img class="avatar" src="https://avatars.githubusercontent.com/u/23323356?v=4" alt="Morphy Kuffour">
 
+{% comment %}
+Two links, because the elsewhere list at the foot of the page now carries the
+rest. LinkedIn, GitHub and Resume were in both places once the list moved here,
+and "Personal Blog" pointed at this very site -- a link back to the page you are
+already standing on, which the `..` in the page layout does better anyway. What
+is left is the pair the list has no entry for: the address to write to, and the
+one long piece of work on this site that is not a post.
+{% endcomment %}
 <p class="contact">
   <a href="mailto:mail@morphykuffour.com">mail@morphykuffour.com</a>
-  <a href="https://www.linkedin.com/in/morphy-kuffour/">LinkedIn</a>
-  <a href="https://github.com/morph-k">GitHub</a>
-  <a href="https://morphykuffour.github.io/">Personal Blog</a>
-  <a href="{{ site.baseurl }}/resume/">Resume</a>
   <a href="{{ site.baseurl }}/thesis/">Honors Thesis</a>
 </p>
 
@@ -134,3 +138,28 @@ permalink: /about/
     <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>, via
     <a href="https://commons.wikimedia.org/wiki/File:Akan_Gold_Weight_MHNT_bovid_head.jpg">Wikimedia Commons</a>.</figcaption>
 </figure>
+
+## Elsewhere
+
+{% comment %}
+The list that used to hang off the homepage menu. It is a page's worth of links
+about a person rather than navigation, which is what brought it here, and it
+closes the page for the same reason: everything above is what I am, this is
+where to find me.
+
+The dragon stack came with it, and is written immediately above the list rather
+than below it because a float only moves the content that follows it in the
+source -- authored after the list, with nothing left on the page behind it, it
+would push nothing at all and simply hang off the foot.
+
+The list itself is still drawn by the menu include: that is the one place that
+knows how to put an `icon:` inside the anchor, and drawing it twice was never
+worth the second copy. Blank lines around the two includes are load-bearing --
+kramdown needs each block of HTML to start its own line to leave it alone.
+{% endcomment %}
+
+{% include cascade.html
+     file="dragon" width=480 height=480
+     label="A dragon over a burning castle at night, in black and white." %}
+
+{% include menu_item.html collection=site.data.elsewhere.entries %}

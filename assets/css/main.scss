@@ -1036,9 +1036,10 @@ body[a="purple"] {
 // ---------------------------------------------------------------------------
 // Menu icons
 // ---------------------------------------------------------------------------
-// The marks in the "elsewhere" list. They sit inside the <a> and paint in
-// currentColor, so they need no per-mode rules at all: dark inverts them along
-// with the text, purple recolours them with the link colour.
+// The marks in the "elsewhere" list at the foot of the përi page. They sit
+// inside the <a> and paint in currentColor, so they need no per-mode rules at
+// all: dark inverts them along with the text, purple recolours them with the
+// link colour.
 
 .menu-icon {
   // Sized off the text rather than in pixels, so the mark tracks the list's
@@ -1234,8 +1235,9 @@ h1 .title-marker {
 // ---------------------------------------------------------------------------
 // Three copies of one clip, stepped down and to the right, floated beside the
 // text next to them: one against the homepage menu, one against the elsewhere
-// list further down. Each layer is 78% of the box wide and the two behind it
-// are offset 11% twice, so 78 + 22 = 100 and the stack fills the box exactly.
+// list at the foot of the përi page. Each layer is 78% of the box wide and the
+// two behind it are offset 11% twice, so 78 + 22 = 100 and the stack fills the
+// box exactly.
 //
 // The box's shape is not set here. It is the clip's own aspect ratio -- the
 // arithmetic is in _includes/cascade.html, which is where the file's pixel

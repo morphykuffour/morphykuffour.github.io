@@ -122,44 +122,15 @@ function loadNarrow(url, width) {
     const posts = Array.from(d.querySelectorAll('li a[href$=".html"]'));
     check('home: the menu still lists every post', posts.length > 10, posts.length + ' post links');
 
-    const elsewhere = Array.from(d.querySelectorAll('li a')).map(x => x.href);
-    for (const profile of ['https://www.reddit.com/user/JediMasterMorphy/',
-                           'https://www.instagram.com/morp.k/',
-                           'https://www.pinterest.com/morphykuffour/',
-                           'https://www.youtube.com/@morpheus_k']) {
-      check('home: elsewhere carries ' + profile.split('/')[2].replace('www.', ''),
-            elsewhere.indexOf(profile) !== -1,
-            elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
-    }
-
-    // Every elsewhere entry carries a mark, drawn in currentColor so it picks
-    // up the link colour of whichever mode is on rather than needing one rule
-    // per mode. The underline is held to the label: run across the whole
-    // anchor it passes under the mark too.
-    const marked = Array.from(d.querySelectorAll('li a.menu-link'));
-    check('home: every elsewhere link carries an icon',
-          marked.length === 9 && marked.every(x => x.querySelector('svg.menu-icon')),
-          marked.length + ' marked links');
-    const oneIcon = marked[0].querySelector('svg.menu-icon');
-    const iconCS = d.defaultView.getComputedStyle(oneIcon);
-    const linkCS = d.defaultView.getComputedStyle(marked[0]);
-    check('home: icon is drawn in the link colour', iconCS.fill === linkCS.color,
-          iconCS.fill + ' vs ' + linkCS.color);
-    check('home: icon is sized off the text', iconCS.width === iconCS.height &&
-          Math.abs(parseFloat(iconCS.width) - parseFloat(linkCS.fontSize)) < 1,
-          iconCS.width + ' at font-size ' + linkCS.fontSize);
-    // Without an intrinsic size a stale or missing stylesheet blows each mark
-    // up to the width of the list, so the attributes stay on the element even
-    // though .menu-icon overrides them.
-    check('home: icon carries its intrinsic size as an attribute',
-          oneIcon.getAttribute('width') === '16' && oneIcon.getAttribute('height') === '16',
-          oneIcon.getAttribute('width') + 'x' + oneIcon.getAttribute('height'));
-    check('home: the underline is held to the label',
-          linkCS.textDecorationLine === 'none' &&
-          d.defaultView.getComputedStyle(marked[0].querySelector('.menu-label')).textDecorationLine === 'underline',
-          linkCS.textDecorationLine);
-    check('home: entries without an icon are left as the theme renders them',
-          !!d.querySelector('li a[href="/about/"]') && !d.querySelector('li a[href="/about/"]').querySelector('svg'));
+    // The elsewhere list moved to the përi page and took every mark on the site
+    // with it, so the homepage menu is plain anchors top to bottom now. A mark
+    // reappearing here means an entry drifted back into _data/menu.yml.
+    const homeMarks = Array.from(d.querySelectorAll('li a.menu-link'));
+    check('home: the menu carries no marked entries', homeMarks.length === 0,
+          homeMarks.length + ' marked links');
+    check('home: menu entries are left as the theme renders them',
+          !!d.querySelector('li a[href="/about/"]') &&
+            !d.querySelector('li a[href="/about/"]').querySelector('svg'));
 
     // --- about: the linked Hippocrates portrait ----------------------------
     d = await load('/about/');
@@ -186,6 +157,60 @@ function loadNarrow(url, width) {
     check('about: caption name links to Wikipedia',
           cap && cap.href === 'https://en.wikipedia.org/wiki/Hippocrates' && cap.textContent === 'Hippocrates',
           cap && cap.href);
+
+    // --- about: the elsewhere list ------------------------------------------
+    // It used to hang off the homepage menu; it closes this page now. Only the
+    // hrefs a browser resolves are worth reading back here -- the rest of
+    // _data/elsewhere.yml is a grep's business.
+    const elsewhere = Array.from(d.querySelectorAll('li a')).map(x => x.href);
+    for (const profile of ['https://www.reddit.com/user/JediMasterMorphy/',
+                           'https://www.instagram.com/morp.k/',
+                           'https://www.pinterest.com/morphykuffour/',
+                           'https://www.youtube.com/@morpheus_k']) {
+      check('about: elsewhere carries ' + profile.split('/')[2].replace('www.', ''),
+            elsewhere.indexOf(profile) !== -1,
+            elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
+    }
+
+    // Every elsewhere entry carries a mark, drawn in currentColor so it picks
+    // up the link colour of whichever mode is on rather than needing one rule
+    // per mode. The underline is held to the label: run across the whole
+    // anchor it passes under the mark too.
+    const marked = Array.from(d.querySelectorAll('li a.menu-link'));
+    check('about: every elsewhere link carries an icon',
+          marked.length === 9 && marked.every(x => x.querySelector('svg.menu-icon')),
+          marked.length + ' marked links');
+    const oneIcon = marked[0].querySelector('svg.menu-icon');
+    const iconCS = d.defaultView.getComputedStyle(oneIcon);
+    const linkCS = d.defaultView.getComputedStyle(marked[0]);
+    check('about: icon is drawn in the link colour', iconCS.fill === linkCS.color,
+          iconCS.fill + ' vs ' + linkCS.color);
+    check('about: icon is sized off the text', iconCS.width === iconCS.height &&
+          Math.abs(parseFloat(iconCS.width) - parseFloat(linkCS.fontSize)) < 1,
+          iconCS.width + ' at font-size ' + linkCS.fontSize);
+    // Without an intrinsic size a stale or missing stylesheet blows each mark
+    // up to the width of the list, so the attributes stay on the element even
+    // though .menu-icon overrides them.
+    check('about: icon carries its intrinsic size as an attribute',
+          oneIcon.getAttribute('width') === '16' && oneIcon.getAttribute('height') === '16',
+          oneIcon.getAttribute('width') + 'x' + oneIcon.getAttribute('height'));
+    check('about: the underline is held to the label',
+          linkCS.textDecorationLine === 'none' &&
+          d.defaultView.getComputedStyle(marked[0].querySelector('.menu-label')).textDecorationLine === 'underline',
+          linkCS.textDecorationLine);
+    // The list closes the page: markdown renders the heading above it, and
+    // nothing in the source comes after the list itself.
+    const elsewhereHead = Array.from(d.querySelectorAll('h2'))
+      .filter(h => h.textContent.trim().toLowerCase() === 'elsewhere')[0];
+    check('about: the list sits under an elsewhere heading at the foot',
+          !!elsewhereHead &&
+            elsewhereHead.getBoundingClientRect().bottom <= marked[0].getBoundingClientRect().top &&
+            marked[8].getBoundingClientRect().bottom >=
+              Array.from(d.querySelectorAll('.paper-figure'))
+                .pop().getBoundingClientRect().bottom,
+          elsewhereHead ? 'h2 @' + Math.round(elsewhereHead.getBoundingClientRect().bottom)
+                        : 'no elsewhere heading');
+
 
     // The small-screen rule un-floats the circle and centres it; it lives on
     // the anchor now, so this is the case that catches it drifting back to the
@@ -605,18 +630,18 @@ function loadNarrow(url, width) {
           menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
 
     // --- the cascades --------------------------------------------------------
-    // Three copies of one clip stepped down and right of each other. Two are
-    // floated beside the text next to them -- one against the menu, one against
-    // the elsewhere list -- and three are laid over the board at the foot of
-    // the page. What is worth asserting is what only a laid-out page can
-    // answer: that each stack is really offset rather than stacked flat, that
-    // it takes the shape of its own clip, that the floated pair really do move
-    // the lines beside them, and that the three on the board land where the
-    // markup put them without shifting the picture underneath.
+    // Three copies of one clip stepped down and right of each other. One is
+    // floated against the homepage menu and three are laid over the board at
+    // the foot of that page; the fifth went to the përi page with the elsewhere
+    // list and is driven further down. What is worth asserting is what only a
+    // laid-out page can answer: that each stack is really offset rather than
+    // stacked flat, that it takes the shape of its own clip, that a floated one
+    // really does move the lines beside it, and that the three on the board land
+    // where the markup put them without shifting the picture underneath.
     localStorage.setItem('appearance', 'light');
     d = await load('/');
     const stacks = Array.from(d.querySelectorAll('.cascade'));
-    check('home: the page carries all five cascades', stacks.length === 5, stacks.length + ' stacks');
+    check('home: the page carries all four cascades', stacks.length === 4, stacks.length + ' stacks');
 
     // The board the last three are hung over, and the picture inside it. An
     // absolutely positioned box contributes no height, so the figure should
@@ -634,8 +659,6 @@ function loadNarrow(url, width) {
     const CASCADES = [
       { name: 'crown',  ratio: 480 / 854,
         neighbour: () => d.querySelector('header ~ ul > li > a') },
-      { name: 'dragon', ratio: 480 / 480,
-        neighbour: () => d.querySelector('a.menu-link') },
       { name: 'riders',  ratio: 640 / 360, over: true },
       { name: 'yinyang', ratio: 480 / 854, over: true },
       { name: 'frogs',   ratio: 480 / 480, over: true },
@@ -727,25 +750,42 @@ function loadNarrow(url, width) {
             layers.map(v => v.poster.split('/').pop()).join(' '));
     }
 
-    // The second stack is hung off its menu entry, which is the only place
-    // anything can be written between an entry and its own children -- so it
-    // has to land above the elsewhere links, not below them or after the list.
-    const dragonBox = stacks[1].getBoundingClientRect();
-    const marks = Array.from(d.querySelectorAll('a.menu-link'));
-    check('home/dragon: the stack starts level with the elsewhere list',
+    // The fifth stack is the përi page's, floated against the elsewhere list at
+    // the foot of it. It is authored immediately above that list because a float
+    // only moves what follows it in the source, so what says it landed right is
+    // that it starts level with the first link rather than below the last one.
+    const about = await load('/about/');
+    const dragon = about.querySelector('.cascade');
+    const dragonBox = dragon.getBoundingClientRect();
+    const marks = Array.from(about.querySelectorAll('a.menu-link'));
+    check('about/dragon: the përi page carries one cascade, playing the dragon',
+          about.querySelectorAll('.cascade').length === 1 &&
+            Array.from(dragon.querySelectorAll('.cascade-layer'))
+              .every(v => v.currentSrc.indexOf('/videos/dragon.mp4') !== -1),
+          about.querySelectorAll('.cascade').length + ' stacks');
+    check('about/dragon: the box takes the shape of its own clip',
+          Math.abs(dragonBox.width / dragonBox.height - 1) < 0.01,
+          (dragonBox.width / dragonBox.height).toFixed(3) + ' vs 1.000');
+    check('about/dragon: the stack starts level with the elsewhere list',
           Math.abs(dragonBox.top - marks[0].getBoundingClientRect().top) < 12,
           'stack.top=' + Math.round(dragonBox.top) +
           ' first elsewhere link @' + Math.round(marks[0].getBoundingClientRect().top));
+    // A float moves line boxes, not block boxes: the list still spans the
+    // column while the entries inside it stop short of the video.
+    check('about/dragon: the stack sits beside the list rather than above it',
+          marks[0].getBoundingClientRect().right <= dragonBox.left + 1,
+          'link.right=' + Math.round(marks[0].getBoundingClientRect().right) +
+          ' stack.left=' + Math.round(dragonBox.left));
 
     // The theme re-inverts <img> and <iframe> under its whole-page invert but
     // not <video>; without the rule in main.scss these clips would be the only
-    // negatives on a dark page. One rule covers both stacks, so both are read.
+    // negatives on a dark page. One rule covers every stack on the page.
     localStorage.setItem('appearance', 'dark');
     d = await load('/');
     let filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
     check('home/dark: every cascade is re-inverted back to true tone',
-          filters.length === 15 && filters.every(f => f === 'invert(1)') &&
+          filters.length === 12 && filters.every(f => f === 'invert(1)') &&
           d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
           filters.join(' '));
     localStorage.setItem('appearance', 'purple');
@@ -753,23 +793,25 @@ function loadNarrow(url, width) {
     filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
     check('home/purple: every cascade is left alone',
-          filters.length === 15 && filters.every(f => f === 'none') &&
+          filters.length === 12 && filters.every(f => f === 'none') &&
           d.defaultView.getComputedStyle(d.body).filter === 'none',
           filters.join(' '));
     localStorage.setItem('appearance', 'light');
 
     // Narrow: half the column is more than a phone can spare, so the float is
-    // dropped and each floated stack centres on its own line above the list it
-    // was floated against.
+    // dropped and a floated stack centres on its own line above the list it was
+    // floated against. The rule is written once and has to reach both pages, so
+    // the përi page's stack is read on the same pass.
     d = await loadNarrow('/', 420);
     const narrowStacks = Array.from(d.querySelectorAll('.cascade'));
     const narrowFloated = narrowStacks.filter(el => !el.closest('.collage-clip'));
-    check('home/narrow: both floated cascades un-float and centre',
-          narrowFloated.length === 2 && narrowFloated.every(el => {
-            const c = d.defaultView.getComputedStyle(el);
-            return c.float === 'none' && c.marginLeft === c.marginRight &&
-                   parseFloat(c.marginLeft) > 0;
-          }),
+    const centred = (doc, el) => {
+      const c = doc.defaultView.getComputedStyle(el);
+      return c.float === 'none' && c.marginLeft === c.marginRight &&
+             parseFloat(c.marginLeft) > 0;
+    };
+    check('home/narrow: the floated cascade un-floats and centres',
+          narrowFloated.length === 1 && centred(d, narrowFloated[0]),
           narrowFloated.map(el => {
             const c = d.defaultView.getComputedStyle(el);
             return c.float + '/' + c.marginLeft;
@@ -797,6 +839,16 @@ function loadNarrow(url, width) {
     check('home/narrow: the page does not scroll sideways',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+
+    d = await loadNarrow('/about/', 420);
+    const narrowDragon = d.querySelector('.cascade');
+    check('about/narrow: the dragon un-floats and centres above the list',
+          !!narrowDragon && centred(d, narrowDragon) &&
+            narrowDragon.getBoundingClientRect().bottom <=
+              d.querySelector('a.menu-link').getBoundingClientRect().top + 1,
+          narrowDragon ? d.defaultView.getComputedStyle(narrowDragon).float + '/' +
+                         d.defaultView.getComputedStyle(narrowDragon).marginLeft
+                       : 'no stack');
     document.getElementById('f').style.width = '1100px';
 
     // --- the rain ------------------------------------------------------------

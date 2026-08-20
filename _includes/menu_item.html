@@ -7,12 +7,10 @@ whole anchor it passes under the mark and the gap, and reads as a stray dash.
 Entries without an icon render exactly as upstream, so the nested post list and
 the plain top-level entries are untouched.
 
-An entry can also carry a `cascade:` block -- file, width, height, label --
-which is rendered just above its nested entries. That position is the whole
-reason it is here rather than in the layout: the stack is a float, and a float
-only moves what follows it in the source, so a stack meant to sit beside a
-sub-list has to be written immediately before that sub-list. Nothing outside
-this loop can get between an entry and its own children.
+It draws two collections now, not one: the homepage menu out of _data/menu.yml,
+and the elsewhere list on the përi page out of _data/elsewhere.yml. Only the
+second uses icons; only the first uses post_list. Neither needs to know that,
+which is why both go through here rather than through a second copy.
 {%- endcomment -%}
 <ul>
   {%-for item in include.collection-%}
@@ -38,14 +36,6 @@ this loop can get between an entry and its own children.
           show_more_text=item.post_list.show_more_text
           show_more_url=item.post_list.show_more_url
      -%}
-    {%-endif-%}
-
-    {%-if item.cascade-%}
-      {%-include cascade.html
-           file=item.cascade.file
-           width=item.cascade.width
-           height=item.cascade.height
-           label=item.cascade.label-%}
     {%-endif-%}
 
     {%-if item.entries-%}

@@ -1,0 +1,38 @@
+# The places to find me that are not this site. It sits on the përi page rather
+# than on the homepage menu, so it is its own file rather than an entry in
+# _data/menu.yml: nothing about it is a menu any more, and the theme's menu
+# format has no room for a list that belongs to a page.
+#
+# It is still rendered through _includes/menu_item.html, which is the include
+# that knows how to draw an `icon:`. Each icon: names a file in _includes/icons,
+# drawn in currentColor at 1em, so it follows the link colour of whichever mode
+# is on.
+
+entries:
+  - title: github
+    url: https://github.com/morph-k
+    icon: github
+  - title: linkedin
+    url: https://www.linkedin.com/in/morphy-kuffour/
+    icon: linkedin
+  - title: website
+    url: https://morphykuffour.com
+    icon: website
+  - title: resume
+    url: /resume/
+    icon: resume
+  - title: rss
+    url: /feed.xml
+    icon: rss
+  - title: reddit
+    url: https://www.reddit.com/user/JediMasterMorphy/
+    icon: reddit
+  - title: instagram
+    url: https://www.instagram.com/morp.k/
+    icon: instagram
+  - title: pinterest
+    url: https://www.pinterest.com/morphykuffour/
+    icon: pinterest
+  - title: youtube
+    url: https://www.youtube.com/@morpheus_k
+    icon: youtube
