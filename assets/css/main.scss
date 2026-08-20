@@ -1120,6 +1120,11 @@ h1 .title-marker {
 
 .home-collage {
   margin: 2.5rem 0 0;
+
+  // The containing block for the two clips hung over the board. Without it
+  // they would position themselves against the page instead, and slide off the
+  // picture the moment anything above them changed height.
+  position: relative;
 }
 
 .home-collage img {
@@ -1127,6 +1132,35 @@ h1 .title-marker {
   width: 100%;
   height: auto;
   margin: 0 auto;
+}
+
+// A cascade laid over the board rather than floated beside text. The stacks
+// upstairs push the lines next to them aside, which is the one thing a clip on
+// top of a picture must not do -- so the float is dropped here and the box is
+// positioned outright.
+//
+// Where it goes is not in this file. Each box is placed by three custom
+// properties set on it in index.markdown, where the board it is measured
+// against is: percentages of the picture, so the arrangement holds at every
+// width, and so a third clip is another three numbers rather than another rule
+// down here. The height is not among them -- the stack derives that from its
+// own clip's shape, exactly as it does when floated.
+.collage-clip {
+  position: absolute;
+  left: var(--clip-left);
+  top: var(--clip-top);
+  width: var(--clip-width);
+}
+
+// Two classes deep, which is what it takes to outrank the plain `.cascade`
+// rules below -- including the narrow-screen one, which un-floats and re-centres
+// every stack on the page. That is the right move for the two beside the lists
+// and the wrong one here: these are already off the flow, and centring them
+// would only walk them off the tiles they were placed on.
+.collage-clip .cascade {
+  float: none;
+  width: 100%;
+  margin: 0;
 }
 
 // ---------------------------------------------------------------------------

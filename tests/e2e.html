@@ -589,24 +589,40 @@ function loadNarrow(url, width) {
           menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
 
     // --- the cascades --------------------------------------------------------
-    // Three copies of one clip stepped down and right of each other, floated
-    // beside the text next to them: one against the menu, one against the
-    // elsewhere list. What is worth asserting is what only a laid-out page can
-    // answer -- that each stack is really offset rather than stacked flat,
-    // that it takes the shape of its own clip, and that the float really does
-    // move the lines beside it.
+    // Three copies of one clip stepped down and right of each other. Two are
+    // floated beside the text next to them -- one against the menu, one against
+    // the elsewhere list -- and three are laid over the board at the foot of
+    // the page. What is worth asserting is what only a laid-out page can
+    // answer: that each stack is really offset rather than stacked flat, that
+    // it takes the shape of its own clip, that the floated pair really do move
+    // the lines beside them, and that the three on the board land where the
+    // markup put them without shifting the picture underneath.
     localStorage.setItem('appearance', 'light');
     d = await load('/');
     const stacks = Array.from(d.querySelectorAll('.cascade'));
-    check('home: the page carries both cascades', stacks.length === 2, stacks.length + ' stacks');
+    check('home: the page carries all five cascades', stacks.length === 5, stacks.length + ' stacks');
 
-    // Each stack, the clip it plays, its file's aspect ratio, and the first
-    // line of the list it is floated against.
+    // The board the last three are hung over, and the picture inside it. An
+    // absolutely positioned box contributes no height, so the figure should
+    // still be exactly as tall as the image -- if it is taller, a clip is in
+    // the flow and has pushed the page around.
+    const board = d.querySelector('.home-collage').getBoundingClientRect();
+    const boardImg = d.querySelector('.home-collage img').getBoundingClientRect();
+    check('home/board: the clips add no height to the picture',
+          Math.abs(board.height - boardImg.height) < 1,
+          'figure ' + Math.round(board.height) + ' vs img ' + Math.round(boardImg.height));
+
+    // Each stack, the clip it plays, and its file's aspect ratio. A floated one
+    // carries the first line of the list it is floated against; one on the
+    // board carries nothing further -- it is checked against the board itself.
     const CASCADES = [
       { name: 'crown',  ratio: 480 / 854,
         neighbour: () => d.querySelector('header ~ ul > li > a') },
       { name: 'dragon', ratio: 480 / 480,
         neighbour: () => d.querySelector('a.menu-link') },
+      { name: 'riders',  ratio: 640 / 360, over: true },
+      { name: 'yinyang', ratio: 480 / 854, over: true },
+      { name: 'frogs',   ratio: 480 / 480, over: true },
     ];
 
     for (let n = 0; n < CASCADES.length; n++) {
@@ -645,12 +661,36 @@ function loadNarrow(url, width) {
             Math.abs(cbox.width / cbox.height - spec.ratio) < 0.01,
             (cbox.width / cbox.height).toFixed(3) + ' vs ' + spec.ratio.toFixed(3));
 
-      // A float moves line boxes, not block boxes, so the list beside it still
-      // spans the column while the entries inside it stop short of the video.
-      const line = spec.neighbour().getBoundingClientRect();
-      check(tag + 'the stack sits beside its list rather than above it',
-            line.right <= cbox.left + 1 && line.top < cbox.bottom && line.bottom > cbox.top,
-            'line.right=' + Math.round(line.right) + ' stack.left=' + Math.round(cbox.left));
+      if (spec.neighbour) {
+        // A float moves line boxes, not block boxes, so the list beside it still
+        // spans the column while the entries inside it stop short of the video.
+        const line = spec.neighbour().getBoundingClientRect();
+        check(tag + 'the stack sits beside its list rather than above it',
+              line.right <= cbox.left + 1 && line.top < cbox.bottom && line.bottom > cbox.top,
+              'line.right=' + Math.round(line.right) + ' stack.left=' + Math.round(cbox.left));
+      } else {
+        // On the board rather than beside anything. Nothing in the markup
+        // states where in pixels: the wrapper carries three percentages and the
+        // board is meant to be what they are percentages of, so reading the
+        // laid-out box back against the picture is what proves both -- that the
+        // custom properties reach the rule, and that the containing block is
+        // the figure rather than the page.
+        check(tag + 'the stack lies within the board',
+              cbox.left >= board.left - 1 && cbox.right <= board.right + 1 &&
+              cbox.top >= board.top - 1 && cbox.bottom <= board.bottom + 1,
+              'stack ' + Math.round(cbox.left) + ',' + Math.round(cbox.top) +
+              ' board ' + Math.round(board.left) + ',' + Math.round(board.top));
+
+        const asked = stack.parentElement.style;
+        const pct = [
+          ['left',  (cbox.left - board.left) / board.width * 100,  asked.getPropertyValue('--clip-left')],
+          ['top',   (cbox.top - board.top) / board.height * 100,   asked.getPropertyValue('--clip-top')],
+          ['width', cbox.width / board.width * 100,                asked.getPropertyValue('--clip-width')],
+        ];
+        check(tag + 'the box sits where the markup placed it on the board',
+              pct.every(([, got, want]) => Math.abs(got - parseFloat(want)) < 0.5),
+              pct.map(([k, got, want]) => k + ' ' + got.toFixed(1) + '% vs ' + want.trim()).join(' '));
+      }
 
       // Autoplay is not in the markup -- the include's script grants it, and
       // declines to when the reader has asked for less motion. This whole run
@@ -688,34 +728,55 @@ function loadNarrow(url, width) {
     d = await load('/');
     let filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
-    check('home/dark: both cascades are re-inverted back to true tone',
-          filters.length === 6 && filters.every(f => f === 'invert(1)') &&
+    check('home/dark: every cascade is re-inverted back to true tone',
+          filters.length === 15 && filters.every(f => f === 'invert(1)') &&
           d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
           filters.join(' '));
     localStorage.setItem('appearance', 'purple');
     d = await load('/');
     filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
-    check('home/purple: both cascades are left alone',
-          filters.length === 6 && filters.every(f => f === 'none') &&
+    check('home/purple: every cascade is left alone',
+          filters.length === 15 && filters.every(f => f === 'none') &&
           d.defaultView.getComputedStyle(d.body).filter === 'none',
           filters.join(' '));
     localStorage.setItem('appearance', 'light');
 
     // Narrow: half the column is more than a phone can spare, so the float is
-    // dropped and each stack centres on its own line above the list it was
-    // floated against.
+    // dropped and each floated stack centres on its own line above the list it
+    // was floated against.
     d = await loadNarrow('/', 420);
     const narrowStacks = Array.from(d.querySelectorAll('.cascade'));
-    check('home/narrow: both cascades un-float and centre',
-          narrowStacks.length === 2 && narrowStacks.every(el => {
+    const narrowFloated = narrowStacks.filter(el => !el.closest('.collage-clip'));
+    check('home/narrow: both floated cascades un-float and centre',
+          narrowFloated.length === 2 && narrowFloated.every(el => {
             const c = d.defaultView.getComputedStyle(el);
             return c.float === 'none' && c.marginLeft === c.marginRight &&
                    parseFloat(c.marginLeft) > 0;
           }),
-          narrowStacks.map(el => {
+          narrowFloated.map(el => {
             const c = d.defaultView.getComputedStyle(el);
             return c.float + '/' + c.marginLeft;
+          }).join(' '));
+
+    // The three on the board are the case that rule must not reach: they are
+    // already out of the flow, and centring them would walk them off the tiles
+    // they were placed on. Being placed in percentages, they ride the picture
+    // down as it narrows -- so the same fractions of the board hold here as at
+    // full width.
+    const narrowBoard = d.querySelector('.home-collage').getBoundingClientRect();
+    const narrowOver = narrowStacks.filter(el => el.closest('.collage-clip'));
+    check('home/narrow: the clips on the board keep their place on it',
+          narrowOver.length === 3 && narrowOver.every(el => {
+            const c = d.defaultView.getComputedStyle(el);
+            const b = el.getBoundingClientRect();
+            const want = parseFloat(el.parentElement.style.getPropertyValue('--clip-left'));
+            return c.float === 'none' && parseFloat(c.marginLeft) === 0 &&
+                   Math.abs((b.left - narrowBoard.left) / narrowBoard.width * 100 - want) < 0.5;
+          }),
+          narrowOver.map(el => {
+            const b = el.getBoundingClientRect();
+            return ((b.left - narrowBoard.left) / narrowBoard.width * 100).toFixed(1) + '%';
           }).join(' '));
     check('home/narrow: the page does not scroll sideways',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
