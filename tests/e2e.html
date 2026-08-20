@@ -506,7 +506,7 @@ function loadNarrow(url, width) {
     const handKept = ['1s40J0N5CxE', '3DxPnr48fKc', 'yoYZf-lBF_U',
                       '01yUzXQctcM', 'lMTZa82UVqE', 'SmqXKbxDoJ0', 'cpbeS15sHZ0',
                       'x-D4MfFLo_0', '-51pxiN4NBA', 'eeTnog5RRQo', 'WTDuXSyINLo',
-                      'yxWhVw0KScY'];
+                      'yxWhVw0KScY', 'XYF5W_0nxSc'];
     const hrefs = tracks.map(t => t.querySelector('a.music-cover').getAttribute('href'));
     check('music: the hand-kept tracks lead the grid, in order',
           handKept.every((id, i) => hrefs[i] && hrefs[i].indexOf('v=' + id) !== -1),
