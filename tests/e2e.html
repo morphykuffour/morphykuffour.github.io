@@ -966,22 +966,25 @@ function loadNarrow(url, width) {
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
 
-    // --- the stop motions ----------------------------------------------------
-    // Three sequences under the roll: ten stills each, laid in a reel ten
-    // windows wide and walked one window at a time. The count is written once,
-    // as --frames on the section, and spent three times -- the Liquid loop that
-    // emits the files, the reel's width, and the step count. The whole thing
-    // only reads as stop motion while all three agree, and each of them is a
-    // laid-out fact rather than a source one.
+    // --- the shoal -----------------------------------------------------------
+    // Three stop motions laid over each other at the foot of the page. Two
+    // things are being asserted at once here and they are worth separating:
+    // that each sequence works -- ten stills, a reel ten windows wide, one
+    // window a step -- and that the three of them cross rather than sit in a
+    // row, which is a fact about the board and nothing to do with the reels.
     d = await load('/');
+    const shoal = d.querySelector('.shoal');
+    const boardBox = d.querySelector('.shoal-board').getBoundingClientRect();
     const flips = Array.from(d.querySelectorAll('.stop-motion'));
-    check('home/stop: all three sequences follow the roll',
-          flips.length === 3 && flips.every(f => f.getBoundingClientRect().top >
-            d.querySelector('.skull-roll').getBoundingClientRect().bottom),
-          flips.length + ' sequences @' +
-          flips.map(f => Math.round(f.getBoundingClientRect().top)).join(' '));
+    check('home/shoal: the board follows the roll',
+          !!shoal && boardBox.top >
+            d.querySelector('.skull-roll').getBoundingClientRect().bottom,
+          shoal ? 'board @' + Math.round(boardBox.top) : 'no board');
+    check('home/shoal: all three sequences are on it', flips.length === 3,
+          flips.length + ' sequences');
 
     const SEQUENCES = ['manta', 'whale', 'whaleshark'];
+    const flipBoxes = [];
     for (let n = 0; n < SEQUENCES.length; n++) {
       const dir = SEQUENCES[n], tag = 'home/' + dir + ': ';
       const flip = flips[n];
@@ -1002,6 +1005,7 @@ function loadNarrow(url, width) {
       // one of them -- otherwise the sequence drifts, showing halves of two
       // frames at a time, and no amount of staring at the stylesheet says so.
       const winBox = flipWindow.getBoundingClientRect();
+      flipBoxes.push(winBox);
       const reelBox = reel.getBoundingClientRect();
       check(tag + 'the reel is exactly as many windows wide as it has frames',
             Math.abs(reelBox.width - winBox.width * asked) < 1,
@@ -1013,10 +1017,34 @@ function loadNarrow(url, width) {
 
       // The window is shaped before any frame arrives -- they are lazy and well
       // below the fold, and a window with no height of its own would collapse
-      // the section and then shove the page open when the first one lands.
+      // and then shove the board's contents around when the first one lands.
       check(tag + 'the window takes one frame\'s shape',
             Math.abs(winBox.width / winBox.height - 480 / 854) < 0.01,
             (winBox.width / winBox.height).toFixed(3) + ' vs ' + (480 / 854).toFixed(3));
+
+      // Nothing in the markup states where in pixels: the slot carries three
+      // percentages and the board is meant to be what they are percentages of,
+      // so reading the laid-out window back against the board is what proves
+      // both -- that the custom properties reach the rule, and that the
+      // containing block is the board rather than the page.
+      check(tag + 'the window lies within the board',
+            winBox.left >= boardBox.left - 1 && winBox.right <= boardBox.right + 1 &&
+            winBox.top >= boardBox.top - 1 && winBox.bottom <= boardBox.bottom + 1,
+            'window ' + Math.round(winBox.left) + ',' + Math.round(winBox.top) +
+            ' board ' + Math.round(boardBox.left) + ',' + Math.round(boardBox.top));
+
+      const asked3 = flip.parentElement.style;
+      const pct = [
+        ['left',  (winBox.left - boardBox.left) / boardBox.width * 100,
+                  asked3.getPropertyValue('--slot-left')],
+        ['top',   (winBox.top - boardBox.top) / boardBox.height * 100,
+                  asked3.getPropertyValue('--slot-top')],
+        ['width', winBox.width / boardBox.width * 100,
+                  asked3.getPropertyValue('--slot-width')],
+      ];
+      check(tag + 'the window sits where the markup placed it on the board',
+            pct.every(([, got, want]) => Math.abs(got - parseFloat(want)) < 0.5),
+            pct.map(([k, got, want]) => k + ' ' + got.toFixed(1) + '% vs ' + want.trim()).join(' '));
 
       // Sampled rather than probed in full, the same call the roll above makes:
       // these are lazy and below the fold, all ten are the same size, and a
@@ -1050,12 +1078,50 @@ function loadNarrow(url, width) {
             flipWindow.scrollWidth + ' of ' + flipWindow.clientWidth + ' visible');
     }
 
-    // The step count is the one of the three that cannot be read back off this
-    // run: reduced motion is forced, which resets the whole animation shorthand
-    // and takes the timing function with it. So it is read off the rule, and
-    // the substitution that puts --frames inside steps() -- the part with no
-    // fallback, since a browser that dropped it would slide smoothly instead of
-    // stepping -- is put to a probe of the same shape in the same engine.
+    // The arrangement itself, which is the thing the percentages are for and the
+    // one claim no single slot can make on its own. Three portrait clips in a
+    // row is a strip of panels; what is wanted is three that cross, so each has
+    // to overlap the next along both axes rather than merely sit beside it.
+    check('home/shoal: each sequence crosses the next rather than standing beside it',
+          flipBoxes.every((box, n) => {
+            const next = flipBoxes[n + 1];
+            if (!next) return true;
+            return next.left > box.left && next.left < box.right &&
+                   next.top !== box.top &&
+                   Math.min(box.bottom, next.bottom) > Math.max(box.top, next.top);
+          }),
+          flipBoxes.map(b => Math.round(b.left) + ',' + Math.round(b.top) +
+            ' ' + Math.round(b.width) + 'x' + Math.round(b.height)).join(' | '));
+
+    // In step the three are one animation of three panels, all changing on the
+    // same beat. Different paces is what makes them three sequences that happen
+    // to overlap -- so the paces have to be different, and the count they are
+    // divided by is the same for all three, which is what makes that true of the
+    // frames rather than only of the passes.
+    const paces = flips.map(f => f.style.getPropertyValue('--pace').trim());
+    check('home/shoal: no two sequences step on the same beat',
+          new Set(paces).size === 3 &&
+          new Set(flips.map(f => f.style.getPropertyValue('--frames').trim())).size === 1,
+          paces.join(' '));
+
+    // The edge is what keeps three dark blue clips lying on each other from
+    // reading as one smeared picture. currentColor rather than a colour of its
+    // own is what makes it right in every mode without a rule for any of them,
+    // so the value that matters is that it resolves to the text colour.
+    const edge = d.defaultView.getComputedStyle(
+      d.querySelector('.stop-motion-window'));
+    check('home/shoal: every window is outlined in the page\'s own ink',
+          edge.outlineStyle === 'solid' && parseFloat(edge.outlineWidth) >= 1 &&
+          edge.outlineColor === d.defaultView.getComputedStyle(d.body).color,
+          edge.outlineWidth + ' ' + edge.outlineStyle + ' ' + edge.outlineColor);
+
+    // The step count is the one part of the mechanism that cannot be read back
+    // off this run: reduced motion is forced, which resets the whole animation
+    // shorthand and takes the timing function with it. So it is read off the
+    // rule, and the substitution that puts --frames inside steps() -- the part
+    // with no fallback, since a browser that dropped it would slide smoothly
+    // instead of stepping -- is put to a probe of the same shape in the same
+    // engine.
     let declaredSteps = null;
     for (const sheet of Array.from(d.styleSheets)) {
       let rules;
@@ -1064,12 +1130,12 @@ function loadNarrow(url, width) {
         if (rule.selectorText !== '.stop-motion-reel') continue;
         // The inner var() has parentheses of its own, so the capture has to
         // allow for them rather than stop at the first close.
-        const m = /steps\((var\([^)]*\)|[^)]*)\)/.exec(rule.style.animation ||
+        const m = /steps\(((var\([^)]*\))|[^)]*)\)/.exec(rule.style.animation ||
                                                         rule.style.animationTimingFunction || '');
         if (m) declaredSteps = m[1].trim();
       }
     }
-    check('home/stop: the step count is the frame count, not a number of its own',
+    check('home/shoal: the step count is the frame count, not a number of its own',
           declaredSteps === 'var(--frames)', 'steps(' + declaredSteps + ')');
 
     const probe = d.createElement('div');
@@ -1077,11 +1143,26 @@ function loadNarrow(url, width) {
     d.body.appendChild(probe);
     const substituted = d.defaultView.getComputedStyle(probe).animationTimingFunction;
     probe.remove();
-    check('home/stop: the browser substitutes the frame count into steps()',
+    check('home/shoal: the browser substitutes the frame count into steps()',
           substituted === 'steps(7)', substituted);
 
+    // Narrow: the crossing is in percentages of the board, so it rides the page
+    // down rather than coming apart -- the same fractions hold here as at full
+    // width, and the board being square means it cannot push the page sideways.
     d = await loadNarrow('/', 420);
-    check('home/stop/narrow: the reels add no sideways scroll',
+    const shoalNarrowBoard = d.querySelector('.shoal-board').getBoundingClientRect();
+    const narrowFlips = Array.from(d.querySelectorAll('.stop-motion'));
+    check('home/shoal/narrow: the crossing keeps its proportions',
+          narrowFlips.length === 3 && narrowFlips.every(f => {
+            const b = f.getBoundingClientRect();
+            const want = parseFloat(f.parentElement.style.getPropertyValue('--slot-left'));
+            return Math.abs((b.left - shoalNarrowBoard.left) / shoalNarrowBoard.width * 100 - want) < 0.5;
+          }),
+          narrowFlips.map(f => {
+            const b = f.getBoundingClientRect();
+            return ((b.left - shoalNarrowBoard.left) / shoalNarrowBoard.width * 100).toFixed(1) + '%';
+          }).join(' '));
+    check('home/shoal/narrow: the board adds no sideways scroll',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';

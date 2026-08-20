@@ -16,10 +16,16 @@ Parameters:
            them, so a wrong pair is a box of the wrong shape rather than a hint
   pace     how long one full pass takes. Divided by count, that is the hold on
            each still -- 2.5s over ten is a quarter second a frame, which is
-           slow enough to read as stop motion rather than as footage
-  heading  the label above it
+           slow enough to read as stop motion rather than as footage. Three of
+           these crossing want three different paces, which is the other half of
+           what this parameter is for: in step they are one animation of three
+           panels, out of step they are three sequences that happen to overlap
   label    what the sequence shows, for anyone who cannot see it
-  caption  the line underneath: what it was cut from, and whose it is
+
+It emits a reel and nothing around it -- no heading, no caption, no section.
+Where one goes and what is said about it belong to the page, which is what lets
+three of them be laid over each other as one picture with one caption under it
+rather than three things stacked in a column.
 
 Stills rather than the clip they came from, which is what separates these from
 the cascades. Those want continuous footage -- the three-copy stack is a phase
@@ -28,24 +34,20 @@ Ten JPEGs also weigh about a third of what the same ten seconds encodes to, and
 being <img> they take the theme's dark-mode handling for free: main.scss carries
 a rule to undo the page invert on <video>, and needs none for these.
 {%- endcomment -%}
-<section class="stop-motion" style="--frames: {{ include.count }}; --pace: {{ include.pace }}">
-  <h2>{{ include.heading }}</h2>
-  <figure>
-    {%- comment -%}
-    The label is on the window rather than spread over the stills. Ten frames
-    each saying "the same thing, slightly later" is ten interruptions for one
-    idea, so they carry no alt text of their own and the window says the whole
-    of it once -- the same call the cascade include makes for its three layers.
-    {%- endcomment -%}
-    <div class="stop-motion-window" role="img" aria-label="{{ include.label | escape }}">
-      <div class="stop-motion-reel">
-        {%- for frame in (1..include.count) -%}
-        <img src="{{ site.baseurl }}/images/{{ include.dir }}/{{ include.dir }}-{{ frame | prepend: '0' | slice: -2, 2 }}.jpg"
-             alt="" width="{{ include.width }}" height="{{ include.height }}"
-             loading="lazy" decoding="async">
-        {%- endfor -%}
-      </div>
+<div class="stop-motion" style="--frames: {{ include.count }}; --pace: {{ include.pace }}">
+  {%- comment -%}
+  The label is on the window rather than spread over the stills. Ten frames each
+  saying "the same thing, slightly later" is ten interruptions for one idea, so
+  they carry no alt text of their own and the window says the whole of it once
+  -- the same call the cascade include makes for its three layers.
+  {%- endcomment -%}
+  <div class="stop-motion-window" role="img" aria-label="{{ include.label | escape }}">
+    <div class="stop-motion-reel">
+      {%- for frame in (1..include.count) -%}
+      <img src="{{ site.baseurl }}/images/{{ include.dir }}/{{ include.dir }}-{{ frame | prepend: '0' | slice: -2, 2 }}.jpg"
+           alt="" width="{{ include.width }}" height="{{ include.height }}"
+           loading="lazy" decoding="async">
+      {%- endfor -%}
     </div>
-    <figcaption>{{ include.caption }}</figcaption>
-  </figure>
-</section>
+  </div>
+</div>

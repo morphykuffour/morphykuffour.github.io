@@ -1599,31 +1599,30 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 }
 
 // ---------------------------------------------------------------------------
-// Stop motions
+// The shoal
 // ---------------------------------------------------------------------------
-// The three sequences under the skulls: ten stills off one clip each, held a
-// quarter second and replaced. Why stills rather than the clips is argued in
-// _includes/stopmotion.html, where the markup they share is.
+// Three stop motions laid over each other at the foot of the page: ten stills
+// off one clip each, held about a quarter second and replaced. Why stills
+// rather than the clips is argued in _includes/stopmotion.html, where the
+// markup they share is.
 //
-// The mechanism is the roll's above, stepped instead of smoothed: one window a
-// frame wide, a reel N windows wide inside it, walked from 0 to -100% of
-// itself. `steps(N)` makes that N discrete stops rather than a slide -- 0,
-// -10%, ... -90% of the reel for ten of them, one window each, landing the last
-// frame last. Nothing tweens, which is the whole of what makes it read as stop
-// motion rather than as a pan across a strip.
+// The board is the containing block and nothing else. Where each reel sits on
+// it is not in this file -- three percentages set on each slot in
+// index.markdown, where the arrangement is composed, exactly as the clips over
+// the collage are placed on the picture. So a fourth fish is three more numbers
+// there rather than another rule down here, and the crossing holds at every
+// width instead of coming apart as the column narrows.
 //
-// The count is not in this file. It comes off --frames, set on the section in
-// index.markdown where the sequence is named, and it is read here twice -- once
-// for how wide the reel is and once for how many stops it takes. Those two have
-// to agree or the sequence drifts, showing halves of two frames at a time, and
-// taking both from one property is what makes that impossible to get wrong. It
-// also means a sequence of six or of twenty needs no rule of its own.
+// The board needs a ratio of its own because everything inside it is out of the
+// flow and contributes no height. Square is what the arrangement asks for: a
+// slot 40% of the width is 71% of it tall at the stills' 9:16, which leaves
+// about a quarter of the board's height to stagger three of them down.
 
-.stop-motion {
+.shoal {
   margin: 3rem 0 0;
 }
 
-.stop-motion h2 {
+.shoal h2 {
   // Same as the roll's above: the theme's 3rem is for headings that break up
   // prose, and this is a label on the thing directly under it.
   margin: 0 0 .8rem;
@@ -1631,19 +1630,60 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   letter-spacing: .08em;
 }
 
-.stop-motion figure {
+.shoal figure {
   margin: 0;
 }
 
-// One frame's worth of window, centred. The aspect ratio is the stills' own, so
-// the box is the right shape before any of them arrive -- they are lazy and
-// below the fold, and a window with no height would collapse the section and
-// then shove the page open when the first one lands.
+.shoal-board {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  margin-bottom: .8rem;
+}
+
+.shoal-slot {
+  position: absolute;
+  left: var(--slot-left);
+  top: var(--slot-top);
+  width: var(--slot-width);
+}
+
+// ---------------------------------------------------------------------------
+// Stop motions
+// ---------------------------------------------------------------------------
+// One sequence: a window a frame wide, a reel N windows wide inside it, walked
+// from 0 to -100% of itself. `steps(N)` makes that N discrete stops rather than
+// a slide -- 0, -10%, ... -90% of the reel for ten of them, one window each,
+// landing the last frame last. Nothing tweens, which is the whole of what makes
+// it read as stop motion rather than as a pan across a strip.
+//
+// The count is not in this file. It comes off --frames, set on the reel in
+// index.markdown where the sequence is named, and it is read here twice -- once
+// for how wide the reel is and once for how many stops it takes. Those two have
+// to agree or the sequence drifts, showing halves of two frames at a time, and
+// taking both from one property is what makes that impossible to get wrong. It
+// also means a sequence of six or of twenty needs no rule of its own.
+//
+// The pace comes the same way, and for a second reason besides taste: three of
+// these overlapping at one pace are one animation of three panels, all changing
+// on the same beat. Given three different ones they cross instead.
+
 .stop-motion-window {
   overflow: hidden;
-  width: min(60%, 18rem);
-  margin: 0 auto;
   aspect-ratio: 480 / 854;
+
+  // The edge is what makes the crossing legible. These are three dark blue
+  // underwater clips lying on each other, and without a line between them the
+  // overlaps read as one smeared picture rather than as three that cross --
+  // the same problem the cascade solves with opacity, which is no use here
+  // because these are three different animals rather than three copies of one.
+  //
+  // An outline rather than a border: it is drawn outside the box and takes no
+  // part in layout, so the window stays exactly one frame wide and the slot
+  // percentages stay the sizes they say they are. currentColor rather than a
+  // colour of its own, which is what makes it right in all three modes without
+  // a rule for any of them -- dark inverts the whole page, and the text it is
+  // taking its colour from is inverted with it.
+  outline: 2px solid currentColor;
 }
 
 .stop-motion-reel {
@@ -1668,10 +1708,11 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   max-width: none;
 }
 
-// A hovered or focused reel stops on whatever frame it was holding, which is
-// the only way to look at one of these for longer than a quarter second.
-.stop-motion:hover .stop-motion-reel,
-.stop-motion:focus-within .stop-motion-reel {
+// A hovered or focused shoal stops -- all three of them, not the one under the
+// pointer. They are one picture, and freezing a third of it is a glitch rather
+// than a pause.
+.shoal:hover .stop-motion-reel,
+.shoal:focus-within .stop-motion-reel {
   animation-play-state: paused;
 }
 
@@ -1680,7 +1721,7 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   to   { transform: translateX(-100%); }
 }
 
-// Asked for less motion, the reel stops and the window scrolls by hand -- the
+// Asked for less motion, the reels stop and each window scrolls by hand -- the
 // same answer the roll above gives, and for the same reason: frozen on the
 // first frame the manta is a speck, and the nine that are the point of the
 // sequence would sit off the edge with no way to bring them back.

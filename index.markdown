@@ -125,38 +125,63 @@ white box with a drawing in it.
 </section>
 
 {%- comment -%}
-Three stop motions under the skulls: ten stills off a clip each, held a quarter
-second and replaced. Stills rather than the clips they came from, which is the
-opposite of the call made for the five cascades further up -- the reasoning is
-in _includes/stopmotion.html, next to the mechanism it explains.
+The shoal that closes the page: three stop motions -- a manta rising, a humpback
+turning, a whale shark feeding -- laid over each other rather than stacked down
+the column. Ten stills off a clip each, held about a quarter second and
+replaced. Stills rather than the footage they were cut from, which is the
+opposite of the call the five cascades upstairs make; the reasoning is in
+_includes/stopmotion.html, next to the mechanism it explains.
 
-Ten is a number picked for the clips rather than for the code. Each runs ten to
-fifteen seconds, so ten stills is roughly one a second, and a second apart is
-the interval at which these read as a sequence of drawings instead of a video
+Crossing rather than in a row, which is the whole point of putting them
+together. Three portrait clips side by side is a strip of three panels and reads
+as one video in three columns; overlapped and staggered they read as what they
+are, three separate sequences that happen to share a piece of water. The board
+is the containing block and each reel is placed on it by three percentages, the
+way the clips over the collage are placed on the picture -- authored here, where
+the arrangement they are measured against is, rather than as a rule per reel a
+file away in main.scss. Being percentages, the crossing holds at every width:
+they ride the board down as it narrows instead of drifting across it.
+
+Three paces rather than one, which is the other half of the mix. In step they
+would be one animation of three panels, changing together every quarter second;
+at 2.5, 3.1 and 3.7 seconds a pass no two land at the same moment and the
+combination does not come back round for minutes.
+
+Ten stills each is a number picked for the clips rather than for the code. They
+run ten to fifteen seconds, so ten is roughly one a second, and a second apart
+is the interval at which these read as a sequence of drawings instead of a video
 someone dropped frames from. It is not baked in anywhere: the count is a
 parameter, written into the markup as a custom property and read back by the
-stylesheet for both the reel's width and its step count, so a sequence of six or
-of twenty is one number here.
+stylesheet for both the reel's width and its step count.
 
 The clips are other people's, saved the way the ones on /art/ were. Two carry
 their maker's line burnt into the picture, which is a caption I did not write
-and will not crop off; the third has none, and its own caption says the same
-thing in words.
+and will not crop off; the caption under the board says so.
 {%- endcomment -%}
-{%- include stopmotion.html
-      dir="manta" count=10 width=480 height=854 pace="2.5s"
-      heading="Ten frames of a rise"
-      label="Ten frames of a manta ray rising through blue water towards the surface, from a distant speck to a white underside filling the frame."
-      caption="Ten stills off a ten-second clip, one a second. The footage is not mine." -%}
-
-{%- include stopmotion.html
-      dir="whale" count=10 width=480 height=854 pace="2.5s"
-      heading="Ten frames of a turn"
-      label="Ten frames of a humpback whale turning through deep blue water below a broken surface, trailing a long cloud of bubbles behind it."
-      caption="Ten stills off an eleven-second clip. The footage is not mine, and neither is the line written across it." -%}
-
-{%- include stopmotion.html
-      dir="whaleshark" count=10 width=480 height=854 pace="2.5s"
-      heading="Ten frames of a mouth"
-      label="Ten frames of a whale shark: a pale open mouth filling the frame head-on, then the spotted back and tail passing overhead through a cloud of small fish."
-      caption="Ten stills off a fifteen-second clip, which cuts between shots -- so this one steps between them rather than through one move. The footage is not mine, and neither is the line written across it." -%}
+<section class="shoal">
+  <h2>Three, crossing</h2>
+  <figure>
+    <div class="shoal-board">
+      <div class="shoal-slot" style="--slot-left: 0%; --slot-top: 0%; --slot-width: 40%">
+        {%- include stopmotion.html
+              dir="manta" count=10 width=480 height=854 pace="2.5s"
+              label="Ten frames of a manta ray rising through blue water towards the surface, from a distant speck to a white underside filling the frame." -%}
+      </div>
+      <div class="shoal-slot" style="--slot-left: 30%; --slot-top: 28%; --slot-width: 40%">
+        {%- include stopmotion.html
+              dir="whale" count=10 width=480 height=854 pace="3.1s"
+              label="Ten frames of a humpback whale turning through deep blue water below a broken surface, trailing a long cloud of bubbles behind it." -%}
+      </div>
+      <div class="shoal-slot" style="--slot-left: 60%; --slot-top: 6%; --slot-width: 40%">
+        {%- include stopmotion.html
+              dir="whaleshark" count=10 width=480 height=854 pace="3.7s"
+              label="Ten frames of a whale shark: a pale open mouth filling the frame head-on, then the spotted back and tail passing overhead through a cloud of small fish." -%}
+      </div>
+    </div>
+    <figcaption>
+      Thirty stills off three clips, ten each -- a manta rising, a humpback
+      turning, a whale shark feeding. None of the footage is mine, and neither
+      are the lines written across two of them.
+    </figcaption>
+  </figure>
+</section>
