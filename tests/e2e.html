@@ -965,6 +965,126 @@ function loadNarrow(url, width) {
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
+
+    // --- the stop motions ----------------------------------------------------
+    // Three sequences under the roll: ten stills each, laid in a reel ten
+    // windows wide and walked one window at a time. The count is written once,
+    // as --frames on the section, and spent three times -- the Liquid loop that
+    // emits the files, the reel's width, and the step count. The whole thing
+    // only reads as stop motion while all three agree, and each of them is a
+    // laid-out fact rather than a source one.
+    d = await load('/');
+    const flips = Array.from(d.querySelectorAll('.stop-motion'));
+    check('home/stop: all three sequences follow the roll',
+          flips.length === 3 && flips.every(f => f.getBoundingClientRect().top >
+            d.querySelector('.skull-roll').getBoundingClientRect().bottom),
+          flips.length + ' sequences @' +
+          flips.map(f => Math.round(f.getBoundingClientRect().top)).join(' '));
+
+    const SEQUENCES = ['manta', 'whale', 'whaleshark'];
+    for (let n = 0; n < SEQUENCES.length; n++) {
+      const dir = SEQUENCES[n], tag = 'home/' + dir + ': ';
+      const flip = flips[n];
+      const flipWindow = flip.querySelector('.stop-motion-window');
+      const reel = flip.querySelector('.stop-motion-reel');
+      const frames = Array.from(reel.querySelectorAll('img'));
+      const asked = Number(flip.style.getPropertyValue('--frames'));
+
+      const names = frames.map(i => i.getAttribute('src').split('/').pop());
+      check(tag + 'the reel holds the frames it says it does, in order',
+            frames.length === asked && names.length === new Set(names).size &&
+            names.join(' ') === names.slice().sort().join(' ') &&
+            names.every(name => name.indexOf(dir + '-') === 0),
+            asked + ' asked, ' + names.join(' '));
+
+      // What the -100% in the keyframe rests on. N steps across the reel is one
+      // window a step only if the reel is N windows wide and each frame fills
+      // one of them -- otherwise the sequence drifts, showing halves of two
+      // frames at a time, and no amount of staring at the stylesheet says so.
+      const winBox = flipWindow.getBoundingClientRect();
+      const reelBox = reel.getBoundingClientRect();
+      check(tag + 'the reel is exactly as many windows wide as it has frames',
+            Math.abs(reelBox.width - winBox.width * asked) < 1,
+            Math.round(reelBox.width) + ' vs ' + Math.round(winBox.width * asked));
+      check(tag + 'each frame fills one window',
+            frames.every(i => Math.abs(i.getBoundingClientRect().width - winBox.width) < 1),
+            frames.map(i => Math.round(i.getBoundingClientRect().width)).join(' ') +
+            ' in ' + Math.round(winBox.width));
+
+      // The window is shaped before any frame arrives -- they are lazy and well
+      // below the fold, and a window with no height of its own would collapse
+      // the section and then shove the page open when the first one lands.
+      check(tag + 'the window takes one frame\'s shape',
+            Math.abs(winBox.width / winBox.height - 480 / 854) < 0.01,
+            (winBox.width / winBox.height).toFixed(3) + ' vs ' + (480 / 854).toFixed(3));
+
+      // Sampled rather than probed in full, the same call the roll above makes:
+      // these are lazy and below the fold, all ten are the same size, and a
+      // declared box that disagrees with the file shifts the reel when the frame
+      // lands -- a mistake made per sequence, so the ends of each are enough.
+      const sampled = [frames[0], frames[frames.length - 1]];
+      const flipSizes = await Promise.all(sampled.map(i => new Promise(res => {
+        const probe = new Image();
+        probe.onload = () => res([probe.naturalWidth, probe.naturalHeight]);
+        probe.onerror = () => res(null);
+        probe.src = i.src;
+      })));
+      check(tag + 'every frame declares the box it actually fills',
+            flipSizes.every((size, k) => size &&
+              Number(sampled[k].getAttribute('width')) === size[0] &&
+              Number(sampled[k].getAttribute('height')) === size[1]),
+            sampled.map((i, k) => i.getAttribute('src').split('/').pop() + ' declared ' +
+              i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
+              (flipSizes[k] ? flipSizes[k].join('x') : 'unreachable')).join(', '));
+
+      // Forced reduced motion, and the same answer the roll gives: stopped, the
+      // reel holds frame one -- where the manta is a speck -- so the window has
+      // to become something a reader can walk through, or the nine frames that
+      // are the point of the sequence are unreachable.
+      check(tag + 'reduced motion stops the stop motion',
+            d.defaultView.getComputedStyle(reel).animationName === 'none',
+            d.defaultView.getComputedStyle(reel).animationName);
+      check(tag + 'a stopped reel can still be walked through by hand',
+            d.defaultView.getComputedStyle(flipWindow).overflowX === 'auto' &&
+            flipWindow.scrollWidth > flipWindow.clientWidth,
+            flipWindow.scrollWidth + ' of ' + flipWindow.clientWidth + ' visible');
+    }
+
+    // The step count is the one of the three that cannot be read back off this
+    // run: reduced motion is forced, which resets the whole animation shorthand
+    // and takes the timing function with it. So it is read off the rule, and
+    // the substitution that puts --frames inside steps() -- the part with no
+    // fallback, since a browser that dropped it would slide smoothly instead of
+    // stepping -- is put to a probe of the same shape in the same engine.
+    let declaredSteps = null;
+    for (const sheet of Array.from(d.styleSheets)) {
+      let rules;
+      try { rules = Array.from(sheet.cssRules); } catch (e) { continue; }
+      for (const rule of rules) {
+        if (rule.selectorText !== '.stop-motion-reel') continue;
+        // The inner var() has parentheses of its own, so the capture has to
+        // allow for them rather than stop at the first close.
+        const m = /steps\((var\([^)]*\)|[^)]*)\)/.exec(rule.style.animation ||
+                                                        rule.style.animationTimingFunction || '');
+        if (m) declaredSteps = m[1].trim();
+      }
+    }
+    check('home/stop: the step count is the frame count, not a number of its own',
+          declaredSteps === 'var(--frames)', 'steps(' + declaredSteps + ')');
+
+    const probe = d.createElement('div');
+    probe.style.cssText = '--frames: 7; animation-timing-function: steps(var(--frames))';
+    d.body.appendChild(probe);
+    const substituted = d.defaultView.getComputedStyle(probe).animationTimingFunction;
+    probe.remove();
+    check('home/stop: the browser substitutes the frame count into steps()',
+          substituted === 'steps(7)', substituted);
+
+    d = await loadNarrow('/', 420);
+    check('home/stop/narrow: the reels add no sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }

@@ -1597,3 +1597,100 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
     animation: none;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Stop motions
+// ---------------------------------------------------------------------------
+// The three sequences under the skulls: ten stills off one clip each, held a
+// quarter second and replaced. Why stills rather than the clips is argued in
+// _includes/stopmotion.html, where the markup they share is.
+//
+// The mechanism is the roll's above, stepped instead of smoothed: one window a
+// frame wide, a reel N windows wide inside it, walked from 0 to -100% of
+// itself. `steps(N)` makes that N discrete stops rather than a slide -- 0,
+// -10%, ... -90% of the reel for ten of them, one window each, landing the last
+// frame last. Nothing tweens, which is the whole of what makes it read as stop
+// motion rather than as a pan across a strip.
+//
+// The count is not in this file. It comes off --frames, set on the section in
+// index.markdown where the sequence is named, and it is read here twice -- once
+// for how wide the reel is and once for how many stops it takes. Those two have
+// to agree or the sequence drifts, showing halves of two frames at a time, and
+// taking both from one property is what makes that impossible to get wrong. It
+// also means a sequence of six or of twenty needs no rule of its own.
+
+.stop-motion {
+  margin: 3rem 0 0;
+}
+
+.stop-motion h2 {
+  // Same as the roll's above: the theme's 3rem is for headings that break up
+  // prose, and this is a label on the thing directly under it.
+  margin: 0 0 .8rem;
+  font-size: 1rem;
+  letter-spacing: .08em;
+}
+
+.stop-motion figure {
+  margin: 0;
+}
+
+// One frame's worth of window, centred. The aspect ratio is the stills' own, so
+// the box is the right shape before any of them arrive -- they are lazy and
+// below the fold, and a window with no height would collapse the section and
+// then shove the page open when the first one lands.
+.stop-motion-window {
+  overflow: hidden;
+  width: min(60%, 18rem);
+  margin: 0 auto;
+  aspect-ratio: 480 / 854;
+}
+
+.stop-motion-reel {
+  display: flex;
+  width: calc(var(--frames) * 100%);
+  height: 100%;
+  animation: stop-motion var(--pace) steps(var(--frames)) infinite;
+}
+
+.stop-motion-reel img {
+  // One Nth of a reel N windows wide is exactly one window. Stated as a flex
+  // basis that cannot shrink, because a row of images is precisely what flex
+  // would otherwise squeeze to fit.
+  flex: 0 0 calc(100% / var(--frames));
+  width: calc(100% / var(--frames));
+  height: 100%;
+  display: block;
+
+  // Both against the theme, which centres every image in the column and holds
+  // it to the column's width. Here they are a reel, and each one is the window.
+  margin: 0;
+  max-width: none;
+}
+
+// A hovered or focused reel stops on whatever frame it was holding, which is
+// the only way to look at one of these for longer than a quarter second.
+.stop-motion:hover .stop-motion-reel,
+.stop-motion:focus-within .stop-motion-reel {
+  animation-play-state: paused;
+}
+
+@keyframes stop-motion {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+// Asked for less motion, the reel stops and the window scrolls by hand -- the
+// same answer the roll above gives, and for the same reason: frozen on the
+// first frame the manta is a speck, and the nine that are the point of the
+// sequence would sit off the edge with no way to bring them back.
+@media (prefers-reduced-motion: reduce) {
+  .stop-motion-window {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .stop-motion-reel {
+    animation: none;
+  }
+}
