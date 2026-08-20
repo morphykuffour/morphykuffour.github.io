@@ -966,6 +966,63 @@ function loadNarrow(url, width) {
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
 
+    // --- the line under the roll ---------------------------------------------
+    // The Phaedrus passage under the skulls. It belongs to the strip above it --
+    // it is about the cut those sixteen were made with -- so what is worth
+    // pinning is that it stays inside the roll's section and under the drawings
+    // rather than drifting off between two things, and that the theme's box does
+    // not come back around it.
+    d = await load('/');
+    const epigraph = d.querySelector('.roll-epigraph');
+    const rollFigure = d.querySelector('.skull-roll figure');
+    check('home/epigraph: the line sits inside the roll, under the drawings',
+          !!epigraph && epigraph.closest('.skull-roll') === d.querySelector('.skull-roll') &&
+          epigraph.getBoundingClientRect().top >
+            rollFigure.getBoundingClientRect().bottom - 1,
+          epigraph ? 'line @' + Math.round(epigraph.getBoundingClientRect().top) +
+            ' figure ends @' + Math.round(rollFigure.getBoundingClientRect().bottom)
+            : 'no line');
+    check('home/epigraph: it names the passage and where it was taken from',
+          !!epigraph && /Phaedrus/.test(epigraph.textContent) &&
+          /265e/.test(epigraph.textContent) &&
+          !!epigraph.querySelector('cite a[href*="jeffsearle"]'),
+          epigraph ? epigraph.querySelector('cite').textContent.replace(/\s+/g, ' ').trim()
+                   : 'no line');
+
+    // The theme puts a full `thin solid black` box on every blockquote. Left
+    // alone that is a box under a rule, so the rule has to win on all four
+    // sides -- three of them staying black is exactly the failure the purple
+    // blockquote rule further up main.scss exists to fix elsewhere.
+    let quoteEdges = d.defaultView.getComputedStyle(epigraph);
+    check('home/epigraph: the theme\'s box is gone and only the hairline is left',
+          quoteEdges.borderLeftStyle === 'none' && quoteEdges.borderRightStyle === 'none' &&
+          quoteEdges.borderBottomStyle === 'none' && quoteEdges.borderTopStyle === 'solid',
+          [quoteEdges.borderTopStyle, quoteEdges.borderRightStyle,
+           quoteEdges.borderBottomStyle, quoteEdges.borderLeftStyle].join(' '));
+
+    // The passage is the theme's italic and the line naming it is not -- left
+    // alone the two arrive as one voice.
+    check('home/epigraph: the attribution is not in the passage\'s voice',
+          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle === 'italic' &&
+          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle === 'normal',
+          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle + ' / ' +
+          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle);
+
+    // Purple sets a colour on every blockquote, and the one it sets is the
+    // attribution colour -- which on a box-less quote is the whole passage in
+    // the wrong ink rather than a border nobody can see.
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    quoteEdges = d.defaultView.getComputedStyle(d.querySelector('.roll-epigraph'));
+    const citeColor = d.defaultView.getComputedStyle(
+      d.querySelector('.roll-epigraph cite')).color;
+    check('home/epigraph: purple gives the passage the page\'s own ink',
+          quoteEdges.color === d.defaultView.getComputedStyle(d.body).color &&
+          citeColor !== quoteEdges.color,
+          'passage ' + quoteEdges.color + ' page ' +
+          d.defaultView.getComputedStyle(d.body).color + ' cite ' + citeColor);
+    localStorage.setItem('appearance', 'light');
+
     // --- the shoal -----------------------------------------------------------
     // Three stop motions laid over each other at the foot of the page. Two
     // things are being asserted at once here and they are worth separating:

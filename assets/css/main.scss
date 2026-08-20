@@ -615,6 +615,15 @@ body[a="purple"] {
     .err { color: $purple-glitch; }
   }
 
+  // Both of these are exempt from the purple blockquote rule above -- they
+  // carry no box, so only the text colour is inherited, and inherited it is the
+  // attribution colour rather than the page's own.
+  .roll-epigraph {
+    border-top-color: rgba(199, 125, 255, .3);
+    color: $purple-pale;
+
+    cite { color: $purple-dim; }
+  }
   // The card's blockquote is exempt from the purple blockquote rule above —
   // it carries no box, so only its text colour is inherited.
   .quote-card {
@@ -1595,6 +1604,41 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 
   .skull-roll-track {
     animation: none;
+  }
+}
+
+// The line under the roll. It is about the cut the sixteen were made with --
+// along the gutters between the drawings rather than through them on a quarter
+// grid -- so it is set as an epigraph belonging to the strip rather than as a
+// pull quote of its own: a narrow, centred block under a hairline, the same
+// serif and the same top rule the quote card on /about/ uses.
+//
+// The theme puts a full `thin solid black` box on every blockquote and margins
+// besides. Both have to go, or the line arrives in a box under a rule.
+.roll-epigraph {
+  max-width: 30rem;
+  margin: 1.6rem auto 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, .18);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size: .95rem;
+  line-height: 1.6;
+  text-align: center;
+
+  p {
+    margin: 0;
+  }
+
+  // The theme italicises every blockquote, which is right for the passage and
+  // wrong for the line naming it -- left alone the two read as one voice.
+  cite {
+    display: block;
+    margin-top: .6rem;
+    font-style: normal;
+    font-size: .8rem;
+    letter-spacing: .03em;
+    color: rgba(0, 0, 0, .55);
   }
 }
 

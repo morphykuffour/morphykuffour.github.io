@@ -122,6 +122,32 @@ white box with a drawing in it.
       off a single sheet of his. The drawings are his, not mine.
     </figcaption>
   </figure>
+
+  {%- comment -%}
+  The line under the roll, which is there because it describes the cut. The
+  sixteen were sliced out of one sheet on the gutters between the drawings
+  rather than on an even quarter grid -- he drew them where they fit rather than
+  to a ruler, and a quarter cut takes the jaw off four of them. That is the
+  passage exactly: along the joints, not through them.
+
+  It is Searle's own quotation as well as Plato's. He is the man whose sheet was
+  cut, and it is his post on Plato's dialectic that the line is lifted from --
+  which is why the attribution goes by way of him rather than straight to a
+  translation, and why this sits inside the roll's section rather than off on
+  its own between two things.
+
+  Inside .skull-roll rather than between it and the shoal, for the same reason:
+  it belongs to the drawings above it. The gap below is the shoal's own top
+  margin, so nothing here needs to make one.
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <p>&ldquo;&hellip;to be able to cut up each kind according to its species
+      along its natural joints, and to try not to splinter any part, as a bad
+      butcher might do.&rdquo;</p>
+    <cite>&mdash; Plato, <i>Phaedrus</i> 265e, quoted by Searle in
+      <a href="https://jeffsearle.blogspot.com/2021/06/dialectics-part-3-plato.html"
+         rel="noopener">Dialectics, part 3</a></cite>
+  </blockquote>
 </section>
 
 {%- comment -%}
