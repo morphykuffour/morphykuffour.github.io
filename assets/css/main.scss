@@ -1103,3 +1103,28 @@ h1 .title-marker {
   margin-left: .8em;
   letter-spacing: .05em;
 }
+
+// ---------------------------------------------------------------------------
+// Homepage collage
+// ---------------------------------------------------------------------------
+// The board at the foot of the homepage. It keeps the column rather than
+// breaking wide like the carousel and the music grid: it is a tall image, and
+// at full-bleed width it would run several screens deep before the page ended.
+// The margin above it is the gap that separates it from the menu, since the
+// figure is the last thing on the page and needs nothing below.
+//
+// No dark rule: the collage sits on a near-white ground, and dark mode is the
+// theme's whole-page `filter: invert(1)` with `img` inverted back, so the
+// picture keeps true tone -- ground included -- the same as every other photo
+// on the site.
+
+.home-collage {
+  margin: 2.5rem 0 0;
+}
+
+.home-collage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
