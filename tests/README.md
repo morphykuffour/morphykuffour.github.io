@@ -48,5 +48,11 @@ values — and stop there. To eyeball the result, rasterise a page and apply the
 same declarations to the image:
 
 ```sh
-qlmanage -t -s 1400 -o /tmp assets/resume/resume.pdf   # /tmp/resume.pdf.png
+curl -fsSL -o /tmp/resume.pdf https://morph-k.github.io/resume/resume.pdf
+qlmanage -t -s 1400 -o /tmp /tmp/resume.pdf   # /tmp/resume.pdf.png
 ```
+
+That PDF is served by `morph-k/resume`, not by this repository — the page embeds
+it cross-origin so it tracks that repository's latest build. The cases assert the
+`data` and `href` the page ships, which is all this side of the origin can see;
+whether the file itself is current is that repository's business.

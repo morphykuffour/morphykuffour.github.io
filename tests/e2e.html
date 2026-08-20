@@ -196,8 +196,14 @@ function loadNarrow(url, width) {
           cs.filter === 'invert(1) sepia(0.4) hue-rotate(220deg) saturate(1.3)', cs.filter);
     check('resume/purple: embed screens over the page', cs.mixBlendMode === 'screen', cs.mixBlendMode);
     check('resume/purple: frame knocked back', cs.borderTopColor === 'rgba(0, 0, 0, 0.12)', cs.borderTopColor);
-    check('resume/purple: embed still points at the PDF',
-          obj.data.indexOf('/assets/resume/resume.pdf') !== -1, obj.data);
+    // The page must embed morph-k/resume's published PDF, not a copy served
+    // from this origin -- that is the whole reason it stays current.
+    check('resume: the embed points at the morph-k build',
+          obj.data.indexOf('https://morph-k.github.io/resume/resume.pdf') === 0, obj.data);
+    check('resume: the download link points there too',
+          Array.from(d.querySelectorAll('.paper-actions a')).some(
+            a => a.href.indexOf('https://morph-k.github.io/resume/resume.pdf') === 0),
+          Array.from(d.querySelectorAll('.paper-actions a')).map(a => a.href).join(' '));
 
     localStorage.setItem('appearance', 'dark');
     d = await load('/resume/');

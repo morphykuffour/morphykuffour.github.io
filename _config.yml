@@ -18,6 +18,13 @@ domain: morphykuffour.github.io
 url: https://morphykuffour.github.io
 github_username: morph-k
 
+# The resume is built and published by the morph-k/resume repository, which
+# compiles its LaTeX and commits the PDF to its own GitHub Pages site. /resume/
+# embeds that file directly rather than keeping a second copy here, so the page
+# shows whatever that repository last built instead of drifting behind it.
+resume_pdf: https://morph-k.github.io/resume/resume.pdf
+resume_source: https://github.com/morph-k/resume
+
 # The theme's head renders this as the tab icon. It is the same portrait the
 # homepage shows beside the alias, kept here as a local copy so the tab does
 # not depend on avatars.githubusercontent.com being reachable.

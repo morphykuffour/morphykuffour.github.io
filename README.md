@@ -49,6 +49,15 @@ geometry, and the appearance toggle's `localStorage` round-trip. See
 [tests/README.md](tests/README.md) for what belongs there and what a browser
 cannot check about the embedded resume PDF.
 
+## Resume
+
+`/resume/` does not build the resume. The LaTeX and the compiled PDF both live in
+[morph-k/resume](https://github.com/morph-k/resume), which publishes the PDF to
+its own GitHub Pages site; this page embeds that file, so a push there shows up
+here on the next load with nothing to rebuild on this side. Edit the resume in
+that repository. The two URLs are `resume_pdf` and `resume_source` in
+`_config.yml`.
+
 ## Appearance modes
 
 Three modes, toggled top-right and stored in `localStorage` under `appearance`:
