@@ -80,74 +80,51 @@ rather than for anything the layout needs.
 </div>
 
 {%- comment -%}
-The skulls under the rain: sixteen studies of one skull from sixteen angles,
-rolling past in a single endless strip. They are Jeff Searle's, sliced out of
-one sheet of his and listed in _data/skulls.yml, which carries each one's own
-width -- the drawings are not all the same shape, and a lazy image without its
-size reserves the wrong box and shifts the strip when it lands. The credit is
-in the caption
-because the sheet's own signature sat in the margin under the bottom-left
-drawing, and a margin is the one part of a sheet that does not survive being
-cut into sixteen; said in words under the strip it is legible, which at this
-size it never was.
+The frieze under the rain: ten pictures run past in a single endless strip.
+They are set to one height and left at their own widths, which is what keeps
+the line of the strip steady while nothing in it is cropped to a common shape.
+
+They are other people's and I do not know whose. Most look like one hand's
+work and two arrived as reposts with the app's chrome still on them, which is
+all that can honestly be said, so the caption says that and stops. The two
+screenshots had their bars cut off before the pictures were cut to height --
+chrome is not picture -- and two more had a mute badge trimmed off the corner
+for the same reason. Nothing else in any of the ten was touched.
 
 The strip is written out twice. The loop walks it exactly one pass to the left
 and starts over, which puts the copy where the original stood -- so there is no
 jump to hide, and no script is needed to hide one.
 
-The images carry no alt text of their own, deliberately: sixteen of them saying
-"a skull, from a slightly different angle" is sixteen interruptions for one
-idea, and the caption below says the whole of it once. The class on them is the
-theme's, and it is what keeps the page's dark mode from inverting them back to
-ink-on-white -- pencil lines on a dark page want to be the light half, not a
-white box with a drawing in it.
+The images carry no alt text of their own, deliberately: ten of them each
+describing a different picture is ten interruptions in the middle of a page,
+and none of them is load-bearing -- the strip is a mood, not an argument. The
+caption below names what the strip is, once.
+
+They take the theme's own dark-mode handling rather than opting out of it with
+`ioda`, which is the opposite of the call the skulls here made before them.
+Those were pencil on white and wanted to be the light half of an inverted page;
+these are photographs and paintings, and the only right thing to do to a
+photograph on a dark page is leave its colours alone.
 {%- endcomment -%}
-<section class="skull-roll">
-  <h2>Heads will roll</h2>
+<section class="frieze">
+  <h2>Frieze</h2>
   <figure>
-    <div class="skull-roll-window">
-      <div class="skull-roll-track">
+    <div class="frieze-window">
+      <div class="frieze-track">
         {%- for pass in (1..2) -%}
-        {%- for skull in site.data.skulls -%}
-        <img class="ioda" src="{{ site.baseurl }}/images/skulls/{{ skull.file }}"
-             alt="" width="{{ skull.width }}" height="{{ skull.height }}"
+        {%- for picture in site.data.frieze -%}
+        <img src="{{ site.baseurl }}/images/frieze/{{ picture.file }}"
+             alt="" width="{{ picture.width }}" height="{{ picture.height }}"
              loading="lazy" decoding="async">
         {%- endfor -%}
         {%- endfor -%}
       </div>
     </div>
     <figcaption>
-      Sixteen studies of one skull by
-      <a href="https://jeffsearle.blogspot.co.uk/" rel="noopener">Jeff Searle</a>,
-      off a single sheet of his. The drawings are his, not mine.
+      Ten pictures saved off other people&rsquo;s feeds. None of them are mine,
+      and I do not know whose they are.
     </figcaption>
   </figure>
-
-  {%- comment -%}
-  The line under the roll, which is there because it describes the cut. The
-  sixteen were sliced out of one sheet on the gutters between the drawings
-  rather than on an even quarter grid -- he drew them where they fit rather than
-  to a ruler, and a quarter cut takes the jaw off four of them. That is the
-  passage exactly: along the joints, not through them.
-
-  It is Searle's own quotation as well as Plato's. He is the man whose sheet was
-  cut, and it is his post on Plato's dialectic that the line is lifted from --
-  which is why the attribution goes by way of him rather than straight to a
-  translation, and why this sits inside the roll's section rather than off on
-  its own between two things.
-
-  Inside .skull-roll rather than between it and the shoal, for the same reason:
-  it belongs to the drawings above it. The gap below is the shoal's own top
-  margin, so nothing here needs to make one.
-  {%- endcomment -%}
-  <blockquote class="roll-epigraph">
-    <p>&ldquo;&hellip;to be able to cut up each kind according to its species
-      along its natural joints, and to try not to splinter any part, as a bad
-      butcher might do.&rdquo;</p>
-    <cite>&mdash; Plato, <i>Phaedrus</i> 265e, quoted by Searle in
-      <a href="https://jeffsearle.blogspot.com/2021/06/dialectics-part-3-plato.html"
-         rel="noopener">Dialectics, part 3</a></cite>
-  </blockquote>
 </section>
 
 {%- comment -%}

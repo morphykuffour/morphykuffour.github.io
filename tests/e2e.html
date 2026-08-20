@@ -936,159 +936,119 @@ function loadNarrow(url, width) {
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
 
-    // --- heads will roll -----------------------------------------------------
-    // Sixteen skulls in an endless strip under the rain. The loop is the strip
+    // --- the frieze ----------------------------------------------------------
+    // Ten pictures in an endless strip under the rain. The loop is the strip
     // printed twice and walked exactly one pass left, which only comes out
     // seamless if the second pass repeats the first in order and a pass is
     // exactly half the track. Both are laid-out facts rather than source ones:
-    // the widths differ drawing to drawing, so half the track is a number only
+    // the widths differ picture to picture, so half the track is a number only
     // the browser has.
     d = await load('/');
-    const roll = d.querySelector('.skull-roll');
-    const skulls = Array.from(d.querySelectorAll('.skull-roll-track img'));
-    check('home/skulls: the roll follows the rain',
+    const roll = d.querySelector('.frieze');
+    const strip = Array.from(d.querySelectorAll('.frieze-track img'));
+    check('home/frieze: the strip follows the rain',
           !!roll && roll.getBoundingClientRect().top >
             d.querySelector('.matrix-rain').getBoundingClientRect().bottom,
-          roll ? 'roll @' + Math.round(roll.getBoundingClientRect().top) : 'no roll');
-    check('home/skulls: the strip is all sixteen, twice', skulls.length === 32,
-          skulls.length + ' tiles');
+          roll ? 'strip @' + Math.round(roll.getBoundingClientRect().top) : 'no strip');
+    check('home/frieze: the strip is all ten, twice', strip.length === 20,
+          strip.length + ' tiles');
 
-    const names = skulls.map(i => i.getAttribute('src').split('/').pop());
-    check('home/skulls: the second pass repeats the first in order',
-          names.slice(0, 16).join(' ') === names.slice(16).join(' ') &&
-          new Set(names.slice(0, 16)).size === 16,
+    const names = strip.map(i => i.getAttribute('src').split('/').pop());
+    check('home/frieze: the second pass repeats the first in order',
+          names.slice(0, 10).join(' ') === names.slice(10).join(' ') &&
+          new Set(names.slice(0, 10)).size === 10,
           new Set(names).size + ' distinct of ' + names.length);
 
-    // What the -50% in the keyframe rests on: the seventeenth tile has to stand
+    // What the -50% in the keyframe rests on: the eleventh tile has to stand
     // exactly where the first one did, or the loop jumps once a pass.
     // `rollTrack` rather than `track`: the /art/ carousel above already has one,
     // and both are top-level in this one long function.
-    const rollTrack = d.querySelector('.skull-roll-track').getBoundingClientRect();
-    const firstLeft = skulls[0].getBoundingClientRect().left;
-    const seamLeft = skulls[16].getBoundingClientRect().left;
-    check('home/skulls: one pass is exactly half the strip',
+    const rollTrack = d.querySelector('.frieze-track').getBoundingClientRect();
+    const firstLeft = strip[0].getBoundingClientRect().left;
+    const seamLeft = strip[10].getBoundingClientRect().left;
+    check('home/frieze: one pass is exactly half the strip',
           Math.abs((seamLeft - firstLeft) - rollTrack.width / 2) < 1,
           'pass ' + Math.round(seamLeft - firstLeft) +
           ' vs half ' + Math.round(rollTrack.width / 2));
 
-    // Every drawing is a different width, and each carries its own so the strip
-    // does not shift when a lazy image lands. A wrong number in _data/skulls.yml
+    // Every picture is a different width, and each carries its own so the strip
+    // does not shift when a lazy image lands. A wrong number in _data/frieze.yml
     // is invisible until the file arrives and the row jumps under it -- which
     // is what reading the declared box back against the real one catches.
     //
-    // Three of them rather than all thirty-two, and fetched deliberately rather
+    // Three of them rather than all twenty, and fetched deliberately rather
     // than by forcing the strip to load: these sit well below the fold and are
     // lazy, so making the page pull every one of them costs the run more than
-    // the extra twenty-nine are worth. A wrong number is a mistake made per
+    // the extra seventeen are worth. A wrong number is a mistake made per
     // entry, and three entries is enough to catch the shape of it.
-    const sampled = [skulls[0], skulls[6], skulls[15]];
+    const sampled = [strip[0], strip[4], strip[9]];
     const sizes = await Promise.all(sampled.map(i => new Promise(res => {
       const probe = new Image();
       probe.onload = () => res([probe.naturalWidth, probe.naturalHeight]);
       probe.onerror = () => res(null);
       probe.src = i.src;
     })));
-    check('home/skulls: every drawing declares the box it actually fills',
+    check('home/frieze: every picture declares the box it actually fills',
           sizes.every((size, n) => size &&
             Number(sampled[n].getAttribute('width')) === size[0] &&
             Number(sampled[n].getAttribute('height')) === size[1]),
           sampled.map((i, n) => i.getAttribute('src').split('/').pop() + ' declared ' +
             i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
             (sizes[n] ? sizes[n].join('x') : 'unreachable')).join(', '));
+    // One height, each its own width -- which is the whole layout of the strip,
+    // and the reason a common box was not used. Read off the laid-out boxes
+    // rather than the attributes: the attributes are the file's size, this is
+    // what the rule made of them.
+    const stripBoxes = strip.slice(0, 10).map(i => i.getBoundingClientRect());
+    check('home/frieze: the pictures share a height and keep their own widths',
+          stripBoxes.every(b => Math.abs(b.height - stripBoxes[0].height) < 1) &&
+          new Set(stripBoxes.map(b => Math.round(b.width))).size > 5,
+          Math.round(stripBoxes[0].height) + 'px tall, widths ' +
+          stripBoxes.map(b => Math.round(b.width)).join(' '));
 
     // This run forces reduced motion, where the roll stops and the strip has to
     // become scrollable instead: frozen and unscrollable, everything past the
-    // third skull would sit off the edge with no way to reach it.
-    const window_ = d.querySelector('.skull-roll-window');
-    check('home/skulls: reduced motion stops the roll',
-          d.defaultView.getComputedStyle(skulls[0].parentElement).animationName === 'none',
-          d.defaultView.getComputedStyle(skulls[0].parentElement).animationName);
-    check('home/skulls: a stopped roll can still be walked through by hand',
+    // third picture would sit off the edge with no way to reach it.
+    const window_ = d.querySelector('.frieze-window');
+    check('home/frieze: reduced motion stops the roll',
+          d.defaultView.getComputedStyle(strip[0].parentElement).animationName === 'none',
+          d.defaultView.getComputedStyle(strip[0].parentElement).animationName);
+    check('home/frieze: a stopped roll can still be walked through by hand',
           d.defaultView.getComputedStyle(window_).overflowX === 'auto' &&
           window_.scrollWidth > window_.clientWidth,
           window_.scrollWidth + ' of ' + window_.clientWidth + ' visible');
 
-    // Pencil on white, so the modes each need something different: dark leaves
-    // the page's own invert on them -- light lines on a dark page is what the
-    // drawings want to be -- and purple, which filters nothing, is given the
-    // ink-on-paper treatment the resume and the xkcd take, on the window rather
-    // than the images so the paper has the page to drop out against.
+    // Photographs and paintings, so both of the tinted modes have to keep their
+    // hands off. Dark re-inverts them back to true tone, which is what an <img>
+    // gets from the theme for free -- the case worth pinning is that none of
+    // them carries the `ioda` opt-out the pencil drawings here before them did,
+    // which would leave every picture on the page a negative. Purple filters
+    // nothing at all, and the window it runs through must not either: it used
+    // to carry an invert-and-screen for the drawings' white paper, and left
+    // behind it would turn ten pictures inside out.
     localStorage.setItem('appearance', 'dark');
     d = await load('/');
-    check('home/skulls: dark mode leaves the drawings inverted',
-          d.defaultView.getComputedStyle(d.querySelector('.skull-roll-track img')).filter
-            === 'invert(0)',
-          d.defaultView.getComputedStyle(d.querySelector('.skull-roll-track img')).filter);
+    const darkFilters = Array.from(d.querySelectorAll('.frieze-track img'))
+      .map(i => d.defaultView.getComputedStyle(i).filter);
+    check('home/frieze: dark mode gives the pictures back their true tone',
+          darkFilters.length === 20 && darkFilters.every(f => f === 'invert(1)') &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          darkFilters[0] + ' on ' + darkFilters.length + ' tiles');
     localStorage.setItem('appearance', 'purple');
     d = await load('/');
-    const win = d.defaultView.getComputedStyle(d.querySelector('.skull-roll-window'));
-    check('home/skulls: purple screens the paper out',
-          win.mixBlendMode === 'screen' && win.filter.indexOf('invert(1)') === 0,
+    const win = d.defaultView.getComputedStyle(d.querySelector('.frieze-window'));
+    check('home/frieze: purple leaves the strip alone',
+          win.filter === 'none' && win.mixBlendMode === 'normal' &&
+          d.defaultView.getComputedStyle(d.querySelector('.frieze-track img')).filter
+            === 'none',
           win.mixBlendMode + ' / ' + win.filter);
     localStorage.setItem('appearance', 'light');
 
     d = await loadNarrow('/', 420);
-    check('home/skulls/narrow: the roll adds no sideways scroll',
+    check('home/frieze/narrow: the strip adds no sideways scroll',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
-
-    // --- the line under the roll ---------------------------------------------
-    // The Phaedrus passage under the skulls. It belongs to the strip above it --
-    // it is about the cut those sixteen were made with -- so what is worth
-    // pinning is that it stays inside the roll's section and under the drawings
-    // rather than drifting off between two things, and that the theme's box does
-    // not come back around it.
-    d = await load('/');
-    const epigraph = d.querySelector('.roll-epigraph');
-    const rollFigure = d.querySelector('.skull-roll figure');
-    check('home/epigraph: the line sits inside the roll, under the drawings',
-          !!epigraph && epigraph.closest('.skull-roll') === d.querySelector('.skull-roll') &&
-          epigraph.getBoundingClientRect().top >
-            rollFigure.getBoundingClientRect().bottom - 1,
-          epigraph ? 'line @' + Math.round(epigraph.getBoundingClientRect().top) +
-            ' figure ends @' + Math.round(rollFigure.getBoundingClientRect().bottom)
-            : 'no line');
-    check('home/epigraph: it names the passage and where it was taken from',
-          !!epigraph && /Phaedrus/.test(epigraph.textContent) &&
-          /265e/.test(epigraph.textContent) &&
-          !!epigraph.querySelector('cite a[href*="jeffsearle"]'),
-          epigraph ? epigraph.querySelector('cite').textContent.replace(/\s+/g, ' ').trim()
-                   : 'no line');
-
-    // The theme puts a full `thin solid black` box on every blockquote. Left
-    // alone that is a box under a rule, so the rule has to win on all four
-    // sides -- three of them staying black is exactly the failure the purple
-    // blockquote rule further up main.scss exists to fix elsewhere.
-    let quoteEdges = d.defaultView.getComputedStyle(epigraph);
-    check('home/epigraph: the theme\'s box is gone and only the hairline is left',
-          quoteEdges.borderLeftStyle === 'none' && quoteEdges.borderRightStyle === 'none' &&
-          quoteEdges.borderBottomStyle === 'none' && quoteEdges.borderTopStyle === 'solid',
-          [quoteEdges.borderTopStyle, quoteEdges.borderRightStyle,
-           quoteEdges.borderBottomStyle, quoteEdges.borderLeftStyle].join(' '));
-
-    // The passage is the theme's italic and the line naming it is not -- left
-    // alone the two arrive as one voice.
-    check('home/epigraph: the attribution is not in the passage\'s voice',
-          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle === 'italic' &&
-          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle === 'normal',
-          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle + ' / ' +
-          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle);
-
-    // Purple sets a colour on every blockquote, and the one it sets is the
-    // attribution colour -- which on a box-less quote is the whole passage in
-    // the wrong ink rather than a border nobody can see.
-    localStorage.setItem('appearance', 'purple');
-    d = await load('/');
-    quoteEdges = d.defaultView.getComputedStyle(d.querySelector('.roll-epigraph'));
-    const citeColor = d.defaultView.getComputedStyle(
-      d.querySelector('.roll-epigraph cite')).color;
-    check('home/epigraph: purple gives the passage the page\'s own ink',
-          quoteEdges.color === d.defaultView.getComputedStyle(d.body).color &&
-          citeColor !== quoteEdges.color,
-          'passage ' + quoteEdges.color + ' page ' +
-          d.defaultView.getComputedStyle(d.body).color + ' cite ' + citeColor);
-    localStorage.setItem('appearance', 'light');
 
     // --- the shoal -----------------------------------------------------------
     // Six reels for three clips, laid along two diagonals that cross over the
@@ -1101,9 +1061,9 @@ function loadNarrow(url, width) {
     const shoal = d.querySelector('.shoal');
     const boardBox = d.querySelector('.shoal-board').getBoundingClientRect();
     const flips = Array.from(d.querySelectorAll('.stop-motion'));
-    check('home/shoal: the board follows the roll',
+    check('home/shoal: the board follows the strip',
           !!shoal && boardBox.top >
-            d.querySelector('.skull-roll').getBoundingClientRect().bottom,
+            d.querySelector('.frieze').getBoundingClientRect().bottom,
           shoal ? 'board @' + Math.round(boardBox.top) : 'no board');
 
     // Read off the files rather than trusted from a list: the order along each
@@ -1285,7 +1245,7 @@ function loadNarrow(url, width) {
     d = await load('/');
     // Re-inverted rather than left alone: the theme's dark mode inverts the page
     // whole, and cancelling that on the picture is an invert of its own. The
-    // skulls' `ioda` opt-out is the other case -- invert(0), staying flipped --
+    // theme's `ioda` opt-out is the other case -- invert(0), staying flipped --
     // and a ground that took it would be an orange sky under blue grass.
     check('home/shoal: dark mode leaves the hill in true tone',
           d.defaultView.getComputedStyle(d.querySelector('.shoal-ground')).filter
