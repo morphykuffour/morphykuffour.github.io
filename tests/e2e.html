@@ -574,7 +574,10 @@ function loadNarrow(url, width) {
 
     // --- the menu carries the art and xkcd pages ----------------------------
     d = await load('/');
-    const menuHrefs = Array.from(d.querySelectorAll('header + ul > li > a')).map(x => x.getAttribute('href'));
+    // `header ~ ul` rather than `header + ul`: the cascade is a figure between
+    // the two, because a float only moves what comes after it in the source.
+    // The menu is still the only top-level <ul> the homepage has.
+    const menuHrefs = Array.from(d.querySelectorAll('header ~ ul > li > a')).map(x => x.getAttribute('href'));
     check('home: art sits in the menu under përi',
           menuHrefs.indexOf('/art/') === menuHrefs.indexOf('/about/') + 1, menuHrefs.join(' '));
     check('home: xkcd sits in the menu under art',
@@ -583,6 +586,93 @@ function loadNarrow(url, width) {
           menuHrefs.indexOf('/unc/') === menuHrefs.indexOf('/xkcd/') + 1, menuHrefs.join(' '));
     check('home: music sits in the menu under unc',
           menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
+
+    // --- the homepage cascade -----------------------------------------------
+    // Three copies of one clip stepped down and right of each other, floated
+    // beside the menu. What is worth asserting is what only a laid-out page
+    // can answer: that the stack really is offset rather than stacked flat,
+    // that the float really does move the menu's lines, and that the three
+    // are running a third of the clip apart instead of in lockstep.
+    localStorage.setItem('appearance', 'light');
+    d = await load('/');
+    const cascade = d.querySelector('.home-cascade');
+    const layers = Array.from(d.querySelectorAll('.home-cascade-layer'));
+    check('home: the cascade has three layers', layers.length === 3, layers.length + ' layers');
+    check('home: the clip carries no audio track',
+          layers.every(v => v.muted && !(v.mozHasAudio || v.webkitAudioDecodedByteCount > 0)),
+          'muted=' + layers.map(v => v.muted).join(',') +
+          ' decodedAudioBytes=' + layers.map(v => v.webkitAudioDecodedByteCount).join(','));
+
+    const boxes = layers.map(v => v.getBoundingClientRect());
+    check('home: each layer is stepped down and to the right of the one behind',
+          boxes[1].left > boxes[0].left && boxes[1].top > boxes[0].top &&
+          boxes[2].left > boxes[1].left && boxes[2].top > boxes[1].top,
+          boxes.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+    // The offsets are derived from the box, so the stack should end up filling
+    // it exactly: back layer flush with the left edge, front flush with the
+    // right, and the same on the vertical.
+    const cbox = cascade.getBoundingClientRect();
+    check('home: the stack fills its reserved box',
+          Math.abs(boxes[0].left - cbox.left) < 2 && Math.abs(boxes[2].right - cbox.right) < 2 &&
+          Math.abs(boxes[0].top - cbox.top) < 2 && Math.abs(boxes[2].bottom - cbox.bottom) < 2,
+          'box ' + Math.round(cbox.width) + 'x' + Math.round(cbox.height) +
+          ' stack ' + Math.round(boxes[2].right - boxes[0].left) + 'x' +
+          Math.round(boxes[2].bottom - boxes[0].top));
+    // A float moves line boxes, not block boxes, so the menu <ul> still spans
+    // the column while the entry inside it stops short of the video.
+    const firstEntry = d.querySelector('header ~ ul > li > a').getBoundingClientRect();
+    check('home: the cascade sits beside the menu rather than above it',
+          firstEntry.right <= cbox.left + 1 && firstEntry.top < cbox.bottom,
+          'entry.right=' + Math.round(firstEntry.right) + ' cascade.left=' + Math.round(cbox.left));
+
+    // Autoplay is not in the markup -- the page's own script grants it, and
+    // declines to when the reader has asked for less motion. This whole run is
+    // driven with --force-prefers-reduced-motion, so what is testable here is
+    // that refusal, and it is the half worth pinning: a <video autoplay> would
+    // have started before any script could consult the setting. The playing
+    // case cannot be asserted under the same flags anyway -- virtual time
+    // never runs the rendering lifecycle, so currentTime would not advance.
+    await new Promise(r => setTimeout(r, 1200));
+    check('home: reduced motion leaves the stack still',
+          layers.every(v => v.paused && v.currentTime === 0),
+          layers.map(v => (v.paused ? 'paused' : 'playing') + '@' + v.currentTime).join(' '));
+    // Which is only a sight worth having because there is a frame to hold:
+    // the poster is what a reader sees when the clip does not play, here or
+    // with scripting off entirely.
+    check('home: every layer carries a poster frame',
+          layers.every(v => (v.poster || '').indexOf('/videos/cascade-poster.jpg') !== -1),
+          layers.map(v => v.poster).join(' '));
+
+    // The theme re-inverts <img> and <iframe> under its whole-page invert but
+    // not <video>; without the rule in main.scss this clip would be the one
+    // negative on a dark page.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade-layer'));
+    check('home/dark: the cascade is re-inverted back to true tone',
+          cs.filter === 'invert(1)' &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          cs.filter);
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade-layer'));
+    check('home/purple: the cascade is left alone',
+          cs.filter === 'none' && d.defaultView.getComputedStyle(d.body).filter === 'none',
+          cs.filter);
+    localStorage.setItem('appearance', 'light');
+
+    // Narrow: half the column is more than a phone can spare, so the float is
+    // dropped and the stack centres on its own line above the menu.
+    d = await loadNarrow('/', 420);
+    const ncs = d.defaultView.getComputedStyle(d.querySelector('.home-cascade'));
+    check('home/narrow: the cascade un-floats and centres',
+          ncs.float === 'none' && ncs.marginLeft === ncs.marginRight &&
+          parseFloat(ncs.marginLeft) > 0,
+          ncs.float + '/' + ncs.marginLeft + '/' + ncs.marginRight);
+    check('home/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }
