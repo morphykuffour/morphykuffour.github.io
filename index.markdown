@@ -217,11 +217,5 @@ not crop off; the caption under the board says all of it.
               label="The same manta sequence, half a pass further on." -%}
       </div>
     </div>
-    <figcaption>
-      Thirty stills off three clips, ten each &mdash; a manta rising, a humpback
-      turning, a whale shark feeding &mdash; crossed twice over Bliss, the hill
-      Charles O&rsquo;Rear photographed for Windows XP. None of it is mine: not
-      the footage, not the lines written across two of the clips, not the hill.
-    </figcaption>
   </figure>
 </section>
