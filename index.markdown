@@ -107,8 +107,7 @@ dark page is leave its colours alone.
   <figure>
     {%- include roll.html data=site.data.frieze dir="frieze" -%}
     <figcaption>
-      Ten pictures saved off other people&rsquo;s feeds. None of them are mine,
-      and I do not know whose they are.
+      Ten flicks and I do not know whose they are. it'ts AI
     </figcaption>
   </figure>
 </section>
