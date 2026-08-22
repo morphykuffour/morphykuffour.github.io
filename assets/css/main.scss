@@ -1637,11 +1637,11 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   }
 }
 
-// The line under the skulls. It is about the cut the sixteen were made with --
-// along the gutters between the drawings rather than through them on a quarter
-// grid -- so it is set as an epigraph belonging to the strip rather than as a
-// pull quote of its own: a narrow, centred block under a hairline, the same
-// serif and the same top rule the quote card on /about/ uses.
+// The line under the skulls. It is about what sixteen goes at one skull are --
+// attempts at a thing none of them settles -- so it is set as an epigraph
+// belonging to the strip rather than as a pull quote of its own: a narrow block
+// under a hairline, the same serif and the same top rule the quote card on
+// /about/ uses.
 //
 // The theme puts a full `thin solid black` box on every blockquote and margins
 // besides. Both have to go, or the line arrives in a box under a rule.
@@ -1656,8 +1656,15 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   line-height: 1.6;
   text-align: center;
 
+  // The passage runs to a paragraph rather than the sentence this slot held
+  // before, and centring a paragraph gives every line a ragged pair of ends to
+  // find. Set flush left so the eye has one edge to return to; the credit under
+  // it is a single short line and stays centred, which is where the block's own
+  // text-align leaves it.
   p {
     margin: 0;
+    text-align: left;
+    text-wrap: pretty;
   }
 
   // The theme italicises every blockquote, which is right for the passage and

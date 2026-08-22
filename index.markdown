@@ -118,7 +118,7 @@ Two rolls rather than one mixed strip, and this is the whole of why: these are
 sixteen views of a single object and those are ten unrelated pictures. Run
 together they would read as one grab bag in which the skulls happen to recur;
 kept apart, each strip is the kind of thing it is, and only the second one can
-carry a credit and a line about the cut.
+carry a credit and a line about looking at one thing sixteen times.
 
 The credit is in the caption because the sheet's own signature sat in the
 margin under the bottom-left drawing, and a margin is the one part of a sheet
@@ -136,27 +136,32 @@ drawing in it.
   </figure>
 
   {%- comment -%}
-  The line under the roll, which is there because it describes the cut. The
-  sixteen were sliced out of one sheet on the gutters between the drawings
-  rather than on an even quarter grid -- he drew them where they fit rather than
-  to a ruler, and a quarter cut takes the jaw off four of them. That is the
-  passage exactly: along the joints, not through them.
+  The line under the roll, which is there because it describes the sheet's
+  situation rather than the drawings on it. Sixteen studies of one skull are an
+  attempt at the same object over and over, none of them final, and the passage
+  is about exactly that: no absolute knowledge, only a method for working out
+  which of the available accounts holds.
 
-  It is Searle's own quotation as well as Plato's. He is the man whose sheet was
-  cut, and it is his post on Plato's dialectic that the line is lifted from --
-  which is why the attribution goes by way of him rather than straight to a
-  translation, and why this sits inside the roll's section rather than off on
-  its own between two things.
+  Searle's own words, from his post on Plato's dialectic -- he is the man whose
+  sheet was cut, which is why the credit and the line come from the same person,
+  and why this sits inside the roll's section rather than off on its own between
+  two things.
 
   Inside .skull-roll rather than between it and the shoal, for the same reason:
   it belongs to the drawings above it. The gap below is the shoal's own top
   margin, so nothing here needs to make one.
   {%- endcomment -%}
   <blockquote class="roll-epigraph">
-    <p>&ldquo;&hellip;to be able to cut up each kind according to its species
-      along its natural joints, and to try not to splinter any part, as a bad
-      butcher might do.&rdquo;</p>
-    <cite>&mdash; Plato, <i>Phaedrus</i> 265e, quoted by Searle in
+    <p>&ldquo;It is a fact of &lsquo;the human condition&rsquo; that we <i>Homo
+      sapiens</i>, not being gods, do not enjoy absolute knowledge &ndash; what
+      individuals or even entire societies can know with certainty about the
+      universe is profoundly limited. The human world therefore is full of
+      opinions, many of them in conflict, and it can be hard to tell the
+      difference between truth and mere belief. Rather than despairing at the
+      possibility of ever arriving at truth, we need a philosophical method that
+      can help us to navigate the wealth of available opinion and work out what
+      is true and what is not.&rdquo;</p>
+    <cite>&mdash; Jeff Searle,
       <a href="https://jeffsearle.blogspot.com/2021/06/dialectics-part-3-plato.html"
          rel="noopener">Dialectics, part 3</a></cite>
   </blockquote>
