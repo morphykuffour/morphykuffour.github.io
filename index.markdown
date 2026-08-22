@@ -103,7 +103,6 @@ photographs and paintings, and the only right thing to do to a photograph on a
 dark page is leave its colours alone.
 {%- endcomment -%}
 <section class="roll frieze">
-  <h2>Frieze</h2>
   <figure>
     {%- include roll.html data=site.data.frieze dir="frieze" -%}
   </figure>
@@ -132,7 +131,6 @@ pencil lines on a dark page want to be the light half, not a white box with a
 drawing in it.
 {%- endcomment -%}
 <section class="roll skull-roll">
-  <h2>Heads will roll</h2>
   <figure>
     {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
   </figure>
