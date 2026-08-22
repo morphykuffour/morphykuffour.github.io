@@ -138,11 +138,6 @@ drawing in it.
   <h2>Heads will roll</h2>
   <figure>
     {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-    <figcaption>
-      Sixteen studies of one skull by
-      <a href="https://jeffsearle.blogspot.co.uk/" rel="noopener">Jeff Searle</a>,
-      off a single sheet of his. The drawings are his, not mine.
-    </figcaption>
   </figure>
 
   {%- comment -%}
