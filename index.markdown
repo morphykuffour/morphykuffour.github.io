@@ -106,9 +106,6 @@ dark page is leave its colours alone.
   <h2>Frieze</h2>
   <figure>
     {%- include roll.html data=site.data.frieze dir="frieze" -%}
-    <figcaption>
-      Ten flicks and I do not know whose they are. it'ts AI
-    </figcaption>
   </figure>
 </section>
 
