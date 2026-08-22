@@ -211,7 +211,6 @@ maker's line burnt into the picture, which is a caption I did not write and will
 not crop off; the caption under the board says all of it.
 {%- endcomment -%}
 <section class="shoal">
-  <h2>Three, crossing</h2>
   <figure>
     <div class="shoal-board">
       <img class="shoal-ground" src="{{ site.baseurl }}/images/bliss.jpg" alt=""
