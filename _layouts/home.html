@@ -18,11 +18,41 @@ are places to find me; this is not one.
 {%- endcomment -%}
 <header>
   <div class="home-id">
-    <a class="home-avatar" href="https://github.com/{{ site.github_username }}"
-       aria-label="{{ site.author }} on GitHub">
-      <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
-           alt="{{ site.author }}">
-    </a>
+    {%- comment -%}
+    The portrait, and the crown that lands on it.
+
+    The crown is three steps off a sheet of pencil studies of a water crown --
+    the ellipse the drop makes on the surface, the column that stands up out of
+    it, the crown that column opens into -- run through the same stop motion
+    include the shoal at the foot of the page uses. The sheet numbers those
+    three itself; the variants beside them on the page and the two finished
+    drawings are not in the reel, and scripts/watercrown-frames.sh says why.
+
+    Given `boomerang`, so it runs forward and then back. A sequence that builds
+    has its whole build wiped in the one frame where the loop comes round, and
+    that frame would be the only cut in it; run backwards after forwards, the
+    crown subsides into the ellipse it rose out of, which is also what the thing
+    being drawn does. Four frames from three files, and the pace over them is
+    slow enough that each is a held drawing rather than a flicker.
+
+    Wrapped rather than handed to the include: where a reel goes is the page's
+    business, which is the same division the shoal keeps with its slots and the
+    collage with its clips. Here it is the portrait's box, so the two are put in
+    one -- the crown belongs to the head under it and has to move with it.
+    {%- endcomment -%}
+    <div class="home-head">
+      <div class="home-crown">
+        {%- include stopmotion.html
+              dir="watercrown" count=3 boomerang=true ioda=true
+              width=384 height=216 pace="1.8s"
+              label="Three pencil steps in the drawing of a water crown, cycling: a flat ellipse on the surface, a column of water standing up out of it, and the crown it opens into, throwing droplets off its points." -%}
+      </div>
+      <a class="home-avatar" href="https://github.com/{{ site.github_username }}"
+         aria-label="{{ site.author }} on GitHub">
+        <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
+             alt="{{ site.author }}">
+      </a>
+    </div>
     <h1><a class="home-alias" href="https://www.youtube.com/watch?v=wEBlaMOmKV4"
            title="Sam Cooke, A Change Is Gonna Come">{{ site.title }}</a>{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
   </div>

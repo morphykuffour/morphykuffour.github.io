@@ -60,6 +60,11 @@ plugins:
 # than adding to it, so that list is restated here -- without it the vendored
 # gems are read as site content and the build dies on a gem's own template.
 exclude:
+  # The sheet the crown over the portrait is cut from. It is kept here so
+  # scripts/watercrown-frames.sh can be run again -- the three frames beside it
+  # are what the page loads, and half a megabyte of source nothing links to has
+  # no business being published with them.
+  - images/watercrown/sheet.jpg
   - .sass-cache/
   - .jekyll-cache/
   - gemfiles/

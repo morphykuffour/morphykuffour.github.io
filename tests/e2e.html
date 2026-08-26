@@ -96,6 +96,71 @@ function loadNarrow(url, width) {
           tagline.querySelectorAll('a').length === 0,
           Array.from(tagline.querySelectorAll('a')).map(x => x.href).join(' | '));
 
+    // --- the water crown over the portrait -----------------------------------------
+    // Three steps off a sheet of pencil studies, run as a stop motion above the
+    // head. Three things are worth pinning and they are separate: that the
+    // boomerang really is forward-and-back rather than a list that happens to
+    // be four long, that the window took its shape from the include instead of
+    // the 480/854 the stylesheet used to hold, and that a crown hung off the
+    // top of the portrait clears the top of the page while adding no height to
+    // the row it is in.
+    const crown = d.querySelector('.home-crown');
+    const crownReel = crown && crown.querySelector('.stop-motion-reel');
+    const crownWindow = crown && crown.querySelector('.stop-motion-window');
+    const crownNames = crownReel
+      ? Array.from(crownReel.querySelectorAll('img'))
+          .map(i => i.getAttribute('src').split('/').pop()) : [];
+    // Forward and then back, and neither turning frame written twice: the last
+    // still is not followed by itself, and the first is reached by the loop
+    // rather than sitting at the end of the list. Either one repeated is a
+    // frame held for two beats at the turn, which is the stutter the whole
+    // arrangement exists to avoid.
+    check('home/watercrown: the reel runs the steps forward and back again',
+          crownNames.join(' ') === 'watercrown-01.jpg watercrown-02.jpg ' +
+                                   'watercrown-03.jpg watercrown-02.jpg',
+          crownNames.join(' ') || 'no crown');
+    check('home/watercrown: the step count is the length of that run, not of the folder',
+          !!crown && Number(crown.querySelector('.stop-motion')
+            .style.getPropertyValue('--frames')) === crownNames.length,
+          crown ? crown.querySelector('.stop-motion').style.getPropertyValue('--frames') +
+                  ' for ' + crownNames.length + ' frames' : 'no crown');
+    // The reel is 16:9 and the shoal's six are 480/854. Both come off the same
+    // rule, so the shape has to have arrived from the markup -- a constant left
+    // in the stylesheet could only have been right for one of them.
+    const crownWinBox = crownWindow && crownWindow.getBoundingClientRect();
+    check('home/watercrown: the window takes the frames\' own shape, not the shoal\'s',
+          !!crownWinBox && Math.abs(crownWinBox.width / crownWinBox.height - 384 / 216) < 0.01,
+          crownWinBox ? (crownWinBox.width / crownWinBox.height).toFixed(3) + ' vs ' +
+            (384 / 216).toFixed(3) : 'no window');
+    // The edge that keeps the shoal's six legible where they overlap has no
+    // business here: nothing lies under this one but the page.
+    check('home/watercrown: no box is ruled round it',
+          !!crownWindow &&
+          d.defaultView.getComputedStyle(crownWindow).outlineStyle === 'none',
+          crownWindow ? d.defaultView.getComputedStyle(crownWindow).outlineStyle : 'no window');
+
+    const crownBox = crown && crown.getBoundingClientRect();
+    const headBox = d.querySelector('.home-head').getBoundingClientRect();
+    check('home/watercrown: it sits above the portrait and centred on it',
+          !!crownBox && crownBox.bottom <= ar.top + 1 &&
+          Math.abs((crownBox.left + crownBox.width / 2) - (ar.left + ar.width / 2)) < 1 &&
+          crownBox.width > ar.width,
+          crownBox ? 'crown ' + Math.round(crownBox.left) + '-' + Math.round(crownBox.right) +
+            ' bottom ' + Math.round(crownBox.bottom) + ', portrait ' +
+            Math.round(ar.left) + '-' + Math.round(ar.right) + ' top ' + Math.round(ar.top)
+            : 'no crown');
+    // Hung off the box rather than standing in it: the row's height is still
+    // the portrait's, so nothing below the header moved to make room.
+    check('home/watercrown: it adds no height to the identity row',
+          Math.abs(headBox.height - ar.height) < 1,
+          Math.round(headBox.height) + ' vs portrait ' + Math.round(ar.height));
+    // What actually limits how wide it can be. The frame is 16:9 of its width
+    // and it hangs entirely above a header that starts one padding down the
+    // page, so past a certain width the droplets are cut off by the viewport.
+    check('home/watercrown: it clears the top of the page',
+          !!crownBox && crownBox.top >= 0,
+          crownBox ? 'crown top ' + Math.round(crownBox.top) : 'no crown');
+
     // The creeds are their own lines under the description, not a run-on of it,
     // and they have to come before the menu -- a stray order here reads as part
     // of the link list.
@@ -1186,6 +1251,14 @@ function loadNarrow(url, width) {
     check('home/rolls: dark mode leaves the drawings inverted',
           skullFilters.length === 32 && skullFilters.every(f => f === 'invert(0)'),
           skullFilters[0] + ' on ' + skullFilters.length + ' tiles');
+    // The crown over the portrait is the same pencil on the same paper as the
+    // skulls, so it takes the same opt-out and for the same reason: re-inverted
+    // to true tone it would be a white card hung over a black page.
+    const crownFilters = Array.from(d.querySelectorAll('.home-crown img'))
+      .map(i => d.defaultView.getComputedStyle(i).filter);
+    check('home/watercrown: dark mode leaves the crown inverted too',
+          crownFilters.length === 4 && crownFilters.every(f => f === 'invert(0)'),
+          (crownFilters[0] || 'none') + ' on ' + crownFilters.length + ' frames');
 
     // Purple filters nothing at all, so the frieze's window must not either --
     // an invert-and-screen left on it would turn ten photographs inside out.
@@ -1208,6 +1281,16 @@ function loadNarrow(url, width) {
     check('home/rolls: purple screens the paper out',
           skullWin.mixBlendMode === 'screen' && skullWin.filter.indexOf('invert(1)') === 0,
           skullWin.mixBlendMode + ' / ' + skullWin.filter);
+    // And the crown with them. On the box outside the window rather than on the
+    // window: what the blend has to reach is the page behind it, and the window
+    // is the box that clips the reel.
+    const crownPurple = d.defaultView.getComputedStyle(d.querySelector('.home-crown'));
+    check('home/watercrown: purple screens the crown\'s paper out as well',
+          crownPurple.mixBlendMode === 'screen' &&
+          crownPurple.filter.indexOf('invert(1)') === 0 &&
+          d.defaultView.getComputedStyle(
+            d.querySelector('.home-crown .stop-motion-window')).mixBlendMode === 'normal',
+          crownPurple.mixBlendMode + ' / ' + crownPurple.filter);
     localStorage.setItem('appearance', 'light');
 
     d = await loadNarrow('/', 420);
@@ -1283,7 +1366,9 @@ function loadNarrow(url, width) {
     d = await load('/');
     const shoal = d.querySelector('.shoal');
     const boardBox = d.querySelector('.shoal-board').getBoundingClientRect();
-    const flips = Array.from(d.querySelectorAll('.stop-motion'));
+    // Scoped to the shoal: the crown over the portrait is a reel through the
+    // same include, and every count and every index below is about these six.
+    const flips = Array.from(d.querySelectorAll('.shoal .stop-motion'));
     check('home/shoal: the board follows the rolls',
           !!shoal && boardBox.top >
             d.querySelector('.skull-roll').getBoundingClientRect().bottom,
@@ -1482,7 +1567,7 @@ function loadNarrow(url, width) {
     // from reading as one picture. currentColor rather than a colour of its own
     // is what makes it right in every mode without a rule for any of them.
     const shoalEdge = d.defaultView.getComputedStyle(
-      d.querySelector('.stop-motion-window'));
+      d.querySelector('.shoal .stop-motion-window'));
     check('home/shoal: every window is outlined in the page\'s own ink',
           shoalEdge.outlineStyle === 'solid' && parseFloat(shoalEdge.outlineWidth) >= 1 &&
           shoalEdge.outlineColor === d.defaultView.getComputedStyle(d.body).color,
@@ -1530,7 +1615,7 @@ function loadNarrow(url, width) {
     // width, and the board being square means it cannot push the page sideways.
     d = await loadNarrow('/', 420);
     const shoalNarrowBoard = d.querySelector('.shoal-board').getBoundingClientRect();
-    const narrowFlips = Array.from(d.querySelectorAll('.stop-motion'));
+    const narrowFlips = Array.from(d.querySelectorAll('.shoal .stop-motion'));
     check('home/shoal/narrow: the crossing keeps its proportions',
           narrowFlips.length === 6 && narrowFlips.every(f => {
             const b = f.getBoundingClientRect();

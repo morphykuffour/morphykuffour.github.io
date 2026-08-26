@@ -12,8 +12,9 @@ Parameters:
            by the stylesheet for both the reel's width and its step count, so
            this number is the only place the length of the sequence is stated
   width    the stills' own pixel dimensions, all of them the same. Required:
-  height   they reserve each frame's box, and the window's shape comes from
-           them, so a wrong pair is a box of the wrong shape rather than a hint
+  height   they reserve each frame's box, and the window's shape is handed to
+           the stylesheet as the ratio between them, so a wrong pair is a box
+           of the wrong shape rather than a hint
   pace     how long one full pass takes. Divided by count, that is the hold on
            each still -- 2.5s over ten is a quarter second a frame, which is
            slow enough to read as stop motion rather than as footage. Three of
@@ -25,6 +26,20 @@ Parameters:
            are identical twins holding the same frame at the same moment; half
            a pass apart they are one sequence seen at two points in it, which is
            the trick the cascade upstairs plays with three copies of a video
+  boomerang  optional: set it and the reel runs the stills forward and then back
+           again, which is what scripts/boomerang.sh does to a video file and
+           for the same reason. A sequence that builds -- a drawing being drawn,
+           a shape growing -- has its whole build wiped in one frame when the
+           loop comes round, and that frame is the only cut in it. Run backward
+           after forward and the end meets the beginning where it left it. The
+           two turning frames are not repeated: the last still is not followed
+           by itself, and the first is reached by the loop rather than written
+           twice, which is the same pair of frames that script trims off
+  ioda     optional: set it and every still takes the theme's dark-mode opt-out,
+           on the same terms the roll offers it. That is for ink on paper --
+           pencil lines want to be the light half of an inverted page -- and
+           wrong for anything photographic, which wants its own colours back
+           and gets them by taking the page invert twice
   label    what the sequence shows, for anyone who cannot see it
 
 It emits a reel and nothing around it -- no heading, no caption, no section.
@@ -39,7 +54,32 @@ Ten JPEGs also weigh about a third of what the same ten seconds encodes to, and
 being <img> they take the theme's dark-mode handling for free: main.scss carries
 a rule to undo the page invert on <video>, and needs none for these.
 {%- endcomment -%}
-<div class="stop-motion" style="--frames: {{ include.count }}; --pace: {{ include.pace }}{% if include.phase %}; --phase: {{ include.phase }}{% endif %}">
+{%- comment -%}
+The reel's running order, built here rather than walked twice below, because
+--frames and the list of <img> have to agree exactly: the stylesheet reads that
+number for both how wide the reel is and how many stops it takes, and a reel
+whose markup says one length while its property says another shows halves of
+two stills at a time. Coming off one list, they cannot disagree.
+
+A plain sequence is 1..N. A boomerang is that followed by N-1..2 -- the last
+still is already where the backward half starts, and the first is where the
+loop lands, so writing either of them twice is a frame held for two beats at
+the turn, which reads as a stutter rather than as a turn.
+
+Liquid has no way to append to an array, so the order is built as text and cut
+back into one. The guard on the second half is for a single still: (2..1) is a
+range Liquid will happily walk downwards.
+{%- endcomment -%}
+{%- capture order_csv -%}
+{%- for step in (1..include.count) -%}{{ step }},{%- endfor -%}
+{%- if include.boomerang and include.count > 1 -%}
+{%- for step in (2..include.count) reversed -%}
+{%- unless forloop.first -%}{{ step }},{%- endunless -%}
+{%- endfor -%}
+{%- endif -%}
+{%- endcapture -%}
+{%- assign order = order_csv | split: ',' -%}
+<div class="stop-motion" style="--frames: {{ order.size }}; --pace: {{ include.pace }}; --shape: {{ include.width }} / {{ include.height }}{% if include.phase %}; --phase: {{ include.phase }}{% endif %}">
   {%- comment -%}
   The label is on the window rather than spread over the stills. Ten frames each
   saying "the same thing, slightly later" is ten interruptions for one idea, so
@@ -48,8 +88,8 @@ a rule to undo the page invert on <video>, and needs none for these.
   {%- endcomment -%}
   <div class="stop-motion-window" role="img" aria-label="{{ include.label | escape }}">
     <div class="stop-motion-reel">
-      {%- for frame in (1..include.count) -%}
-      <img src="{{ site.baseurl }}/images/{{ include.dir }}/{{ include.dir }}-{{ frame | prepend: '0' | slice: -2, 2 }}.jpg"
+      {%- for step in order -%}
+      <img{% if include.ioda %} class="ioda"{% endif %} src="{{ site.baseurl }}/images/{{ include.dir }}/{{ include.dir }}-{{ step | prepend: '0' | slice: -2, 2 }}.jpg"
            alt="" width="{{ include.width }}" height="{{ include.height }}"
            loading="lazy" decoding="async">
       {%- endfor -%}

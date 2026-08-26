@@ -760,6 +760,17 @@ body[a="purple"] {
     mix-blend-mode: screen;
   }
 
+  // The crown over the portrait is the same drawing on the same paper, so it
+  // takes the same treatment: inverted to draw in light, tinted violet, and
+  // screened over the page so the sheet it was drawn on drops out. On the box
+  // outside the window rather than on the window itself, for the reason above
+  // -- the blend has to happen where the page is, and here that is the last
+  // box before it.
+  .home-crown {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+  }
+
   .matrix-rain span {
     background-image: linear-gradient(to bottom,
       rgba(199, 125, 255, 0) 0%,
@@ -1289,6 +1300,10 @@ body[a="purple"] {
 .home-id h1 { margin: 0; }
 
 .home-avatar {
+  // A block box round the picture. It used to get one for free by being the
+  // flex item in the row; the crown put a box between it and that row, and an
+  // inline link wrapping a block image is an anonymous box either side of it.
+  display: block;
   flex: 0 0 auto;
   // The link box is the image, so the inline leading below it would otherwise
   // push the portrait off-centre against the alias.
@@ -1303,12 +1318,58 @@ body[a="purple"] {
   object-position: top center;
 }
 
+// ---------------------------------------------------------------------------
+// The crown over the portrait
+// ---------------------------------------------------------------------------
+// Three steps off a sheet of pencil studies -- an ellipse, the column of water
+// that stands up out of it, the crown it opens into -- run as a stop motion
+// above the portrait, forward and then back again, so the crown rises and
+// subsides the way the thing it is a drawing of does. The frames are cut by
+// scripts/watercrown-frames.sh, which is also where the sheet they come off is
+// described; the reel is the same include the shoal at the foot of the page
+// uses, given `boomerang` so the build is not wiped in a single frame when the
+// loop comes round.
+//
+// The box it sits in is the portrait's, not the page's: the crown belongs to
+// the head under it, and a crown that drifted away from the head as the column
+// widened would be a picture that happens to be nearby. So the portrait gets a
+// positioned box of its own and the crown hangs off the top of it.
+
+.home-head {
+  position: relative;
+  flex: 0 0 auto;
+  // Both inherited from the portrait, which used to be the flex item here.
+  // The inline leading under the picture would otherwise push it off-centre
+  // against the alias beside it.
+  line-height: 0;
+}
+
+.home-crown {
+  position: absolute;
+  // Above the portrait rather than over it. The stills are photographs of a
+  // sheet of paper, so the frame is opaque to the top of the head in every
+  // mode that does not screen it out -- overlapping would take the crown of
+  // the head off to put a crown on it.
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  // Wider than the head, which is what a crown is. The waterline ellipse is
+  // .64 of a frame across (that fraction is set where the frames are cut), so
+  // at 6rem the ring the crown stands on comes out a little over the 3.4rem
+  // portrait -- and the frame's own height, 16:9 of that, is what has to clear
+  // the page's top padding, which is why this is not larger.
+  width: 6rem;
+}
+
 // Under the column width the alias and tagline stack, so the row would leave
 // the portrait floating against a tall block of text. Centring is dropped and
 // the portrait aligns to the first line instead.
 @media (max-width: 34rem) {
   .home-id { align-items: flex-start; }
   .home-avatar img { width: 2.8rem; height: 2.8rem; }
+  // Held to the same proportion against the smaller portrait.
+  .home-crown { width: 5rem; }
 }
 
 // The alias is a link now, to the song it points at. It keeps the heading's own
@@ -1999,22 +2060,32 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 
 .stop-motion-window {
   overflow: hidden;
-  aspect-ratio: 480 / 854;
 
-  // The edge is what makes the crossing legible. These are three dark blue
-  // underwater clips lying on each other, and without a line between them the
-  // overlaps read as one smeared picture rather than as three that cross --
-  // the same problem the cascade solves with opacity, which is no use here
-  // because these are three different animals rather than three copies of one.
-  //
-  // An outline rather than a border: it is drawn outside the box and takes no
-  // part in layout, so the window stays exactly one frame wide and the slot
-  // percentages stay the sizes they say they are. currentColor rather than a
-  // colour of its own, which is what makes it right in all three modes without
-  // a rule for any of them -- dark inverts the whole page, and the text it is
-  // taking its colour from is inverted with it.
-  outline: 2px solid currentColor;
+  // Handed over from the include, where the stills' dimensions are already
+  // stated, the way the cascade hands over its clip's ratio. It was written
+  // here as 480/854 while the shoal was the only caller; the crown over the
+  // portrait is 16:9, and a second sequence of a second shape is the moment a
+  // constant in a stylesheet becomes a rule per caller.
+  aspect-ratio: var(--shape);
 }
+
+// The edge is what makes the crossing legible. These are three dark blue
+// underwater clips lying on each other, and without a line between them the
+// overlaps read as one smeared picture rather than as three that cross --
+// the same problem the cascade solves with opacity, which is no use here
+// because these are three different animals rather than three copies of one.
+//
+// An outline rather than a border: it is drawn outside the box and takes no
+// part in layout, so the window stays exactly one frame wide and the slot
+// percentages stay the sizes they say they are. currentColor rather than a
+// colour of its own, which is what makes it right in all three modes without
+// a rule for any of them -- dark inverts the whole page, and the text it is
+// taking its colour from is inverted with it.
+//
+// On the shoal alone, which is where the crossing is. The crown upstairs is
+// one sequence lying on nothing, and a box ruled round it would be a frame
+// hung over the portrait rather than a drawing floating above it.
+.shoal .stop-motion-window { outline: 2px solid currentColor; }
 
 .stop-motion-reel {
   display: flex;
@@ -2048,7 +2119,8 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 // pointer. They are one picture, and freezing a third of it is a glitch rather
 // than a pause.
 .shoal:hover .stop-motion-reel,
-.shoal:focus-within .stop-motion-reel {
+.shoal:focus-within .stop-motion-reel,
+.home-crown:hover .stop-motion-reel {
   animation-play-state: paused;
 }
 
