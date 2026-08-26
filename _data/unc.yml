@@ -1,0 +1,74 @@
+# The photographs behind /unc/, in the order they are shown. Written by
+# hand, unlike _data/art.yml -- there is no script for this one, because the
+# source is a camera roll rather than an API.
+#
+# `alt` is what is read out in place of the picture, so it describes the photo
+# rather than remarking on it: it is written for someone who cannot see the
+# frame, not as a line under one they can. Nothing is printed under the photos
+# -- the page shows them and says nothing over them.
+
+- file: 'black-pearl.jpg'
+  width: 1014
+  height: 1353
+  alt: 'Standing on a wharf in a black leather jacket, holding a small paper shopping bag, a shrink-wrapped boat and the sign of The Black Pearl behind, under flat grey sky.'
+
+# The sign is a Greek road sign for a place spelt Morphi, which is as close as a
+# road has ever come to pointing at me.
+- file: 'morphi-sign.jpg'
+  width: 1353
+  height: 1014
+  alt: 'At night beside a blue Greek road sign reading Morphi, hands held open toward it, in a black leather jacket against a dark hedge.'
+
+- file: 'under-the-oak.jpg'
+  width: 1006
+  height: 1353
+  alt: 'Close selfie shot from below, sunlit, against an oak canopy and blue sky.'
+
+- file: 'husky-hoodie.jpg'
+  width: 762
+  height: 1353
+  alt: 'Selfie indoors in sunglasses and a grey UConn husky hoodie.'
+
+- file: 'ray-bans.jpg'
+  width: 1006
+  height: 1353
+  alt: 'Selfie in Ray-Bans under a concrete stair, cumulus clouds filling the rest of the frame.'
+
+- file: 'kitchen-kit.jpg'
+  width: 560
+  height: 1001
+  alt: 'Standing in a kitchen drinking a glass of milk, wearing a red Bayern Munich kit.'
+
+- file: 'catacombs.jpg'
+  width: 1006
+  height: 1353
+  alt: 'Standing in a narrow vaulted stone passage, another visitor on the steps behind.'
+
+# The anime one is drawn rather than taken, which is why its alt says so: on a
+# page of photographs an unlabelled render is a small lie.
+# It arrived as a screenshot with this site's own theme slider sitting over
+# the car, so it is cropped to the 750 rows above that.
+- file: 'anime-uconn.jpg'
+  width: 893
+  height: 750
+  alt: 'Anime-style illustration of me standing in front of a red Subaru in a navy UConn polo.'
+
+- file: 'check-scarf.jpg'
+  width: 994
+  height: 1273
+  alt: 'Motion-blurred selfie in a dark coat and a beige check scarf.'
+
+- file: 'wine-and-headphones.jpg'
+  width: 755
+  height: 1121
+  alt: 'Selfie in a green hooded sweatshirt and wired over-ear headphones, holding a glass of red wine.'
+
+- file: 'burger.jpg'
+  width: 971
+  height: 1090
+  alt: 'Sitting at a restaurant table by the window, holding a burger with both hands over a plate of salad.'
+
+- file: 'leonidas.jpg'
+  width: 923
+  height: 1286
+  alt: 'Standing at the foot of the bronze Leonidas statue in Sparta, its inscribed plinth and three flags behind, under heavy grey cloud.'

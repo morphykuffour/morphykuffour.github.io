@@ -1,0 +1,53 @@
+---
+layout: default
+---
+{%- comment -%}
+Shadows the theme's own home layout so the title line can carry a tagline after
+the alias, so the përi portrait can sit beside it, linked to the GitHub account
+it is served from, and so the alias itself can be a link -- none of which the
+upstream layout has anywhere to put. Everything else is that layout verbatim.
+
+The alias used to be respelled here -- circumflex o, open e, eta u -- so those
+letters could not leak into <title>, the feed, or any other page's heading. It
+is spelled plainly now, which is the one thing the respelling could not be:
+readable. site.title was always the plain word, so nothing downstream changes.
+
+Where it points is a song rather than a profile, which is the whole reason it is
+authored here rather than added to the elsewhere list on the përi page. Those
+are places to find me; this is not one.
+{%- endcomment -%}
+<header>
+  <div class="home-id">
+    <a class="home-avatar" href="https://github.com/{{ site.github_username }}"
+       aria-label="{{ site.author }} on GitHub">
+      <img src="https://avatars.githubusercontent.com/u/23323356?v=4"
+           alt="{{ site.author }}">
+    </a>
+    <h1><a class="home-alias" href="https://www.youtube.com/watch?v=wEBlaMOmKV4"
+           title="Sam Cooke, A Change Is Gonna Come">{{ site.title }}</a>{% if site.tagline %} <span class="tagline">{{ site.tagline }}</span>{% endif %}</h1>
+  </div>
+  {%-if site.theme_config.show_description-%}
+    <p>{{ site.description }}</p>
+  {%-endif-%}
+  {%-for creed in site.creed-%}
+    <p class="creed">{{ creed }}</p>
+  {%-endfor-%}
+</header>
+
+{%- comment -%}
+The cascade beside the menu. It is authored here rather than in index.markdown
+because it is a float, and a float only pushes the content that comes *after*
+it in the source. The menu is written by the include below, so anything meant
+to sit beside the menu has to be authored above it -- from index.markdown,
+which lands after the include, it could only ever float past the post list.
+
+The second floated stack went to the përi page with the elsewhere list it was
+floated against, and is authored there, immediately above that list.
+{%- endcomment -%}
+{%- include cascade.html
+      file="crown" width=480 height=854
+      label="Jewelled hands lowering a crown onto a leopard's head, in black and white." -%}
+
+{%-include menu_item.html collection=site.data.menu.entries-%}
+
+{{ content }}

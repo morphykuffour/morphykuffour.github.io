@@ -1,0 +1,21 @@
+# Hand-kept, unlike _data/cybersecurity.yml: talks put on the page one at a
+# time rather than pulled from a playlist. They live in a second file because
+# scripts/youtube-cyber.py rewrites cybersecurity.yml wholesale on every run,
+# so an entry added to it by hand would survive until the next update and no
+# longer.
+#
+# Written by `youtube-cyber.py --add <url>`, newest first, and plain enough to
+# edit or delete an entry by hand afterwards.
+
+- file: 'kS_GqDp6IT4.jpg'
+  title: 'Libraries That Quietly Revolutionized C'
+  channel: 'Tsoding'
+  channel_url: 'https://www.youtube.com/channel/UCEbYhDd6c6vngsF5PQpFVWg'
+  duration: '10:00'
+  link: 'https://www.youtube.com/watch?v=kS_GqDp6IT4'
+- file: 'mZgglPK8Rg0.jpg'
+  title: 'Code Worth Writing - Ray Myers | SSW 2026'
+  channel: 'Software Should Work'
+  channel_url: 'https://www.youtube.com/channel/UCMEeDOfBauUM6-gDQn4b4Ig'
+  duration: '42:52'
+  link: 'https://www.youtube.com/watch?v=mZgglPK8Rg0'

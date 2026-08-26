@@ -1,0 +1,65 @@
+# Speeches worth sitting through, newest addition last, driven onto /speech/.
+#
+# A YouTube id and nothing but an id is what a link gives you, and an id says
+# none of the things that make a speech worth queuing: who is at the lectern,
+# what occasion put them there, and why it is on this page at all. So each one
+# is written out here rather than left to the embed to imply.
+#
+#   id       the v= of the watch URL. The frame and the link out are both
+#            built from it, so there is one place to get it wrong.
+#   title    as the speech is known, which is not always how YouTube files it.
+#   speaker  who is speaking.
+#   where    the occasion, with the year.
+#   note     why it is here. One or two sentences, in my words, not a summary.
+
+- id: _lfxYhtf8o4
+  title: You Are Not Special
+  speaker: David McCullough Jr.
+  where: Wellesley High School commencement, 2012
+  note: >-
+    Twelve minutes spent telling a graduating class, to their faces and their
+    parents', that not one of them is special — and then the turn that makes
+    it the kindest thing anyone said to them that day: climb the mountain to
+    see the world, not so the world can see you.
+
+- id: EzxTGeJMC9w
+  title: Why Law and Lawyers Matter in a World of Rampant Law Breaking
+  speaker: Kristen Eichensehr
+  where: Harvard Law School's Last Lecture to the Class of 2026, April 2026
+  note: >-
+    Twenty-two minutes on what a lawyer is for once the law is being broken
+    openly: not an interpreter of the moment, she argues, but one of the people
+    the law's power to shape the moment has been left with. "Expect the
+    unexpected" arrives here as a duty rather than as advice.
+
+- id: hJbwyN4ZoCg
+  title: Secrets to Optimal Client Service
+  speaker: Jim Donovan
+  where: University of Virginia School of Law, October 2022
+  note: >-
+    Goldman's vice chairman of global client coverage on the half of the job no
+    course covers — not the work done for a client but how you are with them
+    while it is done. Addressed to law students, true of anyone whose work
+    arrives through somebody's trust.
+
+- id: z8kqCIxXTEw
+  title: Managing Client Relationships as an Investment Banker, Lawyer or Consultant
+  speaker: Jim Donovan
+  where: University of Virginia School of Law, November 2015
+  note: >-
+    The same subject as the talk above, seven years earlier and given as a
+    managing director rather than a vice chairman: how a client relationship
+    gets built and kept. Both are here because the argument does not move
+    across those seven years, and watching it not move is worth the eighteen
+    minutes.
+
+- id: RpUJfW4WTKw
+  title: Are You Destined to Deal?
+  speaker: Jim Donovan
+  where: University of Virginia School of Law, October 2016
+  note: >-
+    Thirty-three minutes on the deal rather than on the relationship around
+    it — what the work of a corporate transaction actually is for the lawyer
+    and the banker on either side of it, put to a room of students still
+    deciding whether they want that life. The longest of the three and the
+    only one about the job itself.

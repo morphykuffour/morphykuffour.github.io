@@ -1,0 +1,58 @@
+# The skulls under the frieze on the homepage: sixteen studies of one skull by
+# Jeff Searle (https://jeffsearle.blogspot.co.uk/), sliced out of a single
+# sheet of his. Cut on the gutters between the drawings rather than on an even
+# grid -- he drew them where they fit, not to a ruler -- then trimmed to the
+# ink and set to one height, so a roll of them keeps a steady line.
+#
+# The dimensions are here because the widths differ, drawing by drawing, and a
+# lazy image without its own size reserves the wrong box and shifts the strip
+# when it lands. Order is the order they were read off the sheet.
+
+- file: 'skull-01.jpg'
+  width: 314
+  height: 360
+- file: 'skull-02.jpg'
+  width: 356
+  height: 360
+- file: 'skull-03.jpg'
+  width: 316
+  height: 360
+- file: 'skull-04.jpg'
+  width: 320
+  height: 360
+- file: 'skull-05.jpg'
+  width: 302
+  height: 360
+- file: 'skull-06.jpg'
+  width: 434
+  height: 360
+- file: 'skull-07.jpg'
+  width: 302
+  height: 360
+- file: 'skull-08.jpg'
+  width: 314
+  height: 360
+- file: 'skull-09.jpg'
+  width: 320
+  height: 360
+- file: 'skull-10.jpg'
+  width: 368
+  height: 360
+- file: 'skull-11.jpg'
+  width: 342
+  height: 360
+- file: 'skull-12.jpg'
+  width: 338
+  height: 360
+- file: 'skull-13.jpg'
+  width: 348
+  height: 360
+- file: 'skull-14.jpg'
+  width: 300
+  height: 360
+- file: 'skull-15.jpg'
+  width: 412
+  height: 360
+- file: 'skull-16.jpg'
+  width: 346
+  height: 360

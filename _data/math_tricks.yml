@@ -1,0 +1,110 @@
+# One entry per trick behind /math-tricks/: the file under
+# images/math-tricks/, the line that goes under it, and the file's own
+# dimensions so the box is reserved before the picture lands.
+#
+# `alt` is separate from `title` because these are pictures of writing. The
+# caption says what the trick is; the alt has to say what is actually drawn on
+# the sheet, or the page is a heading and a blank square to anyone not looking
+# at it. Where a trick has a rule small enough to state outright, `rule` puts
+# it under the caption as text -- searchable, selectable, and readable when the
+# picture does not load.
+#
+# Nothing here is authored by me. These are other people's notes, saved and
+# mirrored; `title` is the credit that can be given where there is a name to
+# give, and where there is none it says so by saying nothing.
+
+- file: 'knuckle-months.png'
+  title: 'The knuckle method for how many days are in a month'
+  rule: >-
+    Make a fist and count across the knuckles from January: a knuckle is 31
+    days, the dip between two is 30. Seven months takes you to July on the last
+    knuckle, so start over at the first one for August and the pattern carries
+    to December. February is the exception and is 28, or 29 in a leap year.
+  width: 671
+  height: 955
+  alt: >-
+    A handwritten and hand-drawn sheet titled "Months Days Trick (Knuckle
+    Method)". A pencil drawing of a closed fist runs across the middle, its
+    four knuckles and the three dips between them labelled Jan to Jul with 31
+    on each knuckle, 30 in each dip, and 28/29 written under February; an arrow
+    curls back to the first knuckle beside the note "start again from July for
+    remaining months". Underneath, a table gives all twelve months and their
+    day counts, and two boxes restate the pattern 31 - 28/29 - 31 - 30 - 31 -
+    30 - 31, then repeat.
+
+- file: 'vedic-base-100.png'
+  title: 'Multiplying two numbers near 100, the base-100 trick'
+  rule: >-
+    Write each number as 100 plus or minus something. The left part is either
+    number cross-adjusted by the other's difference -- 96 - 2, or equally
+    98 - 4, both 94. The right part is the two differences multiplied, written
+    in two digits: 4 x 2 = 08. So 96 x 98 = 9408, and 103 x 107 = 11021 the
+    same way, carrying the extra digit left when the right part runs over.
+  width: 660
+  height: 886
+  alt: >-
+    A ruled notebook page in blue ink, headed "Vedic Maths Trick - Multiply Two
+    Numbers Near 100 (Base 100 Trick)". A three-line rule at the top is
+    followed by three worked examples -- 96 x 98 = 9408, 103 x 107 = 11021 and
+    94 x 97 = 9118 -- each written out in steps on the left and drawn on the
+    right as a cross: the two numbers above, their differences from 100
+    beside them, and arrows crossing down to the left and right halves of the
+    answer. A boxed shortcut at the foot restates it in two lines.
+
+- file: 'gradient-steepest-ascent.png'
+  title: 'The gradient of a scalar field, and why it points the way it does'
+  rule: >-
+    Take the partial derivative of a scalar field along each axis and hang the
+    unit vectors on them, and what falls out is a vector: grad phi. Each
+    component says how fast the field changes along that axis, so the vector
+    as a whole points the way the field climbs fastest -- perpendicular to the
+    contour lines, its length the rate of that climb. Downhill is the same
+    vector with a minus sign, which is the direction anything left alone on
+    the slope actually takes.
+  width: 703
+  height: 873
+  alt: >-
+    A typeset note headed "Gradient : The Direction Nature Chooses". It defines
+    the gradient of a scalar field phi as the sum of its partial derivatives
+    along x, y and z with unit vectors on them, factored into the del operator
+    applied to phi, with red and blue annotations saying that each component
+    gives the rate of change along that axis and that the gradient of a scalar
+    produces a vector. Below is a shaded three-dimensional surface of hills
+    drawn with contour lines: a point P on a slope carries a long red arrow up
+    the steepest way to a peak and a short green arrow pointing down the
+    slope, where a red ball rests.
+
+- file: 'vedic-finger-table-of-8.png'
+  title: 'The eight times table on your fingers'
+  rule: >-
+    Number both hands from little finger to thumb as 6, 7, 8, 9, 10. To
+    multiply any two of those, touch the two fingers together. The touching
+    fingers and every finger below them are tens; the fingers left above the
+    join on each hand are multiplied together for the ones. So 8 x 7 touches
+    four fingers and below -- fifty -- with 2 and 3 left above, giving 56.
+  width: 410
+  height: 570
+  alt: >-
+    A ruled notebook page in blue ink headed "Vedic Maths Finger Trick - Table
+    of 8 (Finger Multiplication Trick)". A five-line rule at the top is
+    followed by three worked examples -- 8 x 6 = 48, 8 x 7 = 56 and 8 x 9 = 72
+    -- each with a pair of drawn hands beside it, fingers numbered 6 to 10 from
+    the little finger, showing which two fingers touch and which are counted as
+    tens and which as ones. A boxed shortcut at the foot restates it in a line.
+
+- file: 'vedic-last-digits-ten.png'
+  title: 'Multiplying two numbers with the same tens digit whose last digits add to ten'
+  rule: >-
+    It works only in that case, and then it is two multiplications. The left
+    part is the tens digit times the next number up: for 43 x 47, that is
+    4 x 5 = 20. The right part is the last digits multiplied, written in two
+    digits: 3 x 7 = 21. Put them together and 43 x 47 = 2021.
+  width: 417
+  height: 579
+  alt: >-
+    A ruled notebook page in blue ink headed "Vedic Maths Trick - Multiply
+    Numbers Whose Last Digits Add to 10 (Same Tens Digit Trick)". A three-line
+    rule at the top sits beside a boxed schematic of the method written as
+    a b x a c giving a(a+1) alongside b x c. Three worked examples follow --
+    43 x 47 = 2021, 62 x 68 = 4216 and 84 x 86 = 7224 -- each broken into the
+    same four steps, with a boxed shortcut at the foot.

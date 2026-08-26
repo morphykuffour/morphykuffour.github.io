@@ -1,0 +1,70 @@
+title: morpheus
+# Markup is safe here: the homepage h1 is the only thing that renders it.
+# The epithets used to carry their sources -- the lift, the Wu-Tang bar
+# (Method Man opens GZA's "Shadowboxin'" with "the head toucher, industry
+# party bum rusher"), the physics of bending a shadow -- but the row reads
+# better as four plain words than as three links and a bare one.
+tagline: skull crusher, head toucher, shadow bender, mind wiper, digitally & metaphorically speaking of course
+author: Morpheus
+description: >-
+  pragma once, nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming
+
+# Sit under the description, one line each, on the homepage. The list above
+# says what the interests are; the first of these says what they are all in
+# service of, the second says where the alias itself comes from.
+
+creed:
+ - I love solving extremely difficult problems, fiduciary responsibility and legal obligation to non-binding abstract entities and clients
+
+ - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
+
+# baseurl: "" # the subpath of your site, e.g. /blog
+domain: morphykuffour.github.io
+url: https://morphykuffour.github.io
+github_username: morph-k
+
+# The resume is built and published by the morph-k/resume repository, which
+# compiles its LaTeX and commits the PDF to its own GitHub Pages site. /resume/
+# embeds that file directly rather than keeping a second copy here, so the page
+# shows whatever that repository last built instead of drifting behind it.
+resume_pdf: https://morph-k.github.io/resume/resume.pdf
+resume_source: https://github.com/morph-k/resume
+
+# The theme's head renders this as the tab icon. It is the same portrait the
+# homepage shows beside the alias, kept here as a local copy so the tab does
+# not depend on avatars.githubusercontent.com being reachable.
+favicon: /images/avatar.png
+
+remote_theme: riggraz/no-style-please
+
+theme_config:
+  appearance: "auto" # can be "light", "dark" or "auto"
+  back_home_text: ".." # customize text for homepage link
+  date_format: "%Y-%m-%d"
+  show_description: true # show blog description in homepage
+  show_lastmod: false
+  show_categories: true
+  lowercase_titles: false
+
+sass:
+  style: compressed
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Setting this key at all replaces Jekyll's own default exclude list rather
+# than adding to it, so that list is restated here -- without it the vendored
+# gems are read as site content and the build dies on a gem's own template.
+exclude:
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/

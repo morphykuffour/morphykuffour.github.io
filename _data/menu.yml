@@ -1,0 +1,38 @@
+# For documentation on this file, see:
+# https://github.com/riggraz/no-style-please#customize-the-menu
+
+entries:
+  - title: përi
+    url: /about/
+
+  - title: art
+    url: /art/
+
+  - title: math tricks
+    url: /math-tricks/
+
+  - title: xkcd
+    url: /xkcd/
+
+  - title: unc
+    url: /unc/
+
+  - title: music
+    url: /music/
+
+  - title: speech
+    url: /speech/
+
+  - title: cybersecurity
+    url: /cybersecurity/
+
+  - title: investment
+    url: /investment/
+
+  - title: honors thesis
+    url: /thesis/
+
+  - title: posts
+    post_list:
+      # No limit and no "see all" link: the homepage lists every post itself.
+      show_more: false

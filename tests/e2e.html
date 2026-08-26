@@ -1,0 +1,1564 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>e2e</title>
+<!--
+  The browser-side half of tests/run.sh. It is copied into the built site and
+  served from the same origin as the pages it drives, which is what lets it
+  reach into their documents: computed styles, laid-out geometry, and the
+  `appearance` key in localStorage that the theme toggle writes.
+
+  Add a case by calling check(name, condition, detail). The detail string is
+  printed on both pass and fail, so a broken assertion says what it actually
+  saw rather than only that it disagreed.
+
+  Assert against LINE boxes, not block boxes, when a float is involved: a
+  floated portrait shortens the following block's lines while its block box
+  still spans the full column.
+-->
+<pre id="out">running</pre>
+<iframe id="f" style="width:1100px;height:900px;border:0"></iframe>
+<script>
+const results = [];
+function check(name, ok, detail) {
+  results.push((ok ? "PASS " : "FAIL ") + name + (detail ? "  [" + detail + "]" : ""));
+}
+
+// Resolves once the framed page has loaded and had a moment to lay out, with
+// its document handed back for inspection.
+// The cap matters for /xkcd/: that page frames another origin, and a headless
+// Chrome with site isolation on can leave that subframe pending forever, so
+// the outer load event never arrives. The page's own markup is laid out long
+// before then, so carrying on after the cap costs nothing.
+function load(url) {
+  return new Promise(res => {
+    const f = document.getElementById('f');
+    let done = false;
+    const finish = () => { if (!done) { done = true; res(f.contentDocument); } };
+    f.onload = () => setTimeout(finish, 300);
+    setTimeout(finish, 8000);
+    f.src = url;
+  });
+}
+
+// A page framed at this width sees that width for its media queries, which is
+// how the small-screen rules get exercised without resizing the browser.
+function loadNarrow(url, width) {
+  document.getElementById('f').style.width = width + 'px';
+  return load(url);
+}
+
+(async () => {
+  try {
+    // --- homepage: the përi portrait beside the alias ----------------------
+    let d = await load('/');
+    const a = d.querySelector('header .home-avatar');
+    const img = a && a.querySelector('img');
+    check('home: avatar link exists', !!a);
+    check('home: avatar links to the GitHub profile', a && a.href === 'https://github.com/morph-k', a && a.href);
+    check('home: avatar image actually loaded', !!img && img.complete && img.naturalWidth > 0,
+          img ? 'naturalWidth=' + img.naturalWidth : 'no img');
+    check('home: avatar has alt text', !!img && img.alt.trim().length > 0, img && img.alt);
+    const rowCS = d.defaultView.getComputedStyle(d.querySelector('.home-id'));
+    check('home: identity row is a flex row', rowCS.display === 'flex', rowCS.display);
+    const imgCS = d.defaultView.getComputedStyle(img);
+    check('home: portrait is a circle', imgCS.borderTopLeftRadius === '50%', imgCS.borderTopLeftRadius);
+    const h1 = d.querySelector('.home-id h1');
+    const ar = a.getBoundingClientRect(), hr = h1.getBoundingClientRect();
+    check('home: portrait sits left of the alias, on the same line',
+          ar.right <= hr.left + 1 && Math.abs((ar.top + ar.height / 2) - (hr.top + hr.height / 2)) < 30,
+          'avatar.right=' + Math.round(ar.right) + ' h1.left=' + Math.round(hr.left));
+    // The alias is spelled plainly and is a link -- to a song rather than to a
+    // profile, which is why it is authored in the layout instead of sitting in
+    // _data/menu.yml with the elsewhere list. It keeps the heading's colour
+    // rather than the page's link colour: at this size link blue reads as
+    // navigation, and the underline is what carries the affordance instead.
+    const alias = h1.querySelector('.home-alias');
+    check('home: the alias reads as the plain word',
+          !!alias && alias.textContent.trim() === 'morpheus',
+          alias ? alias.textContent.trim() : h1.textContent.slice(0, 12));
+    check('home: the alias links to the song',
+          !!alias && alias.href === 'https://www.youtube.com/watch?v=wEBlaMOmKV4',
+          alias && alias.href);
+    const aliasCS = d.defaultView.getComputedStyle(alias);
+    check('home: the alias keeps the heading\'s ink and takes an underline',
+          aliasCS.color === d.defaultView.getComputedStyle(h1).color &&
+          aliasCS.textDecorationLine === 'underline',
+          aliasCS.color + ' / ' + aliasCS.textDecorationLine);
+    // The epithets are four plain words now -- the three that used to carry
+    // their source lost the links, so a stray anchor here means one crept
+    // back into _config.yml and the row is mixed again.
+    const tagline = d.querySelector('.tagline');
+    check('home: all four epithets are in the row',
+          tagline.textContent.replace(/\s+/g, ' ').trim() ===
+            'skull crusher, head toucher, shadow bender, mind wiper',
+          tagline.textContent.trim());
+    check('home: the epithets read as plain text',
+          tagline.querySelectorAll('a').length === 0,
+          Array.from(tagline.querySelectorAll('a')).map(x => x.href).join(' | '));
+
+    // The creeds are their own lines under the description, not a run-on of it,
+    // and they have to come before the menu -- a stray order here reads as part
+    // of the link list.
+    const creeds = Array.from(d.querySelectorAll('header .creed'));
+    const creed = creeds[0];
+    const lastCreed = creeds[creeds.length - 1];
+    const firstMenuLink = d.querySelector('li a');
+    check('home: the creed sits under the description, above the menu',
+          !!creed && creed.textContent.indexOf('extremely difficult problems') !== -1 &&
+            lastCreed.getBoundingClientRect().bottom <=
+              firstMenuLink.getBoundingClientRect().top,
+          creed ? creed.textContent + ' @ ' + Math.round(lastCreed.getBoundingClientRect().bottom)
+                : 'no .creed in the header');
+
+    // The second creed glosses the alias itself. Every entry in site.creed gets
+    // a line of its own; one paragraph carrying both would read as prose.
+    const gloss = creeds[1];
+    check('home: the alias gloss is a creed line of its own',
+          creeds.length === 2 && !!gloss &&
+            gloss.textContent.indexOf('God of dreams') !== -1 &&
+            gloss.textContent.indexOf('Metamorphoses') !== -1,
+          creeds.length + ' creed lines: ' + creeds.map(c => c.textContent.slice(0, 30)).join(' | '));
+
+    // They read as one block: the gap between the creed lines is no wider than
+    // the gap from the description to the first of them.
+    if (creeds.length === 2) {
+      const desc = d.querySelector('header > p');
+      const descGap = creed.getBoundingClientRect().top - desc.getBoundingClientRect().bottom;
+      const creedGap = gloss.getBoundingClientRect().top - creed.getBoundingClientRect().bottom;
+      check('home: the creed lines stack as one block',
+            creedGap <= descGap + 1 && creedGap >= 0,
+            'description->creed ' + Math.round(descGap) + 'px, creed->creed ' + Math.round(creedGap) + 'px');
+    }
+
+    check('home: description sits below the row, not beside it',
+          !!d.querySelector('header > p') && d.querySelector('header > p').textContent.indexOf('nixos') === 0);
+    // Post permalinks carry their categories ahead of the date, so they are
+    // matched by the .html ending rather than by a leading year.
+    const posts = Array.from(d.querySelectorAll('li a[href$=".html"]'));
+    check('home: the menu still lists every post', posts.length > 10, posts.length + ' post links');
+
+    // The elsewhere list moved to the përi page and took every mark on the site
+    // with it, so the homepage menu is plain anchors top to bottom now. A mark
+    // reappearing here means an entry drifted back into _data/menu.yml.
+    const homeMarks = Array.from(d.querySelectorAll('li a.menu-link'));
+    check('home: the menu carries no marked entries', homeMarks.length === 0,
+          homeMarks.length + ' marked links');
+    check('home: menu entries are left as the theme renders them',
+          !!d.querySelector('li a[href="/about/"]') &&
+            !d.querySelector('li a[href="/about/"]').querySelector('svg'));
+
+    // --- about: the linked Hippocrates portrait ----------------------------
+    d = await load('/about/');
+    const p = d.querySelector('.quote-card a.quote-portrait');
+    const pimg = p && p.querySelector('img');
+    check('about: portrait is a link', !!p);
+    check('about: portrait links to Wikipedia', p && p.href === 'https://en.wikipedia.org/wiki/Hippocrates', p && p.href);
+    check('about: portrait image loaded', !!pimg && pimg.complete && pimg.naturalWidth > 0,
+          pimg ? 'naturalWidth=' + pimg.naturalWidth : 'no img');
+    let pcs = d.defaultView.getComputedStyle(p);
+    check('about: portrait floats left', pcs.float === 'left', pcs.float);
+    check('about: portrait is a 110px circle',
+          pcs.width === '110px' && pcs.borderTopLeftRadius === '50%', pcs.width + '/' + pcs.borderTopLeftRadius);
+    check('about: portrait keeps its hairline ring', pcs.boxShadow !== 'none', pcs.boxShadow);
+    // The float shortens the quote's line boxes, not its block box, so the
+    // first line's own rect is what says whether the wrap survived.
+    const prect = p.getBoundingClientRect();
+    const range = d.createRange();
+    range.selectNodeContents(d.querySelector('.quote-latin'));
+    check('about: quote wraps beside the portrait', range.getClientRects()[0].left > prect.right - 1,
+          'firstLine.left=' + Math.round(range.getClientRects()[0].left) +
+          ' portrait.right=' + Math.round(prect.right));
+    const cap = d.querySelector('.quote-card figcaption a');
+    check('about: caption name links to Wikipedia',
+          cap && cap.href === 'https://en.wikipedia.org/wiki/Hippocrates' && cap.textContent === 'Hippocrates',
+          cap && cap.href);
+
+    // --- about: the elsewhere list ------------------------------------------
+    // It used to hang off the homepage menu; it closes this page now. Only the
+    // hrefs a browser resolves are worth reading back here -- the rest of
+    // _data/elsewhere.yml is a grep's business.
+    const elsewhere = Array.from(d.querySelectorAll('li a')).map(x => x.href);
+    for (const profile of ['https://www.reddit.com/user/JediMasterMorphy/',
+                           'https://www.instagram.com/morp.k/',
+                           'https://www.pinterest.com/morphykuffour/',
+                           'https://www.youtube.com/@morpheus_k']) {
+      check('about: elsewhere carries ' + profile.split('/')[2].replace('www.', ''),
+            elsewhere.indexOf(profile) !== -1,
+            elsewhere.filter(h => h.indexOf('localhost') === -1).join(' '));
+    }
+
+    // Every elsewhere entry carries a mark, drawn in currentColor so it picks
+    // up the link colour of whichever mode is on rather than needing one rule
+    // per mode. The underline is held to the label: run across the whole
+    // anchor it passes under the mark too.
+    const marked = Array.from(d.querySelectorAll('li a.menu-link'));
+    check('about: every elsewhere link carries an icon',
+          marked.length === 9 && marked.every(x => x.querySelector('svg.menu-icon')),
+          marked.length + ' marked links');
+    const oneIcon = marked[0].querySelector('svg.menu-icon');
+    const iconCS = d.defaultView.getComputedStyle(oneIcon);
+    const linkCS = d.defaultView.getComputedStyle(marked[0]);
+    check('about: icon is drawn in the link colour', iconCS.fill === linkCS.color,
+          iconCS.fill + ' vs ' + linkCS.color);
+    check('about: icon is sized off the text', iconCS.width === iconCS.height &&
+          Math.abs(parseFloat(iconCS.width) - parseFloat(linkCS.fontSize)) < 1,
+          iconCS.width + ' at font-size ' + linkCS.fontSize);
+    // Without an intrinsic size a stale or missing stylesheet blows each mark
+    // up to the width of the list, so the attributes stay on the element even
+    // though .menu-icon overrides them.
+    check('about: icon carries its intrinsic size as an attribute',
+          oneIcon.getAttribute('width') === '16' && oneIcon.getAttribute('height') === '16',
+          oneIcon.getAttribute('width') + 'x' + oneIcon.getAttribute('height'));
+    check('about: the underline is held to the label',
+          linkCS.textDecorationLine === 'none' &&
+          d.defaultView.getComputedStyle(marked[0].querySelector('.menu-label')).textDecorationLine === 'underline',
+          linkCS.textDecorationLine);
+    // The list closes the page: markdown renders the heading above it, and
+    // nothing in the source comes after the list itself.
+    const elsewhereHead = Array.from(d.querySelectorAll('h2'))
+      .filter(h => h.textContent.trim().toLowerCase() === 'elsewhere')[0];
+    check('about: the list sits under an elsewhere heading at the foot',
+          !!elsewhereHead &&
+            elsewhereHead.getBoundingClientRect().bottom <= marked[0].getBoundingClientRect().top &&
+            marked[8].getBoundingClientRect().bottom >=
+              Array.from(d.querySelectorAll('.paper-figure'))
+                .pop().getBoundingClientRect().bottom,
+          elsewhereHead ? 'h2 @' + Math.round(elsewhereHead.getBoundingClientRect().bottom)
+                        : 'no elsewhere heading');
+
+
+    // The small-screen rule un-floats the circle and centres it; it lives on
+    // the anchor now, so this is the case that catches it drifting back to the
+    // image inside.
+    d = await loadNarrow('/about/', 420);
+    pcs = d.defaultView.getComputedStyle(d.querySelector('.quote-card .quote-portrait'));
+    check('about/narrow: portrait un-floats and centres',
+          pcs.float === 'none' && pcs.display === 'block' && pcs.marginLeft === pcs.marginRight &&
+          parseFloat(pcs.marginLeft) > 0,
+          pcs.float + '/' + pcs.display + '/' + pcs.marginLeft);
+    document.getElementById('f').style.width = '1100px';
+
+    // --- resume: the embedded PDF in each mode -----------------------------
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/resume/');
+    const obj = d.querySelector('.resume-embed');
+    let cs = d.defaultView.getComputedStyle(obj);
+    const bodyCS = d.defaultView.getComputedStyle(d.body);
+    check('resume/purple: the stored choice is honoured', d.body.getAttribute('a') === 'purple', d.body.getAttribute('a'));
+    check('resume/purple: page ground is purple', bodyCS.backgroundColor === 'rgb(26, 11, 46)', bodyCS.backgroundColor);
+    check('resume/purple: no page-wide filter', bodyCS.filter === 'none', bodyCS.filter);
+    check('resume/purple: embed is inverted and tinted',
+          cs.filter === 'invert(1) sepia(0.4) hue-rotate(220deg) saturate(1.3)', cs.filter);
+    check('resume/purple: embed screens over the page', cs.mixBlendMode === 'screen', cs.mixBlendMode);
+    check('resume/purple: frame knocked back', cs.borderTopColor === 'rgba(0, 0, 0, 0.12)', cs.borderTopColor);
+    // The page must embed morph-k/resume's published PDF, not a copy served
+    // from this origin -- that is the whole reason it stays current.
+    check('resume: the embed points at the morph-k build',
+          obj.data.indexOf('https://morph-k.github.io/resume/resume.pdf') === 0, obj.data);
+    check('resume: the download link points there too',
+          Array.from(d.querySelectorAll('.paper-actions a')).some(
+            a => a.href.indexOf('https://morph-k.github.io/resume/resume.pdf') === 0),
+          Array.from(d.querySelectorAll('.paper-actions a')).map(a => a.href).join(' '));
+
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/resume/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.resume-embed'));
+    check('resume/dark: the page-wide invert does the work',
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          d.defaultView.getComputedStyle(d.body).filter);
+    check('resume/dark: embed itself untouched',
+          cs.filter === 'none' && cs.mixBlendMode === 'normal', cs.filter + '/' + cs.mixBlendMode);
+
+    localStorage.setItem('appearance', 'light');
+    d = await load('/resume/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.resume-embed'));
+    check('resume/light: embed itself untouched',
+          cs.filter === 'none' && cs.mixBlendMode === 'normal', cs.filter + '/' + cs.mixBlendMode);
+
+    // --- the toggle drives all three modes ---------------------------------
+    d = await load('/resume/');
+    const slider = d.querySelector('.theme-slider__range');
+    slider.value = '1';
+    slider.dispatchEvent(new d.defaultView.Event('input'));
+    check('toggle: the middle detent selects purple',
+          d.body.getAttribute('a') === 'purple' && localStorage.getItem('appearance') === 'purple',
+          d.body.getAttribute('a'));
+    cs = d.defaultView.getComputedStyle(d.querySelector('.resume-embed'));
+    check('toggle: the embed goes purple without a reload',
+          cs.mixBlendMode === 'screen' && cs.filter.indexOf('invert(1)') === 0, cs.filter);
+
+    // --- thesis: the byline links ------------------------------------------
+    d = await load('/thesis/');
+    const links = Array.from(d.querySelectorAll('.paper-meta a')).map(x => x.href);
+    check('thesis: advisor Tabor is linked',
+          links.indexOf('https://earthsciences.uconn.edu/person/clay_tabor/') !== -1, links.join(' '));
+    check('thesis: advisor Ding is linked', links.indexOf('https://cse.umn.edu/cs/caiwen-ding') !== -1);
+
+    // --- xkcd: the framed comic and the random roll -------------------------
+    // Nothing here reaches into the frame: it is another origin, and a headless
+    // Chrome with site isolation on will not even finish a scripted navigation
+    // into it. What is checkable from this side is the wiring -- the frame is
+    // named, the buttons target that name, and the random link is armed with a
+    // real comic URL before any click reaches it.
+    localStorage.setItem('appearance', 'light');
+    d = await load('/xkcd/');
+    const frame = d.querySelector('.xkcd-embed');
+    check('xkcd: the frame is pointed at xkcd', frame && frame.src === 'https://xkcd.com/', frame && frame.src);
+    check('xkcd: the frame carries the name the buttons target',
+          frame && frame.name === 'xkcd-frame', frame && frame.name);
+    const acts = Array.from(d.querySelectorAll('.paper-actions a'));
+    check('xkcd: the two in-page buttons target the frame',
+          acts.filter(x => x.target === 'xkcd-frame').length === 2,
+          acts.map(x => x.textContent + ':' + (x.target || '-')).join(' '));
+    // The frame has to hand xkcd at least the 780px its fixed, centre-anchored
+    // layout wants; give it less and the left of every comic falls off the
+    // edge where nothing can scroll it back. 1100px of harness is plenty, so
+    // the frame should be at its full size and untouched by the zoom.
+    let fcs = d.defaultView.getComputedStyle(frame);
+    check('xkcd: the frame is as wide as xkcd lays out',
+          frame.getBoundingClientRect().width >= 780 && fcs.zoom === '1',
+          frame.getBoundingClientRect().width + ' zoom ' + fcs.zoom);
+
+    const rnd = d.getElementById('xkcd-random');
+    check('xkcd: random is armed with a comic before any click',
+          /^https:\/\/xkcd\.com\/\d+\/$/.test(rnd.href), rnd.href);
+    // Two rolls in a row landing on the same comic would be a stuck arm, not
+    // luck: the draw is over thousands.
+    const first = rnd.href;
+    rnd.dispatchEvent(new d.defaultView.Event('click'));
+    check('xkcd: the click re-arms it for the next jump', rnd.href !== first, first + ' -> ' + rnd.href);
+    // The roll stays on https, because xkcd's own random button redirects to
+    // http and the browser blocks that as mixed content on this site.
+    let https = true;
+    for (let i = 0; i < 200; i++) {
+      rnd.dispatchEvent(new d.defaultView.Event('click'));
+      if (rnd.href.indexOf('https://xkcd.com/') !== 0 || rnd.href === 'https://xkcd.com/404/') https = false;
+    }
+    check('xkcd: 200 rolls stay on https and skip the missing comic 404', https, rnd.href);
+
+    // On a phone there is no width left to give, so the frame is scaled down
+    // whole rather than cropped: it fits the screen, and the page inside it
+    // still gets the 800px it lays out against.
+    d = await loadNarrow('/xkcd/', 420);
+    const narrow = d.querySelector('.xkcd-embed');
+    fcs = d.defaultView.getComputedStyle(narrow);
+    check('xkcd/narrow: the frame is scaled to fit rather than cropped',
+          narrow.getBoundingClientRect().width <= 420 && parseFloat(fcs.zoom) < 1 &&
+          fcs.width === '800px' && d.documentElement.scrollWidth <= 420,
+          narrow.getBoundingClientRect().width + ' zoom ' + fcs.zoom + ' inner ' + fcs.width +
+          ' page ' + d.documentElement.scrollWidth);
+    document.getElementById('f').style.width = '1100px';
+
+    // Purple has no page-wide invert, so the frame -- another site's white
+    // page -- takes the same treatment the resume PDF does.
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/xkcd/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.xkcd-embed'));
+    check('xkcd/purple: frame is inverted, tinted and screened',
+          cs.filter === 'invert(1) sepia(0.4) hue-rotate(220deg) saturate(1.3)' &&
+          cs.mixBlendMode === 'screen', cs.filter + '/' + cs.mixBlendMode);
+
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/xkcd/');
+    cs = d.defaultView.getComputedStyle(d.querySelector('.xkcd-embed'));
+    // The theme inverts the whole page and then inverts <iframe> back, the same
+    // deal <img> gets, so the comic keeps its true tone on the dark page.
+    check('xkcd/dark: the frame is re-inverted back to true tone',
+          cs.filter === 'invert(1)' && cs.mixBlendMode === 'normal' &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          cs.filter + '/' + cs.mixBlendMode);
+    localStorage.setItem('appearance', 'light');
+
+    // --- the art carousel ---------------------------------------------------
+    // The pins are mirrored from a private board, so a checkout without them
+    // renders the standing note instead of a track. Both states are legitimate
+    // and the page has to hold together in each, so the shape is asserted here
+    // and the scroll behaviour only where there are slides to scroll.
+    d = await load('/art/');
+    // The marker rides inside the h1, so it has to sit on the heading's line
+    // rather than under it -- the failure of shadowing the theme's page layout
+    // wrongly is a marker that has broken out onto its own row.
+    const h1art = d.querySelector('h1');
+    const marker = h1art && h1art.querySelector('.title-marker');
+    check('art: the title carries its marker on the same line',
+          !!marker && marker.textContent.trim() === '~2' &&
+            marker.getBoundingClientRect().top < h1art.getBoundingClientRect().bottom &&
+            marker.getBoundingClientRect().left > h1art.getBoundingClientRect().left,
+          marker ? marker.textContent.trim() + ' at ' +
+            Math.round(marker.getBoundingClientRect().left) + ',' +
+            Math.round(marker.getBoundingClientRect().top) +
+            ' in h1 ' + Math.round(h1art.getBoundingClientRect().left) + ',' +
+            Math.round(h1art.getBoundingClientRect().top) : 'no .title-marker');
+    const track = d.querySelector('.carousel-track');
+    const slides = track ? track.querySelectorAll('.carousel-slide') : [];
+    check('art: the page renders a track or says why it cannot',
+          !!track || !!d.querySelector('.art-note'),
+          track ? slides.length + ' slides' : 'note only');
+
+    if (slides.length > 1) {
+      const trackCS = d.defaultView.getComputedStyle(track);
+      // Snap is the whole mechanism: without it the arrows leave the strip
+      // resting between two pictures.
+      check('art: the track snaps on the x axis',
+            /x/.test(trackCS.scrollSnapType) && /mandatory/.test(trackCS.scrollSnapType),
+            trackCS.scrollSnapType);
+      check('art: the track scrolls sideways rather than the page',
+            trackCS.overflowX === 'auto' || trackCS.overflowX === 'scroll', trackCS.overflowX);
+      // One whole pin per view: a slide that is not the track's width lands a
+      // sliver of the next one beside it.
+      const slideW = slides[0].getBoundingClientRect().width;
+      check('art: one slide fills the frame',
+            Math.abs(slideW - track.clientWidth) < 2,
+            slideW + ' vs track ' + track.clientWidth);
+      // Pins are tall; an unbounded one turns the carousel into a scroll-down.
+      const shown = slides[0].querySelector('img');
+      check('art: a tall pin is held inside the viewport',
+            shown.getBoundingClientRect().height <= d.defaultView.innerHeight,
+            shown.getBoundingClientRect().height + ' of ' + d.defaultView.innerHeight);
+      // The controls are authored hidden and revealed by the page's own
+      // script, so a visible pair of arrows is also proof the script ran.
+      const controls = d.querySelector('.carousel-controls');
+      check('art: the arrows appear once the script has wired them',
+            !!controls && !controls.hidden, controls ? 'shown' : 'missing');
+      // The arrows move the same scroll box a swipe would, one whole slide at
+      // a time, and stop at the ends rather than running past them. run.sh
+      // forces reduced motion so the scroll lands inside this task -- see the
+      // note there for why a smooth one never would.
+      d.querySelector('.carousel-next').click();
+      await new Promise(r => setTimeout(r, 250));
+      check('art: next steps one whole slide',
+            Math.abs(track.scrollLeft - slideW) < 2, 'scrollLeft=' + track.scrollLeft);
+      d.querySelector('.carousel-prev').click();
+      await new Promise(r => setTimeout(r, 250));
+      check('art: prev steps back',
+            Math.abs(track.scrollLeft) < 2, 'scrollLeft=' + track.scrollLeft);
+      d.querySelector('.carousel-prev').click();
+      await new Promise(r => setTimeout(r, 250));
+      check('art: prev at the first pin stays put rather than wrapping',
+            Math.abs(track.scrollLeft) < 2, 'scrollLeft=' + track.scrollLeft);
+      // The counter is deliberately not asserted here: it is driven by the
+      // track's `scroll` event, and this runner's --virtual-time-budget stops
+      // Chrome running the rendering lifecycle, so no scroll event is ever
+      // dispatched. Asserting it would be testing the harness, not the page.
+
+      // Every mirrored pin has to actually be on disk -- _data/art.yml naming
+      // a file that was never downloaded fails only here, as a broken image.
+      await new Promise(r => setTimeout(r, 400));
+      const shownImgs = Array.from(track.querySelectorAll('img'));
+      const loaded = shownImgs.filter(i => i.complete && i.naturalWidth > 0);
+      check('art: the pins in view actually loaded',
+            loaded.length > 0 && shownImgs[0].naturalWidth > 0,
+            loaded.length + '/' + shownImgs.length + ' decoded so far');
+      // The hand-kept images come from _data/art_local.yml rather than the
+      // scraped art.yml, and they lead the strip. A wiring mistake there drops
+      // them without breaking anything else on the page, so they are named.
+      const localFiles = ['balotelli-headphones.jpg', 'pixel-temple-window.gif',
+                          'koi-pair.jpg', 'ald-flight-jacket.jpg'];
+      const localImgs = localFiles.map(
+        f => shownImgs.filter(i => i.src.indexOf(f) !== -1)[0]);
+      check('art: the hand-kept images lead the strip and decoded',
+            localImgs.every(i => i && i.naturalWidth > 0) &&
+              shownImgs.indexOf(localImgs[0]) === 0,
+            localImgs.map((i, n) => localFiles[n] + ': ' +
+              (i ? '#' + shownImgs.indexOf(i) + ' ' + i.naturalWidth + 'px'
+                 : 'missing')).join(', '));
+    } else {
+      results.push('SKIP art: carousel behaviour — no pins mirrored into images/art/ yet');
+    }
+
+    // A phone gets the carousel at the viewport's width less its gutters, and
+    // the page must not gain a sideways scroll of its own on top of the
+    // track's -- two nested horizontal scrolls is the failure mode here.
+    if (slides.length > 1) {
+      d = await loadNarrow('/art/', 420);
+      const narrowTrack = d.querySelector('.carousel-track');
+      const page = d.documentElement.scrollWidth - d.defaultView.innerWidth;
+      check('art/narrow: the page itself does not scroll sideways', page <= 0,
+            'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+      check('art/narrow: the carousel still shows one whole pin',
+            Math.abs(narrowTrack.querySelector('.carousel-slide').getBoundingClientRect().width
+                     - narrowTrack.clientWidth) < 2,
+            narrowTrack.clientWidth + 'px track');
+      document.getElementById('f').style.width = '1100px';
+    }
+
+    // --- the unc carousel ---------------------------------------------------
+    // Same include as /art/, so the mechanism is already covered above; what is
+    // asserted here is what this page adds -- its own pictures, and nothing
+    // written under them -- plus the one thing sharing a strip cannot
+    // guarantee, that both copies were actually wired.
+    d = await load('/unc/');
+    const uncTrack = d.querySelector('.carousel-track');
+    const uncSlides = uncTrack ? uncTrack.querySelectorAll('.carousel-slide') : [];
+    // Counted against the data file rather than a number written here, which
+    // would need editing every time a photo is added.
+    check('unc: the page has photos in it', uncSlides.length > 0, uncSlides.length + ' slides');
+
+    // A file named in _data/unc.yml that is not in images/unc/ fails only in a
+    // browser, as a broken image -- the build links at it perfectly happily.
+    await new Promise(r => setTimeout(r, 600));
+    const uncImgs = Array.from(uncTrack.querySelectorAll('img'));
+    const decoded = uncImgs.filter(i => i.complete && i.naturalWidth > 0);
+    check('unc: the photos actually loaded',
+          decoded.length > 0 && uncImgs[0].naturalWidth > 0,
+          decoded.length + '/' + uncImgs.length + ' decoded so far');
+
+    // The photos are shown and nothing is said over them: a caption line
+    // creeping back in from the data file is a change to the page, not a
+    // detail, so it fails here.
+    const uncCaps = Array.from(uncTrack.querySelectorAll('.carousel-slide figcaption'));
+    check('unc: no slide writes a line under its photo', uncCaps.length === 0,
+          uncCaps.length + ' captions for ' + uncSlides.length + ' slides');
+
+    // A slide is the picture alone now, and it has to stay inside the fold, or
+    // the arrows underneath are off-screen.
+    check('unc: a slide is held inside the viewport',
+          uncSlides[0].getBoundingClientRect().height <= d.defaultView.innerHeight,
+          uncSlides[0].getBoundingClientRect().height + ' of ' + d.defaultView.innerHeight);
+
+    // The script ships inside the include, so this is the case that would catch
+    // a second copy of it failing to wire its own carousel.
+    const uncControls = d.querySelector('.carousel-controls');
+    check('unc: the arrows were wired here too',
+          !!uncControls && !uncControls.hidden, uncControls ? 'shown' : 'missing');
+    const uncStep = uncSlides[0].getBoundingClientRect().width;
+    d.querySelector('.carousel-next').click();
+    await new Promise(r => setTimeout(r, 250));
+    check('unc: next steps one whole photo',
+          Math.abs(uncTrack.scrollLeft - uncStep) < 2, 'scrollLeft=' + uncTrack.scrollLeft);
+    // One click, one slide: a doubly-wired carousel would have moved two.
+    check('unc: the arrows are wired exactly once',
+          Math.abs(uncTrack.scrollLeft - uncStep) < 2,
+          uncTrack.scrollLeft + ' vs one step ' + uncStep);
+
+    d = await loadNarrow('/unc/', 420);
+    check('unc/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+
+    // --- the music grid -----------------------------------------------------
+    // The list is generated from a watch history, so its length is whatever the
+    // last run found; what has to hold is that every entry is complete and
+    // clickable, which is the part a bad run breaks silently.
+    d = await load('/music/');
+    const tracks = Array.from(d.querySelectorAll('.video-item'));
+    check('music: the grid has tracks in it', tracks.length > 0, tracks.length + ' tracks');
+
+    // The two halves of editing this page by hand. Tracks added to
+    // _data/music_local.yml lead the grid, in the order that file has them,
+    // and each appears exactly once even after the history catches up with it;
+    // a track dropped from the page has to be in the script's DROPPED set too,
+    // or the next run brings it back and only this case would notice. The ids
+    // are listed here rather than read from anywhere, so adding one by hand is
+    // one line in each file -- and the order is the assertion, which pinning a
+    // single id at the top was not: it broke the next time one was added above
+    // it, which is the ordinary case rather than a regression.
+    const handKept = ['fQIJb1h1RkA', 'YfBvcw3E_qU', 'ivCY3Ec4iaU', 'bOEvBlNI-wc',
+                      'uxpDa-c-4Mc', 'R0ykLlhg0AQ',
+                      'stFetny7HFc', '5ssOaawUQq8', 'DPMtHgR3TUI', 'RqQGUJK7Na4',
+                      'GLTQPR8PoZU', 'I4P5RR4jPGg', '1s40J0N5CxE', '3DxPnr48fKc',
+                      'yoYZf-lBF_U', '01yUzXQctcM', 'lMTZa82UVqE', 'SmqXKbxDoJ0',
+                      'cpbeS15sHZ0', 'x-D4MfFLo_0', '-51pxiN4NBA', 'eeTnog5RRQo',
+                      'WTDuXSyINLo', 'yxWhVw0KScY', 'XYF5W_0nxSc'];
+    const hrefs = tracks.map(t => t.querySelector('a.video-cover').getAttribute('href'));
+    check('music: the hand-kept tracks lead the grid, in order',
+          handKept.every((id, i) => hrefs[i] && hrefs[i].indexOf('v=' + id) !== -1),
+          hrefs.slice(0, handKept.length).join(' '));
+    check('music: no hand-kept track is repeated further down',
+          handKept.every(id => hrefs.filter(h => h.indexOf('v=' + id) !== -1).length === 1),
+          hrefs.length + ' tracks in the grid');
+    check('music: a dropped track stays off the page',
+          hrefs.every(h => h.indexOf('v=Sbcq7TZLQA4') === -1),
+          hrefs.length + ' tracks, none of them Sbcq7TZLQA4');
+
+    check('music: every cover links to its video',
+          tracks.every(t => {
+            const a = t.querySelector('a.video-cover');
+            return a && /youtube\.com\/watch\?v=/.test(a.getAttribute('href'));
+          }),
+          tracks[0].querySelector('a.video-cover').getAttribute('href'));
+
+    // A cover named in _data/music.yml but missing from images/music/ fails
+    // only in a browser, as a broken image -- the build links at it happily.
+    await new Promise(r => setTimeout(r, 800));
+    const covers = tracks.map(t => t.querySelector('img'));
+    const live = covers.filter(i => i.complete && i.naturalWidth > 0);
+    check('music: the covers actually loaded', live.length === covers.length,
+          live.length + '/' + covers.length + ' decoded');
+
+    // Thumbnails arrive at more than one shape; the grid crops them to one, or
+    // a 4:3 cover among 16:9 neighbours reads as a broken cell.
+    const shape = covers[0].getBoundingClientRect();
+    check('music: covers are cropped to a single shape',
+          Math.abs(shape.width / shape.height - 16 / 9) < 0.05,
+          (shape.width / shape.height).toFixed(3));
+    check('music: the covers in a row are the same height',
+          new Set(covers.slice(0, 3).map(i => Math.round(i.getBoundingClientRect().height))).size === 1,
+          covers.slice(0, 3).map(i => Math.round(i.getBoundingClientRect().height)).join(' '));
+
+    // More than one column is the whole reason the grid steps outside the text
+    // column; at 1100px a single column would mean the escape bought nothing.
+    const grid = d.querySelector('.video-grid');
+    check('music: the grid runs in more than one column',
+          d.defaultView.getComputedStyle(grid).gridTemplateColumns.split(' ').length > 1,
+          d.defaultView.getComputedStyle(grid).gridTemplateColumns);
+
+    // The badge is the only thing that separates a three-minute single from a
+    // three-hour mix at a glance, and it has to sit on the cover, not under it.
+    const badge = tracks.map(t => t.querySelector('.video-time')).filter(Boolean);
+    check('music: durations are stamped on the covers', badge.length === tracks.length,
+          badge.length + '/' + tracks.length + ' stamped');
+    check('music: the badge sits inside its cover',
+          badge[0].getBoundingClientRect().bottom <=
+          covers[0].getBoundingClientRect().bottom + 1,
+          'badge ' + Math.round(badge[0].getBoundingClientRect().bottom) +
+          ' vs cover ' + Math.round(covers[0].getBoundingClientRect().bottom));
+
+    d = await loadNarrow('/music/', 420);
+    check('music/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+
+    // --- the cybersecurity playlists ----------------------------------------
+    // Same cover grid as /music/, so the grid itself is not re-asserted here.
+    // What is this page's own is the frame around it: playlists are named
+    // sections in playlist order, and a video in one is reached from the page
+    // rather than only from YouTube's own listing.
+    d = await load('/cybersecurity/');
+    const lists = Array.from(d.querySelectorAll('.playlist'));
+    check('cyber: the page carries playlists', lists.length > 0, lists.length + ' playlists');
+
+    check('cyber: every playlist is named and links to itself',
+          lists.every(l => {
+            const a = l.querySelector('.playlist-name a');
+            return a && /youtube\.com\/playlist\?list=/.test(a.getAttribute('href'));
+          }),
+          lists[0].querySelector('.playlist-name a').getAttribute('href'));
+
+    check('cyber: every playlist says why it is here',
+          lists.every(l => (l.querySelector('.playlist-note') || {}).textContent),
+          lists.length + ' notes');
+
+    const cyberItems = Array.from(d.querySelectorAll('.playlist .video-item, .loose .video-item'));
+    check('cyber: the playlists have videos in them', cyberItems.length > 0,
+          cyberItems.length + ' videos');
+    check('cyber: every cover links to its video',
+          cyberItems.every(t => {
+            const a = t.querySelector('a.video-cover');
+            return a && /youtube\.com\/watch\?v=/.test(a.getAttribute('href'));
+          }),
+          cyberItems[0].querySelector('a.video-cover').getAttribute('href'));
+
+    // The count in the credit line is the page's own claim about the playlist;
+    // if it disagrees with the covers under it, one of them is stale.
+    check('cyber: the credit counts the videos actually shown',
+          lists.every(l => {
+            const said = (l.querySelector('.playlist-credit').textContent.match(/(\d+) video/) || [])[1];
+            return Number(said) === l.querySelectorAll('.video-item').length;
+          }),
+          lists[0].querySelector('.playlist-credit').textContent.trim());
+
+    // The hand-kept shelf under the playlists. Its heading is deliberately not
+    // a link -- there is nothing on YouTube it could point at -- and its cells
+    // carry a channel, which a playlist's cells leave to the credit line above
+    // them. Both are the kind of thing a copied block quietly loses.
+    const shelf = d.querySelector('.loose');
+    check('cyber: the hand-kept talks have a shelf of their own',
+          shelf && shelf.querySelectorAll('.video-item').length > 0,
+          shelf ? shelf.querySelectorAll('.video-item').length + ' talks' : 'no shelf');
+    check('cyber: the shelf is named but links nowhere',
+          shelf.querySelector('.playlist-name').textContent.trim().length > 0 &&
+          !shelf.querySelector('.playlist-name a'),
+          shelf.querySelector('.playlist-name').textContent.trim());
+    check('cyber: every talk on the shelf names its channel',
+          Array.from(shelf.querySelectorAll('.video-item'))
+               .every(t => t.querySelector('a.video-channel')),
+          shelf.querySelectorAll('a.video-channel').length + ' credited');
+    check('cyber: the shelf sits under the playlists',
+          shelf.compareDocumentPosition(d.querySelector('.playlist')) &
+          Node.DOCUMENT_POSITION_PRECEDING,
+          'shelf last');
+
+    // Mirrored covers, so a name in the data file with no file behind it fails
+    // only in a browser -- the build links at it happily.
+    await new Promise(r => setTimeout(r, 800));
+    const cyberCovers = cyberItems.map(t => t.querySelector('img'));
+    const cyberLive = cyberCovers.filter(i => i.complete && i.naturalWidth > 0);
+    check('cyber: the covers actually loaded', cyberLive.length === cyberCovers.length,
+          cyberLive.length + '/' + cyberCovers.length + ' decoded');
+
+    // --- the investment talks ------------------------------------------------
+    // A flat grid of loose videos, so this is /music/'s shape rather than
+    // /cybersecurity/'s -- and the grid itself is /music/'s component, already
+    // asserted there. What is this page's own is that it stayed flat: a talk
+    // here belongs to no playlist, and the credit under each cover is the
+    // channel that gave it rather than a section heading above a run of them.
+    d = await load('/investment/');
+    const talks = Array.from(d.querySelectorAll('.video-item'));
+    check('invest: the grid has talks in it', talks.length > 0, talks.length + ' talks');
+    check('invest: the talks are one flat grid, not playlist sections',
+          d.querySelectorAll('.video-grid').length === 1 &&
+          d.querySelectorAll('.playlist').length === 0,
+          d.querySelectorAll('.video-grid').length + ' grids, ' +
+          d.querySelectorAll('.playlist').length + ' playlists');
+
+    check('invest: every cover links to its video',
+          talks.every(t => {
+            const a = t.querySelector('a.video-cover');
+            return a && /youtube\.com\/watch\?v=/.test(a.getAttribute('href'));
+          }),
+          talks[0].querySelector('a.video-cover').getAttribute('href'));
+
+    // The talks run between half an hour and two, which the covers do not say
+    // and the titles do not either -- the badge is the only thing that does.
+    const talkBadges = talks.map(t => t.querySelector('.video-time')).filter(Boolean);
+    check('invest: durations are stamped on the covers',
+          talkBadges.length === talks.length,
+          talkBadges.length + '/' + talks.length + ' stamped');
+
+    // Whose talk it is matters more here than on /music/: these are one firm's
+    // engineers on a stage, and the line under the title is what says so.
+    check('invest: every talk credits its channel',
+          talks.every(t => {
+            const a = t.querySelector('a.video-channel');
+            return a && a.textContent.trim() && a.getAttribute('href');
+          }),
+          talks.length + ' credits');
+
+    // Mirrored covers, so a name in the data file with no file behind it fails
+    // only in a browser -- the build links at it happily.
+    await new Promise(r => setTimeout(r, 800));
+    const talkCovers = talks.map(t => t.querySelector('img'));
+    const talkLive = talkCovers.filter(i => i.complete && i.naturalWidth > 0);
+    check('invest: the covers actually loaded', talkLive.length === talkCovers.length,
+          talkLive.length + '/' + talkCovers.length + ' decoded');
+
+    // --- the menu carries the art and xkcd pages ----------------------------
+    d = await load('/');
+    // `header ~ ul` rather than `header + ul`: the cascade is a figure between
+    // the two, because a float only moves what comes after it in the source.
+    // The menu is still the only top-level <ul> the homepage has.
+    const menuHrefs = Array.from(d.querySelectorAll('header ~ ul > li > a')).map(x => x.getAttribute('href'));
+    check('home: art sits in the menu under përi',
+          menuHrefs.indexOf('/art/') === menuHrefs.indexOf('/about/') + 1, menuHrefs.join(' '));
+    check('home: xkcd sits in the menu under art',
+          menuHrefs.indexOf('/xkcd/') === menuHrefs.indexOf('/art/') + 1, menuHrefs.join(' '));
+    check('home: unc sits in the menu under xkcd',
+          menuHrefs.indexOf('/unc/') === menuHrefs.indexOf('/xkcd/') + 1, menuHrefs.join(' '));
+    check('home: music sits in the menu under unc',
+          menuHrefs.indexOf('/music/') === menuHrefs.indexOf('/unc/') + 1, menuHrefs.join(' '));
+    check('home: cybersecurity sits in the menu under speech',
+          menuHrefs.indexOf('/cybersecurity/') === menuHrefs.indexOf('/speech/') + 1,
+          menuHrefs.join(' '));
+    check('home: investment sits in the menu under cybersecurity',
+          menuHrefs.indexOf('/investment/') === menuHrefs.indexOf('/cybersecurity/') + 1,
+          menuHrefs.join(' '));
+
+    // --- the cascades --------------------------------------------------------
+    // Three copies of one clip stepped down and right of each other. One is
+    // floated against the homepage menu and three are laid over the board at
+    // the foot of that page; the fifth went to the përi page with the elsewhere
+    // list and is driven further down. What is worth asserting is what only a
+    // laid-out page can answer: that each stack is really offset rather than
+    // stacked flat, that it takes the shape of its own clip, that a floated one
+    // really does move the lines beside it, and that the three on the board land
+    // where the markup put them without shifting the picture underneath.
+    localStorage.setItem('appearance', 'light');
+    d = await load('/');
+    const stacks = Array.from(d.querySelectorAll('.cascade'));
+    check('home: the page carries all four cascades', stacks.length === 4, stacks.length + ' stacks');
+
+    // The board the last three are hung over, and the picture inside it. An
+    // absolutely positioned box contributes no height, so the figure should
+    // still be exactly as tall as the image -- if it is taller, a clip is in
+    // the flow and has pushed the page around.
+    const board = d.querySelector('.home-collage').getBoundingClientRect();
+    const boardImg = d.querySelector('.home-collage img').getBoundingClientRect();
+    check('home/board: the clips add no height to the picture',
+          Math.abs(board.height - boardImg.height) < 1,
+          'figure ' + Math.round(board.height) + ' vs img ' + Math.round(boardImg.height));
+
+    // Each stack, the clip it plays, and its file's aspect ratio. A floated one
+    // carries the first line of the list it is floated against; one on the
+    // board carries nothing further -- it is checked against the board itself.
+    const CASCADES = [
+      { name: 'crown',  ratio: 480 / 854,
+        neighbour: () => d.querySelector('header ~ ul > li > a') },
+      { name: 'riders',  ratio: 640 / 360, over: true },
+      { name: 'yinyang', ratio: 480 / 854, over: true },
+      { name: 'frogs',   ratio: 480 / 480, over: true },
+    ];
+
+    for (let n = 0; n < CASCADES.length; n++) {
+      const spec = CASCADES[n], tag = 'home/' + spec.name + ': ';
+      const stack = stacks[n];
+      const layers = Array.from(stack.querySelectorAll('.cascade-layer'));
+      check(tag + 'the stack has three layers', layers.length === 3, layers.length + ' layers');
+      check(tag + 'every layer plays the same clip',
+            layers.length === 3 &&
+            layers.every(v => v.currentSrc.indexOf('/videos/' + spec.name + '.mp4') !== -1),
+            layers.map(v => v.currentSrc.split('/').pop()).join(' '));
+      check(tag + 'the clip carries no audio track',
+            layers.every(v => v.muted && !(v.mozHasAudio || v.webkitAudioDecodedByteCount > 0)),
+            'muted=' + layers.map(v => v.muted).join(',') +
+            ' decodedAudioBytes=' + layers.map(v => v.webkitAudioDecodedByteCount).join(','));
+
+      const boxes = layers.map(v => v.getBoundingClientRect());
+      check(tag + 'each layer is stepped down and to the right of the one behind',
+            boxes[1].left > boxes[0].left && boxes[1].top > boxes[0].top &&
+            boxes[2].left > boxes[1].left && boxes[2].top > boxes[1].top,
+            boxes.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+
+      // The offsets are derived from the box, so the stack should fill it
+      // exactly: back layer flush with the left and top, front flush with the
+      // right and bottom. Which only works out if the box carries the clip's
+      // own ratio -- the two assertions are halves of the same arithmetic, so
+      // the ratio is checked here too, against the file rather than a constant.
+      const cbox = stack.getBoundingClientRect();
+      check(tag + 'the stack fills its reserved box',
+            Math.abs(boxes[0].left - cbox.left) < 2 && Math.abs(boxes[2].right - cbox.right) < 2 &&
+            Math.abs(boxes[0].top - cbox.top) < 2 && Math.abs(boxes[2].bottom - cbox.bottom) < 2,
+            'box ' + Math.round(cbox.width) + 'x' + Math.round(cbox.height) +
+            ' stack ' + Math.round(boxes[2].right - boxes[0].left) + 'x' +
+            Math.round(boxes[2].bottom - boxes[0].top));
+      check(tag + 'the box takes the shape of its own clip',
+            Math.abs(cbox.width / cbox.height - spec.ratio) < 0.01,
+            (cbox.width / cbox.height).toFixed(3) + ' vs ' + spec.ratio.toFixed(3));
+
+      if (spec.neighbour) {
+        // A float moves line boxes, not block boxes, so the list beside it still
+        // spans the column while the entries inside it stop short of the video.
+        const line = spec.neighbour().getBoundingClientRect();
+        check(tag + 'the stack sits beside its list rather than above it',
+              line.right <= cbox.left + 1 && line.top < cbox.bottom && line.bottom > cbox.top,
+              'line.right=' + Math.round(line.right) + ' stack.left=' + Math.round(cbox.left));
+      } else {
+        // On the board rather than beside anything. Nothing in the markup
+        // states where in pixels: the wrapper carries three percentages and the
+        // board is meant to be what they are percentages of, so reading the
+        // laid-out box back against the picture is what proves both -- that the
+        // custom properties reach the rule, and that the containing block is
+        // the figure rather than the page.
+        check(tag + 'the stack lies within the board',
+              cbox.left >= board.left - 1 && cbox.right <= board.right + 1 &&
+              cbox.top >= board.top - 1 && cbox.bottom <= board.bottom + 1,
+              'stack ' + Math.round(cbox.left) + ',' + Math.round(cbox.top) +
+              ' board ' + Math.round(board.left) + ',' + Math.round(board.top));
+
+        const asked = stack.parentElement.style;
+        const pct = [
+          ['left',  (cbox.left - board.left) / board.width * 100,  asked.getPropertyValue('--clip-left')],
+          ['top',   (cbox.top - board.top) / board.height * 100,   asked.getPropertyValue('--clip-top')],
+          ['width', cbox.width / board.width * 100,                asked.getPropertyValue('--clip-width')],
+        ];
+        check(tag + 'the box sits where the markup placed it on the board',
+              pct.every(([, got, want]) => Math.abs(got - parseFloat(want)) < 0.5),
+              pct.map(([k, got, want]) => k + ' ' + got.toFixed(1) + '% vs ' + want.trim()).join(' '));
+      }
+
+      // Autoplay is not in the markup -- the include's script grants it, and
+      // declines to when the reader has asked for less motion. This whole run
+      // is driven with --force-prefers-reduced-motion, so what is testable
+      // here is that refusal, and it is the half worth pinning: a <video
+      // autoplay> would have started before any script could consult the
+      // setting. The playing case cannot be asserted under the same flags
+      // anyway -- virtual time never runs the rendering lifecycle, so
+      // currentTime would not advance.
+      check(tag + 'reduced motion leaves the stack still',
+            layers.every(v => v.paused && v.currentTime === 0),
+            layers.map(v => (v.paused ? 'paused' : 'playing') + '@' + v.currentTime).join(' '));
+      // Which is only a sight worth having because there is a frame to hold:
+      // the poster is what a reader sees when the clip does not play, here or
+      // with scripting off entirely.
+      check(tag + 'every layer carries a poster frame',
+            layers.every(v => (v.poster || '').indexOf('/videos/' + spec.name + '-poster.jpg') !== -1),
+            layers.map(v => v.poster.split('/').pop()).join(' '));
+    }
+
+    // The fifth stack is the përi page's, floated against the elsewhere list at
+    // the foot of it. It is authored immediately above that list because a float
+    // only moves what follows it in the source, so what says it landed right is
+    // that it starts level with the first link rather than below the last one.
+    const about = await load('/about/');
+    const dragon = about.querySelector('.cascade');
+    const dragonBox = dragon.getBoundingClientRect();
+    const marks = Array.from(about.querySelectorAll('a.menu-link'));
+    check('about/dragon: the përi page carries one cascade, playing the dragon',
+          about.querySelectorAll('.cascade').length === 1 &&
+            Array.from(dragon.querySelectorAll('.cascade-layer'))
+              .every(v => v.currentSrc.indexOf('/videos/dragon.mp4') !== -1),
+          about.querySelectorAll('.cascade').length + ' stacks');
+    check('about/dragon: the box takes the shape of its own clip',
+          Math.abs(dragonBox.width / dragonBox.height - 1) < 0.01,
+          (dragonBox.width / dragonBox.height).toFixed(3) + ' vs 1.000');
+    check('about/dragon: the stack starts level with the elsewhere list',
+          Math.abs(dragonBox.top - marks[0].getBoundingClientRect().top) < 12,
+          'stack.top=' + Math.round(dragonBox.top) +
+          ' first elsewhere link @' + Math.round(marks[0].getBoundingClientRect().top));
+    // A float moves line boxes, not block boxes: the list still spans the
+    // column while the entries inside it stop short of the video.
+    check('about/dragon: the stack sits beside the list rather than above it',
+          marks[0].getBoundingClientRect().right <= dragonBox.left + 1,
+          'link.right=' + Math.round(marks[0].getBoundingClientRect().right) +
+          ' stack.left=' + Math.round(dragonBox.left));
+
+    // The theme re-inverts <img> and <iframe> under its whole-page invert but
+    // not <video>; without the rule in main.scss these clips would be the only
+    // negatives on a dark page. One rule covers every stack on the page.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    let filters = Array.from(d.querySelectorAll('.cascade-layer'))
+      .map(v => d.defaultView.getComputedStyle(v).filter);
+    check('home/dark: every cascade is re-inverted back to true tone',
+          filters.length === 12 && filters.every(f => f === 'invert(1)') &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          filters.join(' '));
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    filters = Array.from(d.querySelectorAll('.cascade-layer'))
+      .map(v => d.defaultView.getComputedStyle(v).filter);
+    check('home/purple: every cascade is left alone',
+          filters.length === 12 && filters.every(f => f === 'none') &&
+          d.defaultView.getComputedStyle(d.body).filter === 'none',
+          filters.join(' '));
+    localStorage.setItem('appearance', 'light');
+
+    // Narrow: half the column is more than a phone can spare, so the float is
+    // dropped and a floated stack centres on its own line above the list it was
+    // floated against. The rule is written once and has to reach both pages, so
+    // the përi page's stack is read on the same pass.
+    d = await loadNarrow('/', 420);
+    const narrowStacks = Array.from(d.querySelectorAll('.cascade'));
+    const narrowFloated = narrowStacks.filter(el => !el.closest('.collage-clip'));
+    const centred = (doc, el) => {
+      const c = doc.defaultView.getComputedStyle(el);
+      return c.float === 'none' && c.marginLeft === c.marginRight &&
+             parseFloat(c.marginLeft) > 0;
+    };
+    check('home/narrow: the floated cascade un-floats and centres',
+          narrowFloated.length === 1 && centred(d, narrowFloated[0]),
+          narrowFloated.map(el => {
+            const c = d.defaultView.getComputedStyle(el);
+            return c.float + '/' + c.marginLeft;
+          }).join(' '));
+
+    // The three on the board are the case that rule must not reach: they are
+    // already out of the flow, and centring them would walk them off the tiles
+    // they were placed on. Being placed in percentages, they ride the picture
+    // down as it narrows -- so the same fractions of the board hold here as at
+    // full width.
+    const narrowBoard = d.querySelector('.home-collage').getBoundingClientRect();
+    const narrowOver = narrowStacks.filter(el => el.closest('.collage-clip'));
+    check('home/narrow: the clips on the board keep their place on it',
+          narrowOver.length === 3 && narrowOver.every(el => {
+            const c = d.defaultView.getComputedStyle(el);
+            const b = el.getBoundingClientRect();
+            const want = parseFloat(el.parentElement.style.getPropertyValue('--clip-left'));
+            return c.float === 'none' && parseFloat(c.marginLeft) === 0 &&
+                   Math.abs((b.left - narrowBoard.left) / narrowBoard.width * 100 - want) < 0.5;
+          }),
+          narrowOver.map(el => {
+            const b = el.getBoundingClientRect();
+            return ((b.left - narrowBoard.left) / narrowBoard.width * 100).toFixed(1) + '%';
+          }).join(' '));
+    check('home/narrow: the page does not scroll sideways',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+
+    d = await loadNarrow('/about/', 420);
+    const narrowDragon = d.querySelector('.cascade');
+    check('about/narrow: the dragon un-floats and centres above the list',
+          !!narrowDragon && centred(d, narrowDragon) &&
+            narrowDragon.getBoundingClientRect().bottom <=
+              d.querySelector('a.menu-link').getBoundingClientRect().top + 1,
+          narrowDragon ? d.defaultView.getComputedStyle(narrowDragon).float + '/' +
+                         d.defaultView.getComputedStyle(narrowDragon).marginLeft
+                       : 'no stack');
+    document.getElementById('f').style.width = '1100px';
+
+    // --- the rain ------------------------------------------------------------
+    // The band under the board. There is no script behind it: an integer is
+    // animated in the stylesheet, read back through counters and printed as
+    // glyphs. Which is exactly why it belongs here rather than in a grep --
+    // whether @property registers the integer, whether mod() resolves inside
+    // it, and whether a counter prints anything at all are questions only a
+    // browser answers, and the failure mode of any of them is an empty box.
+    d = await load('/');
+    const rain = d.querySelector('.matrix-rain');
+    const columns = Array.from(d.querySelectorAll('.matrix-rain span'));
+    check('home/rain: the band closes the page',
+          !!rain && rain.getBoundingClientRect().top >
+            d.querySelector('.home-collage').getBoundingClientRect().top,
+          rain ? 'band @' + Math.round(rain.getBoundingClientRect().top) : 'no band');
+    check('home/rain: every column is there', columns.length === 26,
+          columns.length + ' columns');
+
+    // A column with nothing in it still has a box; one with glyphs in it has a
+    // tall, narrow one, because the writing mode turns the line downward. So
+    // the shape is the evidence that the counters printed.
+    const strips = columns.map(c => c.getBoundingClientRect());
+    check('home/rain: the counters print a column of glyphs',
+          strips.every(b => b.height > 60 && b.height > b.width),
+          Math.round(strips[0].width) + 'x' + Math.round(strips[0].height));
+
+    // The registered property is what the whole effect hangs on: the timer is
+    // an <integer>, and each glyph is that integer walked forward and wrapped
+    // with mod(). A browser that drops either hands back something that is not
+    // a number in range, and the band goes quietly blank.
+    const gs = d.defaultView.getComputedStyle(columns[0]);
+    const timer = parseFloat(gs.getPropertyValue('--rain-t'));
+    const glyphs = [1, 6, 12].map(n => parseFloat(gs.getPropertyValue('--rain-g' + n)));
+    check('home/rain: the timer resolves to an integer',
+          Number.isInteger(timer) && timer >= 1 && timer <= 26, '--rain-t=' + timer);
+    check('home/rain: each glyph is the timer wrapped into the alphabet',
+          glyphs.every(v => Number.isInteger(v) && v >= 1 && v <= 26),
+          glyphs.join(' '));
+
+    // This run forces reduced motion, so what is testable is the still frame:
+    // the animations are off, and every column is parked somewhere on the band
+    // rather than at the start of its fall, which is above the band and out of
+    // sight. Without the resting offsets that is a black box and nothing in it.
+    const band = rain.getBoundingClientRect();
+    check('home/rain: reduced motion stops the fall',
+          d.defaultView.getComputedStyle(columns[0]).animationName === 'none',
+          d.defaultView.getComputedStyle(columns[0]).animationName);
+    check('home/rain: every column is parked in view of the band',
+          strips.every(b => b.top < band.bottom && b.bottom > band.top),
+          strips.filter(b => b.top >= band.bottom || b.bottom <= band.top).length + ' off the band');
+    check('home/rain: the columns park at different heights',
+          new Set(strips.map(b => Math.round(b.top))).size > 3,
+          new Set(strips.map(b => Math.round(b.top))).size + ' distinct offsets');
+
+    // The band is authored black-on-green like the code blocks, so it takes the
+    // same exemption from the whole-page invert; purple mode filters nothing and
+    // is given the colours outright instead.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    check('home/rain: the band is re-inverted back to true tone in dark mode',
+          d.defaultView.getComputedStyle(d.querySelector('.matrix-rain')).filter === 'invert(1)',
+          d.defaultView.getComputedStyle(d.querySelector('.matrix-rain')).filter);
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    const purple = d.defaultView.getComputedStyle(d.querySelector('.matrix-rain'));
+    check('home/rain: purple mode restrikes the band rather than filtering it',
+          purple.filter === 'none' && purple.backgroundColor === 'rgb(20, 7, 34)',
+          purple.filter + ' / ' + purple.backgroundColor);
+    localStorage.setItem('appearance', 'light');
+
+    // The columns divide the band between them, so a phone gets the same
+    // twenty-six in less room rather than a band that overflows the column.
+    d = await loadNarrow('/', 420);
+    const narrowBand = d.querySelector('.matrix-rain').getBoundingClientRect();
+    const narrowColumns = Array.from(d.querySelectorAll('.matrix-rain span'));
+    check('home/rain/narrow: the columns still fit inside the band',
+          narrowColumns.length === 26 && narrowColumns.every(c => {
+            const b = c.getBoundingClientRect();
+            return b.left >= narrowBand.left - 1 && b.right <= narrowBand.right + 1;
+          }),
+          Math.round(narrowBand.width) + 'px band');
+    check('home/rain/narrow: the band adds no sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+
+    // --- the rolls -----------------------------------------------------------
+    // Two endless strips under the rain: ten pictures, and under them sixteen
+    // studies of one skull. Both come out of _includes/roll.html, and the loop
+    // is the strip printed twice and walked exactly one pass left -- which only
+    // comes out seamless if the second pass repeats the first in order and a
+    // pass is exactly half the track. Both are laid-out facts rather than
+    // source ones: the widths differ picture to picture, so half the track is a
+    // number only the browser has.
+    //
+    // Walked over both strips rather than written out for one. The mechanism is
+    // a single include now, but half a track is measured per strip: one wrong
+    // width in either data file breaks that strip's seam and leaves the other
+    // one perfect.
+    d = await load('/');
+    const frieze = d.querySelector('.frieze');
+    const skullRoll = d.querySelector('.skull-roll');
+    check('home/rolls: the frieze follows the rain',
+          !!frieze && frieze.getBoundingClientRect().top >
+            d.querySelector('.matrix-rain').getBoundingClientRect().bottom,
+          frieze ? 'frieze @' + Math.round(frieze.getBoundingClientRect().top)
+                 : 'no frieze');
+    check('home/rolls: the skulls follow the frieze',
+          !!skullRoll && !!frieze && skullRoll.getBoundingClientRect().top >
+            frieze.getBoundingClientRect().bottom,
+          skullRoll ? 'skulls @' + Math.round(skullRoll.getBoundingClientRect().top)
+                    : 'no skulls');
+
+    for (const r of [{ sel: '.frieze', name: 'frieze', count: 10, sample: [0, 4, 9] },
+                     { sel: '.skull-roll', name: 'skulls', count: 16, sample: [0, 6, 15] }]) {
+      const strip = Array.from(d.querySelectorAll(r.sel + ' .roll-track img'));
+      check('home/rolls/' + r.name + ': the strip is all of them, twice',
+            strip.length === r.count * 2, strip.length + ' tiles');
+
+      const names = strip.map(i => i.getAttribute('src').split('/').pop());
+      check('home/rolls/' + r.name + ': the second pass repeats the first in order',
+            names.slice(0, r.count).join(' ') === names.slice(r.count).join(' ') &&
+            new Set(names.slice(0, r.count)).size === r.count,
+            new Set(names).size + ' distinct of ' + names.length);
+
+      // What the -50% in the keyframe rests on: the first tile of the second
+      // pass has to stand exactly where the first one did, or the loop jumps
+      // once a pass. `rollTrack` rather than `track`: the /art/ carousel above
+      // already has one, and both are top-level in this one long function.
+      const rollTrack = d.querySelector(r.sel + ' .roll-track').getBoundingClientRect();
+      const firstLeft = strip[0].getBoundingClientRect().left;
+      const seamLeft = strip[r.count].getBoundingClientRect().left;
+      check('home/rolls/' + r.name + ': one pass is exactly half the strip',
+            Math.abs((seamLeft - firstLeft) - rollTrack.width / 2) < 1,
+            'pass ' + Math.round(seamLeft - firstLeft) +
+            ' vs half ' + Math.round(rollTrack.width / 2));
+
+      // Every picture is a different width, and each carries its own so the
+      // strip does not shift when a lazy image lands. A wrong number in
+      // _data/frieze.yml or _data/skulls.yml is invisible until the file
+      // arrives and the row jumps under it -- which is what reading the
+      // declared box back against the real one catches.
+      //
+      // Three of them per strip rather than all of them, and fetched
+      // deliberately rather than by forcing the strip to load: these sit well
+      // below the fold and are lazy, so making the page pull every one of them
+      // costs the run more than the rest are worth. A wrong number is a mistake
+      // made per entry, and three entries is enough to catch the shape of it.
+      const sampled = r.sample.map(n => strip[n]);
+      const sizes = await Promise.all(sampled.map(i => new Promise(res => {
+        const probe = new Image();
+        probe.onload = () => res([probe.naturalWidth, probe.naturalHeight]);
+        probe.onerror = () => res(null);
+        probe.src = i.src;
+      })));
+      check('home/rolls/' + r.name + ': every picture declares the box it actually fills',
+            sizes.every((size, n) => size &&
+              Number(sampled[n].getAttribute('width')) === size[0] &&
+              Number(sampled[n].getAttribute('height')) === size[1]),
+            sampled.map((i, n) => i.getAttribute('src').split('/').pop() + ' declared ' +
+              i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
+              (sizes[n] ? sizes[n].join('x') : 'unreachable')).join(', '));
+
+      // One height, each its own width -- which is the whole layout of a strip,
+      // and the reason a common box was not used. Read off the laid-out boxes
+      // rather than the attributes: the attributes are the file's size, this is
+      // what the rule made of them.
+      const boxes = strip.slice(0, r.count).map(i => i.getBoundingClientRect());
+      check('home/rolls/' + r.name + ': they share a height and keep their own widths',
+            boxes.every(b => Math.abs(b.height - boxes[0].height) < 1) &&
+            new Set(boxes.map(b => Math.round(b.width))).size > 5,
+            Math.round(boxes[0].height) + 'px tall, widths ' +
+            boxes.map(b => Math.round(b.width)).join(' '));
+
+      // This run forces reduced motion, where the roll stops and the strip has
+      // to become scrollable instead: frozen and unscrollable, everything past
+      // the third picture would sit off the edge with no way to reach it.
+      const window_ = d.querySelector(r.sel + ' .roll-window');
+      check('home/rolls/' + r.name + ': reduced motion stops the roll',
+            d.defaultView.getComputedStyle(strip[0].parentElement).animationName === 'none',
+            d.defaultView.getComputedStyle(strip[0].parentElement).animationName);
+      check('home/rolls/' + r.name + ': a stopped roll can still be walked through by hand',
+            d.defaultView.getComputedStyle(window_).overflowX === 'auto' &&
+            window_.scrollWidth > window_.clientWidth,
+            window_.scrollWidth + ' of ' + window_.clientWidth + ' visible');
+    }
+
+    // The two strips want opposite things from the tinted modes, which is the
+    // only place either is named in the stylesheet and so the only place worth
+    // pinning them apart.
+    //
+    // The frieze is photographs and paintings: dark has to give them back their
+    // true tone, which an <img> gets from the theme for free -- what is checked
+    // is that none of them picked up the `ioda` opt-out from the drawings below
+    // and stayed a negative. The skulls are pencil on white and want exactly
+    // that opt-out, so they take invert(0) and stay light lines on a dark page.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    const friezeFilters = Array.from(d.querySelectorAll('.frieze .roll-track img'))
+      .map(i => d.defaultView.getComputedStyle(i).filter);
+    const skullFilters = Array.from(d.querySelectorAll('.skull-roll .roll-track img'))
+      .map(i => d.defaultView.getComputedStyle(i).filter);
+    check('home/rolls: dark mode gives the pictures back their true tone',
+          friezeFilters.length === 20 && friezeFilters.every(f => f === 'invert(1)') &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          friezeFilters[0] + ' on ' + friezeFilters.length + ' tiles');
+    check('home/rolls: dark mode leaves the drawings inverted',
+          skullFilters.length === 32 && skullFilters.every(f => f === 'invert(0)'),
+          skullFilters[0] + ' on ' + skullFilters.length + ' tiles');
+
+    // Purple filters nothing at all, so the frieze's window must not either --
+    // an invert-and-screen left on it would turn ten photographs inside out.
+    // The drawings' window is where that treatment belongs: it is the resume's
+    // problem and the xkcd's, ink on paper on a page with no white in it, and
+    // the blend goes on the window rather than the images because the window's
+    // mask isolates everything inside it into a group with nothing to screen
+    // against.
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    const friezeWin = d.defaultView.getComputedStyle(
+      d.querySelector('.frieze .roll-window'));
+    check('home/rolls: purple leaves the frieze alone',
+          friezeWin.filter === 'none' && friezeWin.mixBlendMode === 'normal' &&
+          d.defaultView.getComputedStyle(d.querySelector('.frieze .roll-track img')).filter
+            === 'none',
+          friezeWin.mixBlendMode + ' / ' + friezeWin.filter);
+    const skullWin = d.defaultView.getComputedStyle(
+      d.querySelector('.skull-roll .roll-window'));
+    check('home/rolls: purple screens the paper out',
+          skullWin.mixBlendMode === 'screen' && skullWin.filter.indexOf('invert(1)') === 0,
+          skullWin.mixBlendMode + ' / ' + skullWin.filter);
+    localStorage.setItem('appearance', 'light');
+
+    d = await loadNarrow('/', 420);
+    check('home/rolls/narrow: neither strip adds sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+
+    // --- the line under the roll ---------------------------------------------
+    // The Phaedrus passage under the skulls. It belongs to the strip above it --
+    // it is about the cut those sixteen were made with -- so what is worth
+    // pinning is that it stays inside the roll's section and under the drawings
+    // rather than drifting off between two things, and that the theme's box does
+    // not come back around it.
+    d = await load('/');
+    const epigraph = d.querySelector('.roll-epigraph');
+    const rollFigure = d.querySelector('.skull-roll figure');
+    check('home/epigraph: the line sits inside the roll, under the drawings',
+          !!epigraph && epigraph.closest('.roll') === d.querySelector('.skull-roll') &&
+          epigraph.getBoundingClientRect().top >
+            rollFigure.getBoundingClientRect().bottom - 1,
+          epigraph ? 'line @' + Math.round(epigraph.getBoundingClientRect().top) +
+            ' figure ends @' + Math.round(rollFigure.getBoundingClientRect().bottom)
+            : 'no line');
+    check('home/epigraph: it names the passage and where it was taken from',
+          !!epigraph && /Phaedrus/.test(epigraph.textContent) &&
+          /265e/.test(epigraph.textContent) &&
+          !!epigraph.querySelector('cite a[href*="jeffsearle"]'),
+          epigraph ? epigraph.querySelector('cite').textContent.replace(/\s+/g, ' ').trim()
+                   : 'no line');
+
+    // The theme puts a full `thin solid black` box on every blockquote. Left
+    // alone that is a box under a rule, so the rule has to win on all four
+    // sides -- three of them staying black is exactly the failure the purple
+    // blockquote rule further up main.scss exists to fix elsewhere.
+    let quoteEdges = d.defaultView.getComputedStyle(epigraph);
+    check('home/epigraph: the theme\'s box is gone and only the hairline is left',
+          quoteEdges.borderLeftStyle === 'none' && quoteEdges.borderRightStyle === 'none' &&
+          quoteEdges.borderBottomStyle === 'none' && quoteEdges.borderTopStyle === 'solid',
+          [quoteEdges.borderTopStyle, quoteEdges.borderRightStyle,
+           quoteEdges.borderBottomStyle, quoteEdges.borderLeftStyle].join(' '));
+
+    // The passage is the theme's italic and the line naming it is not -- left
+    // alone the two arrive as one voice.
+    check('home/epigraph: the attribution is not in the passage\'s voice',
+          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle === 'italic' &&
+          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle === 'normal',
+          d.defaultView.getComputedStyle(epigraph.querySelector('p')).fontStyle + ' / ' +
+          d.defaultView.getComputedStyle(epigraph.querySelector('cite')).fontStyle);
+
+    // Purple sets a colour on every blockquote, and the one it sets is the
+    // attribution colour -- which on a box-less quote is the whole passage in
+    // the wrong ink rather than a border nobody can see.
+    localStorage.setItem('appearance', 'purple');
+    d = await load('/');
+    quoteEdges = d.defaultView.getComputedStyle(d.querySelector('.roll-epigraph'));
+    const citeColor = d.defaultView.getComputedStyle(
+      d.querySelector('.roll-epigraph cite')).color;
+    check('home/epigraph: purple gives the passage the page\'s own ink',
+          quoteEdges.color === d.defaultView.getComputedStyle(d.body).color &&
+          citeColor !== quoteEdges.color,
+          'passage ' + quoteEdges.color + ' page ' +
+          d.defaultView.getComputedStyle(d.body).color + ' cite ' + citeColor);
+    localStorage.setItem('appearance', 'light');
+
+    // --- the shoal -----------------------------------------------------------
+    // Six reels for three clips, laid along two diagonals that cross over the
+    // hill. Three things are being asserted and they are worth keeping apart:
+    // that each reel works -- ten stills, a reel ten windows wide, one window a
+    // step -- that the six of them make two crossing strokes rather than a
+    // scatter, and that the ground behind them is a picture rather than a
+    // background, which is the whole reason it survives dark mode.
+    d = await load('/');
+    const shoal = d.querySelector('.shoal');
+    const boardBox = d.querySelector('.shoal-board').getBoundingClientRect();
+    const flips = Array.from(d.querySelectorAll('.stop-motion'));
+    check('home/shoal: the board follows the rolls',
+          !!shoal && boardBox.top >
+            d.querySelector('.skull-roll').getBoundingClientRect().bottom,
+          shoal ? 'board @' + Math.round(boardBox.top) : 'no board');
+
+    // Read off the files rather than trusted from a list: the order along each
+    // diagonal is the arrangement, and a slot given the wrong clip is a mistake
+    // no geometry case would notice.
+    const dirs = flips.map(f => f.querySelector('img').getAttribute('src')
+                                 .split('/').slice(-2)[0]);
+    check('home/shoal: two diagonals, each carrying all three clips',
+          dirs.join(' ') === 'manta whale whaleshark whaleshark whale manta',
+          dirs.join(' '));
+
+    const flipBoxes = [];
+    for (let n = 0; n < flips.length; n++) {
+      const dir = dirs[n], tag = 'home/' + dir + '[' + n + ']: ';
+      const flip = flips[n];
+      const flipWindow = flip.querySelector('.stop-motion-window');
+      const reel = flip.querySelector('.stop-motion-reel');
+      const frames = Array.from(reel.querySelectorAll('img'));
+      const asked = Number(flip.style.getPropertyValue('--frames'));
+
+      const names = frames.map(i => i.getAttribute('src').split('/').pop());
+      check(tag + 'the reel holds the frames it says it does, in order',
+            frames.length === asked && names.length === new Set(names).size &&
+            names.join(' ') === names.slice().sort().join(' ') &&
+            names.every(name => name.indexOf(dir + '-') === 0),
+            asked + ' asked, ' + names.join(' '));
+
+      // What the -100% in the keyframe rests on. N steps across the reel is one
+      // window a step only if the reel is N windows wide and each frame fills
+      // one of them -- otherwise the sequence drifts, showing halves of two
+      // frames at a time, and no amount of staring at the stylesheet says so.
+      const winBox = flipWindow.getBoundingClientRect();
+      flipBoxes.push(winBox);
+      const reelBox = reel.getBoundingClientRect();
+      check(tag + 'the reel is exactly as many windows wide as it has frames',
+            Math.abs(reelBox.width - winBox.width * asked) < 1,
+            Math.round(reelBox.width) + ' vs ' + Math.round(winBox.width * asked));
+      check(tag + 'each frame fills one window',
+            frames.every(i => Math.abs(i.getBoundingClientRect().width - winBox.width) < 1),
+            frames.map(i => Math.round(i.getBoundingClientRect().width)).join(' ') +
+            ' in ' + Math.round(winBox.width));
+      check(tag + 'the window takes one frame\'s shape',
+            Math.abs(winBox.width / winBox.height - 480 / 854) < 0.01,
+            (winBox.width / winBox.height).toFixed(3) + ' vs ' + (480 / 854).toFixed(3));
+
+      // Nothing in the markup states where in pixels: the slot carries three
+      // percentages and the board is meant to be what they are percentages of,
+      // so reading the laid-out window back against the board is what proves
+      // both -- that the custom properties reach the rule, and that the
+      // containing block is the board rather than the page.
+      check(tag + 'the window lies within the board',
+            winBox.left >= boardBox.left - 1 && winBox.right <= boardBox.right + 1 &&
+            winBox.top >= boardBox.top - 1 && winBox.bottom <= boardBox.bottom + 1,
+            'window ' + Math.round(winBox.left) + ',' + Math.round(winBox.top) +
+            ' board ' + Math.round(boardBox.left) + ',' + Math.round(boardBox.top));
+
+      const slot = flip.parentElement.style;
+      const pct = [
+        ['left',  (winBox.left - boardBox.left) / boardBox.width * 100,
+                  slot.getPropertyValue('--slot-left')],
+        ['top',   (winBox.top - boardBox.top) / boardBox.height * 100,
+                  slot.getPropertyValue('--slot-top')],
+        ['width', winBox.width / boardBox.width * 100,
+                  slot.getPropertyValue('--slot-width')],
+      ];
+      check(tag + 'the window sits where the markup placed it on the board',
+            pct.every(([, got, want]) => Math.abs(got - parseFloat(want)) < 0.5),
+            pct.map(([k, got, want]) => k + ' ' + got.toFixed(1) + '% vs ' + want.trim()).join(' '));
+
+      // Forced reduced motion, and the same answer the roll gives: stopped, the
+      // reel holds frame one -- where the manta is a speck -- so the window has
+      // to become something a reader can walk through, or the nine frames that
+      // are the point of the sequence are unreachable.
+      check(tag + 'reduced motion stops the stop motion',
+            d.defaultView.getComputedStyle(reel).animationName === 'none',
+            d.defaultView.getComputedStyle(reel).animationName);
+      check(tag + 'a stopped reel can still be walked through by hand',
+            d.defaultView.getComputedStyle(flipWindow).overflowX === 'auto' &&
+            flipWindow.scrollWidth > flipWindow.clientWidth,
+            flipWindow.scrollWidth + ' of ' + flipWindow.clientWidth + ' visible');
+    }
+
+    // Sampled rather than probed in full, the same call the roll above makes:
+    // these are lazy and below the fold, all thirty are the same size, and a
+    // declared box that disagrees with the file shifts the reel when the frame
+    // lands -- a mistake made per clip, so one frame from each of the three is
+    // enough and the second copy of each adds nothing.
+    const shoalSampled = [flips[0], flips[1], flips[2]]
+      .map(f => f.querySelectorAll('img')[0]);
+    const shoalSizes = await Promise.all(shoalSampled.map(i => new Promise(res => {
+      const size = new Image();
+      size.onload = () => res([size.naturalWidth, size.naturalHeight]);
+      size.onerror = () => res(null);
+      size.src = i.src;
+    })));
+    check('home/shoal: every frame declares the box it actually fills',
+          shoalSizes.every((size, k) => size &&
+            Number(shoalSampled[k].getAttribute('width')) === size[0] &&
+            Number(shoalSampled[k].getAttribute('height')) === size[1]),
+          shoalSampled.map((i, k) => i.getAttribute('src').split('/').pop() + ' declared ' +
+            i.getAttribute('width') + 'x' + i.getAttribute('height') + ' is ' +
+            (shoalSizes[k] ? shoalSizes[k].join('x') : 'unreachable')).join(', '));
+
+    // The arrangement, which is what the percentages are for and the one claim
+    // no single slot can make on its own. Two diagonals: the first descends
+    // left to right, the second descends right to left, and they have to cross
+    // rather than run parallel -- which is a statement about the pair of them
+    // and about the middle two, whose spans must overlap.
+    const strokeA = flipBoxes.slice(0, 3), strokeB = flipBoxes.slice(3);
+    check('home/shoal: the first diagonal falls to the right',
+          strokeA.every((b, k) => !strokeA[k + 1] ||
+            (strokeA[k + 1].left > b.left && strokeA[k + 1].top > b.top)),
+          strokeA.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+    check('home/shoal: the second diagonal falls to the left',
+          strokeB.every((b, k) => !strokeB[k + 1] ||
+            (strokeB[k + 1].left < b.left && strokeB[k + 1].top > b.top)),
+          strokeB.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' -> '));
+    check('home/shoal: the two strokes cross rather than run beside each other',
+          strokeA[1].left < strokeB[1].right && strokeB[1].left < strokeA[1].right &&
+          Math.abs(strokeA[1].top - strokeB[1].top) < 1 &&
+          Math.abs(strokeA[1].left - strokeB[1].left) > 1,
+          'middles at ' + Math.round(strokeA[1].left) + ' and ' +
+          Math.round(strokeB[1].left) + ', ' + Math.round(strokeA[1].width) + ' wide');
+
+    // Each clip is on the board twice. At one phase the two copies hold the same
+    // frame at the same moment, which reads as a duplicated tile rather than as
+    // a sequence -- so the second copy of each is offset, and by half its own
+    // pass, which is the furthest from its twin it can be.
+    const phased = ['manta', 'whale', 'whaleshark'].map(name => {
+      const pair = flips.filter((f, k) => dirs[k] === name);
+      const pace = parseFloat(pair[0].style.getPropertyValue('--pace'));
+      const offsets = pair.map(f =>
+        Math.abs(parseFloat(f.style.getPropertyValue('--phase') || '0')));
+      return { name, pace, offsets, ok: pair.length === 2 &&
+        new Set(pair.map(f => f.style.getPropertyValue('--pace').trim())).size === 1 &&
+        Math.abs(Math.abs(offsets[0] - offsets[1]) - pace / 2) < 0.01 };
+    });
+    check('home/shoal: each clip\'s two copies are half a pass apart',
+          phased.every(p => p.ok),
+          phased.map(p => p.name + ' ' + p.pace + 's ' + p.offsets.join('/')).join(' | '));
+
+    // In step the six would change together every quarter second. Three paces
+    // over one frame count is what makes them sequences that happen to overlap.
+    check('home/shoal: no two clips step on the same beat',
+          new Set(flips.map(f => f.style.getPropertyValue('--pace').trim())).size === 3 &&
+          new Set(flips.map(f => f.style.getPropertyValue('--frames').trim())).size === 1,
+          flips.map(f => f.style.getPropertyValue('--pace').trim()).join(' '));
+
+    // The hill. An <img> and not a background, which is the whole reason it
+    // survives dark mode: the theme inverts the page whole and re-inverts <img>,
+    // so a background would be the one thing on the board with an orange sky.
+    // Positioned rather than in the flow, so the board's ratio still shapes it,
+    // and behind everything since it is written before the slots.
+    const ground = d.querySelector('.shoal-ground');
+    const groundBox = ground && ground.getBoundingClientRect();
+    check('home/shoal: the hill is a picture, not a background',
+          !!ground && ground.tagName === 'IMG' &&
+          d.defaultView.getComputedStyle(
+            d.querySelector('.shoal-board')).backgroundImage === 'none',
+          ground ? ground.tagName + '/' + ground.getAttribute('src').split('/').pop()
+                 : 'no ground');
+    check('home/shoal: it covers the board and adds no height to it',
+          !!groundBox && Math.abs(groundBox.width - boardBox.width) < 1 &&
+          Math.abs(groundBox.height - boardBox.height) < 1 &&
+          d.defaultView.getComputedStyle(ground).objectFit === 'cover',
+          groundBox ? Math.round(groundBox.width) + 'x' + Math.round(groundBox.height) +
+            ' board ' + Math.round(boardBox.width) + 'x' + Math.round(boardBox.height)
+            : 'no ground');
+    check('home/shoal: the reels are laid over the hill, not under it',
+          !!ground && flips.every(f =>
+            ground.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING),
+          ground ? 'ground first of ' + (flips.length + 1) : 'no ground');
+
+    // Dark mode is where a background would have given itself away. The page
+    // inverts whole; the hill has to be inverted back, which is the treatment
+    // every other photograph on the site gets and the one <video> had to be
+    // given a rule for.
+    localStorage.setItem('appearance', 'dark');
+    d = await load('/');
+    // Re-inverted rather than left alone: the theme's dark mode inverts the page
+    // whole, and cancelling that on the picture is an invert of its own. The
+    // skulls' `ioda` opt-out is the other case -- invert(0), staying flipped --
+    // and a ground that took it would be an orange sky under blue grass.
+    check('home/shoal: dark mode leaves the hill in true tone',
+          d.defaultView.getComputedStyle(d.querySelector('.shoal-ground')).filter
+            === 'invert(1)' &&
+          d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
+          d.defaultView.getComputedStyle(d.querySelector('.shoal-ground')).filter);
+    localStorage.setItem('appearance', 'light');
+    d = await load('/');
+
+    // The shoalEdge is what keeps six clips lying on each other and on a photograph
+    // from reading as one picture. currentColor rather than a colour of its own
+    // is what makes it right in every mode without a rule for any of them.
+    const shoalEdge = d.defaultView.getComputedStyle(
+      d.querySelector('.stop-motion-window'));
+    check('home/shoal: every window is outlined in the page\'s own ink',
+          shoalEdge.outlineStyle === 'solid' && parseFloat(shoalEdge.outlineWidth) >= 1 &&
+          shoalEdge.outlineColor === d.defaultView.getComputedStyle(d.body).color,
+          shoalEdge.outlineWidth + ' ' + shoalEdge.outlineStyle + ' ' + shoalEdge.outlineColor);
+
+    // The step count is the one part of the mechanism that cannot be read back
+    // off this run: reduced motion is forced, which resets the whole animation
+    // shorthand and takes the timing function with it. So it is read off the
+    // rule, and the substitution that puts --frames inside steps() -- the part
+    // with no fallback, since a browser that dropped it would slide smoothly
+    // instead of stepping -- is put to a probe of the same shape in the same
+    // engine.
+    // Read out of the compiled stylesheet rather than through the CSSOM. An
+    // `animation` shorthand carrying var() is a pending substitution: with a
+    // longhand set beside it, neither rule.style.animation nor the longhands it
+    // covers serialise -- and Chrome drops the shorthand from rule.cssText
+    // altogether, so the declaration is simply not there to read. The file is
+    // same-origin, and what is being asserted is what was authored.
+    const sheetHref = d.querySelector('link[rel="stylesheet"][href*="main"]');
+    const sheetText = sheetHref ? await (await fetch(sheetHref.href)).text() : '';
+    const reelRule = /\.stop-motion-reel\s*\{([^}]*)\}/.exec(sheetText);
+    const declared = reelRule ? reelRule[1] : '';
+    const stepsMatch = /steps\(((var\([^)]*\))|[^)]*)\)/.exec(declared);
+    const declaredSteps = stepsMatch ? stepsMatch[1].trim() : null;
+    const delayMatch = /animation-delay:\s*([^;]+)/.exec(declared);
+    const declaredDelay = delayMatch ? delayMatch[1].trim() : null;
+
+    check('home/shoal: the step count is the frame count, not a number of its own',
+          declaredSteps === 'var(--frames)', 'steps(' + declaredSteps + ')');
+    // The shorthand resets every longhand it does not name, delay included, so a
+    // phase written inside it would be wiped by the declaration carrying it.
+    check('home/shoal: the phase is set after the shorthand, not inside it',
+          declaredDelay === 'var(--phase, 0s)', 'animation-delay: ' + declaredDelay);
+
+    const stepProbe = d.createElement('div');
+    stepProbe.style.cssText = '--frames: 7; animation-timing-function: steps(var(--frames))';
+    d.body.appendChild(stepProbe);
+    const substituted = d.defaultView.getComputedStyle(stepProbe).animationTimingFunction;
+    stepProbe.remove();
+    check('home/shoal: the browser substitutes the frame count into steps()',
+          substituted === 'steps(7)', substituted);
+
+    // Narrow: the crossing is in percentages of the board, so it rides the page
+    // down rather than coming apart -- the same fractions hold here as at full
+    // width, and the board being square means it cannot push the page sideways.
+    d = await loadNarrow('/', 420);
+    const shoalNarrowBoard = d.querySelector('.shoal-board').getBoundingClientRect();
+    const narrowFlips = Array.from(d.querySelectorAll('.stop-motion'));
+    check('home/shoal/narrow: the crossing keeps its proportions',
+          narrowFlips.length === 6 && narrowFlips.every(f => {
+            const b = f.getBoundingClientRect();
+            const want = parseFloat(f.parentElement.style.getPropertyValue('--slot-left'));
+            return Math.abs((b.left - shoalNarrowBoard.left) /
+                            shoalNarrowBoard.width * 100 - want) < 0.5;
+          }),
+          narrowFlips.map(f => {
+            const b = f.getBoundingClientRect();
+            return ((b.left - shoalNarrowBoard.left) / shoalNarrowBoard.width * 100).toFixed(1) + '%';
+          }).join(' '));
+    check('home/shoal/narrow: the board adds no sideways scroll',
+          d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
+          'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
+    document.getElementById('f').style.width = '1100px';
+  } catch (e) {
+    results.push('FAIL harness threw: ' + e.message);
+  }
+
+  const failed = results.filter(r => r.indexOf('FAIL') === 0).length;
+  // SKIP lines are neither: they record a case that had nothing to run against
+  // (an empty images/art/), and counting them as passes would report coverage
+  // the run did not have.
+  const skipped = results.filter(r => r.indexOf('SKIP') === 0).length;
+  // run.sh reads this summary line out of the dumped DOM.
+  results.push('---');
+  results.push((results.length - failed - skipped - 1) + ' passed, ' +
+               (skipped ? skipped + ' skipped, ' : '') + failed + ' failed');
+  document.getElementById('out').textContent = results.join('\n');
+})();
+</script>

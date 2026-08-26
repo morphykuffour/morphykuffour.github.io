@@ -1,0 +1,45 @@
+{%- comment -%}
+A strip of pictures run past the page in one endless loop: a roll. It began as
+the skulls under the rain and was made an include when the frieze wanted the
+same treatment, on the same reasoning the stop motion and the cascade were --
+two copies of a doubled track and a translate keyframe is two copies of one
+idea, and copies drift apart at the first fix.
+
+Parameters:
+  data     the list to run, one entry per picture, each with `file`, `width`
+           and `height`. The dimensions are the file's own: these are lazy and
+           sit below the fold, and one without its size reserves the wrong box
+           and shifts the strip sideways when it lands
+  dir      folder under /images/ the files sit in
+  ioda     optional: set it and every picture takes the theme's dark-mode
+           opt-out. That is for ink on paper -- pencil lines want to be the
+           light half of an inverted page -- and wrong for anything
+           photographic, which wants its own colours back and gets them by
+           taking the page invert twice
+
+The strip is written out twice. The loop walks it exactly one pass to the left
+and starts over, which puts the copy where the original stood -- so there is no
+jump to hide, and no script is needed to hide one.
+
+The pictures carry no alt text of their own, deliberately: a dozen of them each
+describing a different picture is a dozen interruptions for one idea, and none
+of them is load-bearing. The caption below the strip says the whole of it once
+-- the same call the stop motion include makes for its ten frames.
+
+It emits the window and the track inside it and nothing else -- no heading, no
+caption, no section. Those belong to the page, which is where the two rolls on
+the homepage differ from each other and this file is where they do not. The
+section around it wants `.roll` on it: that is what the stylesheet hangs the
+hover pause on, so that reading the caption stops the strip too.
+{%- endcomment -%}
+<div class="roll-window">
+  <div class="roll-track">
+    {%- for pass in (1..2) -%}
+    {%- for picture in include.data -%}
+    <img{% if include.ioda %} class="ioda"{% endif %} src="{{ site.baseurl }}/images/{{ include.dir }}/{{ picture.file }}"
+         alt="" width="{{ picture.width }}" height="{{ picture.height }}"
+         loading="lazy" decoding="async">
+    {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>

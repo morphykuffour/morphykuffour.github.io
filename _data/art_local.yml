@@ -1,0 +1,85 @@
+# Hand-kept, unlike _data/art.yml: images saved from somewhere other than
+# Pinterest. They live in a second file because scripts/pinterest-art.py
+# rewrites art.yml wholesale from the API on every run, so anything added
+# to it by hand is gone at the next update.
+#
+# Same shape as art.yml, minus `link` -- there is no pin to point back at.
+# Everything here is still someone else's work; `title` is the credit that
+# can be given.
+
+- file: 'balotelli-headphones.jpg'
+  title: 'Mario Balotelli in shades and wired headphones, mohawk bleached blond'
+  width: 1206
+  height: 1508
+- file: 'pixel-temple-window.gif'
+  title: 'Pixel-art temple at dusk, seen through a shoji window -- Lennart Butz'
+  width: 1580
+  height: 725
+- file: 'koi-pair.jpg'
+  title: 'Two koi circling in dark water, oriental banner illustration'
+  width: 1920
+  height: 960
+- file: 'ald-flight-jacket.jpg'
+  title: 'World''s Borough leather flight jacket -- Aimé Leon Dore, spring/summer 2026'
+  width: 1206
+  height: 1508
+- file: 'oris-moonphase-wrist.png'
+  title: 'Oris rectangular moonphase automatic on a grey suede strap, worn under a striped shirt cuff'
+  width: 657
+  height: 898
+- file: 'near-black-night-frame.png'
+  title: 'Near-black night frame, a rounded shape barely surfacing out of the dark'
+  width: 1512
+  height: 2016
+- file: 'zorn-nude-collage.png'
+  title: 'Anders Zorn nude on white sheets, 1908, with a red-haired painted head laid over it as an inset'
+  width: 1020
+  height: 1016
+- file: 'kith-mets-wool-cap.png'
+  title: 'Cream wool Mets cap with a royal blue NY monogram and a bandana-print brim -- Kith'
+  width: 761
+  height: 764
+- file: 'ald-corduroy-cap.png'
+  title: 'Cream corduroy cap with a script logo and a grey suede brim -- Aimé Leon Dore'
+  width: 690
+  height: 791
+- file: 'mercedes-f1-cap.png'
+  title: 'Black Mercedes-AMG Petronas team cap with a teal brim edge, worn'
+  width: 724
+  height: 717
+- file: 'nomos-ludwig-roman.png'
+  title: 'Nomos Glashütte Ludwig with Roman numerals and blued hands, on black leather over oak'
+  width: 653
+  height: 859
+- file: 'watch-roll-trio.png'
+  title: 'Three watches on a black leather roll -- Seiko panda chronograph, Cartier Tank, Tissot PRX Powermatic 80'
+  width: 667
+  height: 622
+- file: 'patek-5970-dial.png'
+  title: 'Patek Philippe 5970 perpetual calendar chronograph in yellow gold, resting on an old French book'
+  width: 635
+  height: 840
+- file: 'patek-5970-caseback.png'
+  title: 'Caseback of the Patek Philippe 5970, its chronograph movement open over the certificate of origin'
+  width: 621
+  height: 831
+- file: 'omega-speedmaster-38.png'
+  title: 'Omega Speedmaster 38 with a silver dial and steel bracelet, on a tooled leather book cover'
+  width: 650
+  height: 718
+- file: 'junghans-max-bill-caseback.png'
+  title: 'Junghans Max Bill chronoscope caseback, the Dessau Bauhaus building etched on it'
+  width: 685
+  height: 842
+- file: 'reverso-enamel-monet.png'
+  title: 'Jaeger-LeCoultre Reverso in rose gold on a green strap, its back enamelled with a Monet view of Venice, held in a gloved hand'
+  width: 603
+  height: 750
+- file: 'alexander-achilles-graphite.png'
+  title: 'Alexander in a plumed helmet and a head of Achilles, graphite, over the Gnomologium Vaticanum passage in Greek and English -- P-S Lindblom, 2026'
+  width: 1020
+  height: 1228
+- file: 'david-head-construction.png'
+  title: 'Three-step construction of Michelangelo''s David''s head -- sphere in a square, blocked-in planes, finished drawing -- Aladdin_draws'
+  width: 643
+  height: 936

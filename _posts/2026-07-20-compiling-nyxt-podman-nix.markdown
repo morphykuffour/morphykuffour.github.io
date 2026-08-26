@@ -1,0 +1,232 @@
+---
+layout: post
+title:  "compiling nyxt with podman and nix, and why cross-compilation can't help"
+date:   2026-07-20
+categories: nix podman lisp nyxt containers macos sbcl
+---
+
+I wanted to build [Nyxt](https://github.com/atlas-engineer/nyxt) on my M-series Mac. Nyxt's download page offers a Docker route for macOS, so that seemed like the obvious path. It wasn't, and the detour turned out to be more interesting than the destination.
+
+Short version: I got it building with Podman and a Nix toolchain. Along the way I hit a dead upstream dependency that breaks the build for everyone, and I convinced myself that Nix cross-compilation fundamentally cannot solve this particular problem.
+
+## the docker route is a dead end
+
+The "Get Nyxt via Docker!" button points at [deddu/nyxt-docker](https://github.com/deddu/nyxt-docker). That image installs a prebuilt `nyxt_2.2.4_amd64.deb`. Three problems: it's Nyxt 2.2.4 (the tree I'm working from is 4.0.0-pre-release), it's amd64 only, and it doesn't compile anything. The last commit is from 2022.
+
+So if you actually want to *compile* current Nyxt, you're writing your own container.
+
+## podman first
+
+My Podman VM wouldn't start:
+
+```
+Error: unable to connect to "gvproxy" socket
+```
+
+The log pointed at a missing SSH identity file. Digging further, the VM's disk image was gone too. Only the config JSON survived, so `podman machine list` cheerfully reported a machine that had nothing behind it. Recreating it was the fix, and nothing was lost because there was nothing there:
+
+```bash
+podman machine rm -f podman-machine-default
+podman machine init --memory 8192 --cpus 6 --disk-size 100
+podman machine start
+```
+
+The memory bump matters. Nyxt's makefile passes SBCL `--dynamic-space-size 3072`, so a 2GB VM won't do.
+
+## a dependency that no longer exists
+
+Nyxt vendors its Lisp dependencies as 110 git submodules. One of them doesn't resolve:
+
+```
+fatal: repository 'https://github.com/pcostanza/closer-mop/' not found
+```
+
+`closer-mop` is a real and widely used library, but that GitHub repo is gone. Nyxt's `.gitmodules` on master still points there, so this breaks for anyone cloning today, not just me.
+
+Finding a replacement was harder than expected. The [gitlab.common-lisp.net mirror](https://gitlab.common-lisp.net/closer/closer-mop) exists but its history stops in 2013. The `ocicl` mirror has squashed history. Neither contains the pinned commit `7b86f2a`.
+
+[Software Heritage](https://archive.softwareheritage.org/) had it. Their archive crawls GitHub and keeps content after upstream deletes it, and because git objects are content-addressed you can verify exactly what you got:
+
+```bash
+curl -sL "https://archive.softwareheritage.org/api/1/vault/flat/\
+swh:1:dir:a586e6df8e167a401cc5632a03cd040ee896aa81/raw/" -o cmop.tar.gz
+tar xzf cmop.tar.gz --strip-components=1 -C _build/closer-mop
+cd _build/closer-mop && git init -q . && git add -A && git write-tree
+# a586e6df8e167a401cc5632a03cd040ee896aa81
+```
+
+The computed tree hash matches the tree of the pinned commit, so this is provably the right source rather than something that merely looks close.
+
+Git still wanted `HEAD` at the pinned commit. Since Software Heritage also stores the commit metadata, the commit object can be rebuilt byte for byte, and it hashes back to the original SHA. That was satisfying in a way I did not expect from a dependency-resolution problem.
+
+## the failure that wasn't what it looked like
+
+The first `git submodule update --init --recursive` aborted partway through, at `closer-mop`. After I fixed that and re-ran it, `git submodule status` reported everything clean.
+
+It was lying, sort of. 41 submodules had been cloned but never checked out. The gitlinks matched, which is all `git submodule status` checks, so the directories sat there containing nothing but `.git`. This surfaced thousands of lines into an SBCL build as:
+
+```
+Component ASDF/USER::CALISPEL not found, required by #<NASDF-SYSTEM "nyxt">
+```
+
+`git submodule update --init --recursive --force` fixed it. The lesson I'm taking: a clean `submodule status` means the recorded commits agree, not that the files are on disk.
+
+## two small dependency papercuts
+
+Debian trixie ships Python 3.13, which removed `distutils` per [PEP 632](https://peps.python.org/pep-0632/). The `node-gyp` bundled with one of Electron's native modules still imports it, so `npm install` dies. Installing `python3-setuptools` restores the import, because setuptools ships a `distutils-precedence.pth` that redirects it.
+
+Then `cl-enchant` failed to load `libenchant-2`. Nyxt's developer manual lists enchant as optional (it's for spellchecking), but the library is `dlopen`ed at load time, so the build hard-fails without it. It also has to be the `-dev` package: CFFI asks for the unversioned `libenchant-2.so`, and Debian's runtime package ships only `libenchant-2.so.2`.
+
+## switching to nix
+
+Fighting distro packaging is exactly what Nix is for, so I moved the toolchain into a flake.
+
+One wrinkle: my host is `aarch64-darwin` with no Linux builder configured, so it can't realize `aarch64-linux` derivations. Rather than set up a builder VM, I run Nix *inside* the container. The flake pins the toolchain, Podman provides the Linux kernel, and no builder VM is needed.
+
+```nix
+default = pkgs.mkShell {
+  nativeBuildInputs = with pkgs; [
+    sbcl nodejs_20 python3 gnumake gcc git pkg-config xclip
+  ];
+  buildInputs = ffiLibs ++ electronLibs;
+  LD_LIBRARY_PATH = nixpkgs.lib.makeLibraryPath (ffiLibs ++ electronLibs);
+};
+```
+
+That `nativeBuildInputs` / `buildInputs` split is load-bearing. `cffi-grovel` shells out to `pkg-config` for libfixposix's cflags, and nixpkgs' pkg-config setup hook only exposes `.pc` files from `buildInputs`. Put the libraries in the wrong list and grovelling fails.
+
+The other gotcha: `nix develop` needs an explicit flake reference. With no argument it resolves the flake from the working directory, which is the bind-mounted repo, where `flake.nix` is untracked by git and therefore invisible to Nix. The error message is good about saying so.
+
+That builds:
+
+```bash
+podman run --rm -v "$PWD":/nyxt -w /nyxt nyxt-nix
+./nyxt --version   # Nyxt version 4
+```
+
+## so why not cross-compile?
+
+This is where I'd expected to end up. The [nix.dev cross-compilation tutorial](https://nix.dev/tutorials/cross-compilation.html) is good, and `pkgsCross` makes targeting another platform look easy. If it worked, I could skip the container.
+
+It doesn't work here, for three reasons of increasing severity.
+
+First, the tutorial says so directly: "It's only possible to cross compile between `aarch64-darwin` and `x86_64-darwin`." macOS to Linux is outside what's supported.
+
+Second, empirically, `pkgsCross.aarch64-multiplatform.sbcl` won't even evaluate from Darwin. It fails on a build-time dependency, `strace`, that isn't available on `aarch64-darwin` as the build platform. Interestingly, simpler cross targets do work; `pkgsCross.aarch64-multiplatform.hello` pulls a cross toolchain from the cache and starts building. So the wall isn't cross-compilation in general, it's this toolchain.
+
+Third, and this is the one that actually settles it: even a perfect cross-compiled SBCL wouldn't help. SBCL doesn't link executables the way a C compiler does. It produces them with `save-lisp-and-die`, which per the [SBCL manual](https://www.sbcl.org/manual/#Saving-a-Core-Image) dumps *the currently running Lisp image* and combines it with the runtime. Building Nyxt means loading all of Nyxt into a live SBCL and then dumping that process.
+
+To produce a Linux binary, you must execute a Linux SBCL. Cross-compilation is about generating code for a machine you aren't running on, and that's precisely the thing this build cannot do. No amount of toolchain configuration gets around it, because the compiler is not the thing producing the artifact; a running process is.
+
+Which reframes the container. I'd been thinking of Podman as a workaround for not having a Linux machine. It isn't a workaround. It's the mechanism, because what this build needs is a Linux *execution* environment, and that's exactly what a container provides and what a cross-compiler does not.
+
+The same reasoning applies to any language whose build step runs the artifact it's building. Cross-compilation works for compile-and-link toolchains. It doesn't work for image-dumping ones.
+
+## but sbcl does cross-compile, sort of
+
+I should be precise here, because "SBCL can't cross-compile" is not what I mean, and I've written a whole post arguing otherwise. Building SBCL for a new architecture is very much a cross-compilation process: a host SBCL runs `make-host-1` to produce a cross-compiler for the target.
+
+What that process cannot do is escape needing a live target. When I [built SBCL for RISC-V]({% post_url 2025-05-06-SBCL-development-on-riscv-architecture %}), the actual driver was:
+
+```bash
+sh cross-make.sh -p 2222 sync ubuntu@localhost /home/ubuntu/sbcl \
+  "GNUMAKE=gmake SBCL_ARCH=riscv64 CFLAGS='-fsigned-char'"
+```
+
+That `sync` and that port 2222 are the giveaway. The script rsyncs the tree into a QEMU RISC-V VM over SSH and runs the target-side build steps *inside the VM*. The cross-compiler gets you `make-host-1`. Everything after it needs a machine that can execute RISC-V code.
+
+So the RISC-V work is prior art that corroborates the Nyxt conclusion rather than contradicting it. Cross-compiling the compiler: possible. Cross-dumping an application image: not. Both cases need a target execution environment, and the only thing that varies is what supplies it.
+
+The interesting difference is cost. That post notes native SBCL compilation under QEMU RISC-V takes 3-4 hours, because every instruction is emulated. Here the container is aarch64-linux on aarch64 Apple Silicon, so the guest architecture matches the host and there's no emulation penalty at all. Same structural requirement, wildly different price.
+
+## a second build machine
+
+The container works, but it's an awkward thing to keep reaching into. Since the real requirement is only "somewhere Linux that can execute," a VM does the job as well and is nicer to drive: a small NixOS guest under UTM, aarch64 on aarch64, no emulation.
+
+That took far longer than the container, almost entirely because of UTM quirks rather than anything to do with Nyxt. Three worth writing down:
+
+**UTM's AppleScript `source` property is a no-op.** You can create a VM with {% raw %}`make new virtual machine ... drives:{{source:POSIX file "..."}}`{% endraw %} and it happily hands one back. The drive it writes has `ImageType = CD` and no `ImageName`, so no image is attached at all, and starting fails with "Cannot access resource". The fix is to copy the image into the bundle's `Data/` directory and add `ImageName` with `PlistBuddy`.
+
+**An empty CD drive stops the firmware booting the disk.** After installing I removed the ISO by deleting `ImageName`, leaving the drive itself in place. The VM then booted *something* that answered SSH and rejected every key — which reads exactly like a broken install, so I spent a long time debugging the install instead of the boot. Deleting the whole `Drive:0` entry booted the installed system first try.
+
+**A changing SSH host key proves nothing.** I kept concluding the installed system had booted because its host key differed from the previous boot. Live ISOs regenerate host keys in tmpfs every time, so of course it differed. The question that settles it is whether a *persisted* host key exists on disk: if `/etc/ssh/ssh_host_ed25519_key` isn't there, the installed system has never completed a boot. One command, and I should have run it hours earlier.
+
+There's a related trap in inspecting an installed NixOS from a live ISO. Most `/etc` entries are absolute symlinks into `/etc/static`, so reading `/mnt/etc/hostname` resolves against the *installer's* root, not the disk you mounted. I built an entire theory about the config not applying on that misreading. Only real files — `/etc/ssh/authorized_keys.d/*`, say — read correctly.
+
+With the VM up, either form works:
+
+```bash
+# derivations, straight into the VM's store, no sudo
+export NIX_SSHOPTS="-i ~/.ssh/utm_builder"
+nix build --store ssh-ng://builder@192.168.64.32 <installable>
+
+# nyxt itself
+ssh builder@192.168.64.32 'cd ~/nyxt && nix develop --command make all'
+```
+
+The VM also caught a real bug the container had hidden. My flake carried a comment claiming nixpkgs' `python3` needed no distutils shim. It does — nixpkgs ships 3.12, and [PEP 632](https://peps.python.org/pep-0632/) removed distutils there just as Debian's 3.13 did. The container never hit it because it reused a `node_modules` tree an earlier Debian build had populated, so `npm install` never rebuilt the native module. A cold tree on the VM failed immediately. Reusing artifacts across toolchains will happily make a broken toolchain look like a working one.
+
+## what's actually left
+
+The binary is Linux either way, linked against a `/nix/store` glibc, so it runs in the container or the VM and not on the host.
+
+I assumed the UTM guest would just show it, since UTM draws a window. It doesn't: the guest has `virtio_gpu` loaded at refcount 0, no `/dev/dri`, no framebuffer, and `XDG_SESSION_TYPE=tty`. A UTM VM created through AppleScript gets no display device unless you add one, and there'd still be no desktop inside it. So "the VM has a screen" was wishful thinking on my part.
+
+What works is a headless X server in the guest — `Xvfb` plus `x11vnc` — viewed over an SSH tunnel:
+
+```bash
+# guest
+Xvfb :99 -screen 0 1600x1000x24 &
+x11vnc -display :99 -rfbport 5999 -localhost -forever -nopw &
+DISPLAY=:99 ./nyxt --electron-opts='--no-sandbox --disable-gpu --disable-dev-shm-usage'
+
+# mac
+ssh -N -L 5999:127.0.0.1:5999 builder@192.168.64.32
+open vnc://127.0.0.1:5999
+```
+
+![Nyxt 4 running under Xvfb on aarch64 NixOS, viewed from macOS]({{ site.baseurl }}/images/2026-07-20-nyxt-running.png)
+
+No XQuartz. Which is a preference rather than a necessity, incidentally — I'd assumed XQuartz was the abandoned legacy option, and it isn't. 2.8.6 shipped on 2026-07-14, and its notes mention fixing an Apple Silicon bug where X11 surfaces rendered black.
+
+## the build was never the hard part
+
+Getting that screenshot took four more failures, and the first one invalidates most of what I'd claimed up to this point.
+
+**Electron couldn't launch at all.** npm ships it as a generic-Linux prebuilt whose ELF interpreter is `/lib/ld-linux-aarch64.so.1`. NixOS has no such loader — the path exists but is a stub whose entire job is to print `Could not start dynamically linked executable`. `programs.nix-ld` supplies a real one plus a library path.
+
+That is worth sitting with. Every time I said the build was "verified end to end," the evidence was `./nyxt --version` — which never starts Electron. The browser could not run, in the container or the VM, and the build had been telling me nothing about that. Building and running were separate questions and I'd been using one as proof of the other.
+
+**`libgbm.so.1` wasn't found**, because nixpkgs split it out of `mesa` into its own `libgbm`. Listing `mesa` in nix-ld's libraries isn't enough any more.
+
+**`--electron-opts` rejected its own argument.** This fails with `missing arg for option`:
+
+```
+--electron-opts '--no-sandbox --disable-gpu'
+```
+
+and this works:
+
+```
+--electron-opts='--no-sandbox --disable-gpu'
+```
+
+The parser reads a space-separated value beginning with `--` as the next flag.
+
+**A relaunch produced no window while cheerfully logging "Nyxt started, opening new window."** A stale instance still held `/run/user/1000/nyxt/nyxt.socket`, so the new process handed its request to that one and exited — and the old one had no working Electron. The tell was a missing "Listening to socket" line in the log.
+
+Four failures, four different-looking symptoms, none of which the build could have surfaced.
+
+`Containerfile`, the plain Debian one, is still unverified end to end. It got as far as the enchant failure, I fixed that, and never re-ran it, because a successful run would have overwritten the working binary. It's in the repo labelled as a sketch.
+
+The more interesting direction is that nixpkgs has SBCL 2.6.5 for `aarch64-darwin` natively, and Electron ships macOS builds. So a native macOS Nyxt looks plausible with no container and no VM, which would sidestep the display problem entirely. Nyxt's own docs call macOS support "in development." That's the next thing I want to try.
+
+## resources
+
+- [Common lisp disassembly through SBCL on RISC-V architecture]({% post_url 2025-05-06-SBCL-development-on-riscv-architecture %}), my earlier post on cross-building SBCL, which needed a QEMU target for the same structural reason
+- [Nyxt](https://github.com/atlas-engineer/nyxt) and its developer manual
+- [deddu/nyxt-docker](https://github.com/deddu/nyxt-docker), the image linked from Nyxt's download page
+- [nix.dev: Cross compilation](https://nix.dev/tutorials/cross-compilation.html)
+- [SBCL manual: Saving a Core Image](https://www.sbcl.org/manual/#Saving-a-Core-Image)
+- [Software Heritage](https://archive.softwareheritage.org/)
+- [PEP 632](https://peps.python.org/pep-0632/), deprecating and removing distutils

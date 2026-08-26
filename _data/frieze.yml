@@ -1,0 +1,40 @@
+# The frieze under the rain on the homepage: ten pictures saved off other
+# people's feeds, set to one height and run past the page in a single endless
+# strip. Where they came from is not recorded and the makers are not known
+# here, so the caption under the strip claims nothing about either -- see
+# index.markdown, where that decision is written out.
+#
+# The dimensions are here because the widths differ, picture by picture, and a
+# lazy image without its own size reserves the wrong box and shifts the strip
+# when it lands. Order is the order they were handed over.
+
+- file: 'frieze-01.jpg'
+  width: 325
+  height: 360
+- file: 'frieze-02.jpg'
+  width: 316
+  height: 360
+- file: 'frieze-03.jpg'
+  width: 326
+  height: 360
+- file: 'frieze-04.jpg'
+  width: 301
+  height: 360
+- file: 'frieze-05.jpg'
+  width: 199
+  height: 360
+- file: 'frieze-06.jpg'
+  width: 326
+  height: 360
+- file: 'frieze-07.jpg'
+  width: 293
+  height: 360
+- file: 'frieze-08.jpg'
+  width: 271
+  height: 360
+- file: 'frieze-09.jpg'
+  width: 274
+  height: 360
+- file: 'frieze-10.jpg'
+  width: 272
+  height: 360

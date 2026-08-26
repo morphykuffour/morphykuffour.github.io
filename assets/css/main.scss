@@ -1,0 +1,2128 @@
+---
+# Shadows the theme's own assets/css/main.scss, re-importing it so the
+# theme's styles still apply, then adding the Matrix syntax palette and
+# the light/dark toggle.
+---
+
+@import "no-style-please";
+
+// ---------------------------------------------------------------------------
+// Matrix palette
+// ---------------------------------------------------------------------------
+// The theme flips the page in dark mode with `filter: invert(1)` on <body>.
+// Left alone that turns every green in here magenta, which is the opposite of
+// the point. So code blocks and the toggle re-invert themselves in dark mode
+// (invert twice == identity) and keep their authored colours in both modes.
+//
+// Consequence: in dark mode the block is black-on-black against the page, so
+// it carries a green rule to stay delineated.
+
+$matrix-bg:      #000000;
+$matrix-base:    #00ff41; // the canonical phosphor green
+$matrix-dim:     #4a9c5d; // comments, deliberately receding
+$matrix-pale:    #b9f6ca; // identifiers, the bulk of most blocks
+$matrix-string:  #7dffa0;
+$matrix-number:  #39ff14;
+$matrix-fn:      #00e676;
+$matrix-class:   #69f0ae;
+$matrix-op:      #00c853;
+$matrix-tag:     #76ff03;
+$matrix-attr:    #a5d6a7;
+$matrix-glitch:  #ff5370; // errors — the one non-green, so it actually reads
+
+// ---------------------------------------------------------------------------
+// Purple palette
+// ---------------------------------------------------------------------------
+// The third mode. It can't be derived by inverting anything, so unlike
+// light/dark it is authored outright: its own page colours plus its own
+// syntax palette, and no `filter` anywhere in it.
+
+$purple-bg:      #1a0b2e;
+$purple-code-bg: #140722; // a shade under the page, so blocks sit back a little
+$purple-base:    #c77dff; // the counterpart to $matrix-base
+$purple-dim:     #7a5c9e; // comments, deliberately receding
+$purple-pale:    #e0c3fc; // identifiers, the bulk of most blocks
+$purple-string:  #ff9ff3;
+$purple-number:  #d0a3ff;
+$purple-fn:      #b388ff;
+$purple-class:   #dda0ff;
+$purple-op:      #9d6bd8;
+$purple-tag:     #e39ff6;
+$purple-attr:    #c9b6e4;
+$purple-glitch:  #ff5370; // errors — kept, it still reads against purple
+
+// The border goes on the block wrapper only. `.highlighter-rouge` is also on
+// inline <code>, so it has to be qualified to a div or every inline snippet
+// picks up a box too.
+div.highlighter-rouge {
+  border: 1px solid rgba(0, 255, 65, .35);
+  // Also carries the background: <pre>'s default margin collapses out through
+  // the .highlight wrapper, so without it those few pixels show the page
+  // colour and read as a pale gutter inside the border.
+  background: $matrix-bg;
+}
+
+.highlight {
+  background: $matrix-bg;
+
+  // Kill the collapsing margin outright rather than paper over it.
+  pre { margin: 0; }
+
+  pre, code { background: $matrix-bg; color: $matrix-base; }
+
+  // Rouge emits these token classes already; the theme just never coloured
+  // them. Grouped roughly the way tree-sitter splits captures.
+  .c, .cd, .cm, .cp, .cs, .c1  { color: $matrix-dim; font-style: italic; }
+  .k, .kc, .kd, .kn, .kp, .kr, .kt, .kv { color: $matrix-base; font-weight: bold; }
+  .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss, .dl { color: $matrix-string; }
+  .m, .mb, .mf, .mh, .mi, .mo, .mx, .il { color: $matrix-number; }
+  .nf, .fm                     { color: $matrix-fn; }
+  .nc, .nn, .no, .ne           { color: $matrix-class; }
+  .nb, .bp, .o, .ow            { color: $matrix-op; }
+  .nv, .vc, .vg, .vi, .nx, .py { color: $matrix-pale; }
+  .nt                          { color: $matrix-tag; }
+  .na, .nl, .nd, .ni           { color: $matrix-attr; }
+  .p, .pi                      { color: $matrix-op; }
+
+  // diffs
+  .gd { color: $matrix-glitch; }
+  .gi { color: $matrix-number; }
+  .gh, .gu { color: $matrix-base; font-weight: bold; }
+  .ge { font-style: italic; }
+  .gs { font-weight: bold; }
+
+  .err { color: $matrix-glitch; background: none; }
+}
+
+// ---------------------------------------------------------------------------
+// About page
+// ---------------------------------------------------------------------------
+// Everything here is authored in light-mode colours only. Dark mode is the
+// theme's whole-page `filter: invert(1)`, which flips these along with the
+// rest of the page (and re-inverts <img> back to true tone), so none of it
+// needs dark rules — only the purple ones further down, purple being a third
+// palette rather than an inversion.
+
+.avatar {
+  display: block;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto .9rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .35rem .9rem;
+  margin: 0 0 1.5rem;
+  font-size: .85rem;
+}
+
+// ---------------------------------------------------------------------------
+// Quote card (about page)
+// ---------------------------------------------------------------------------
+// Authored in light-mode colours only. Dark mode is the theme's whole-page
+// `filter: invert(1)`, which flips this along with everything else and
+// re-inverts the portrait back to its true tone — so it needs no dark rules,
+// only the purple ones further down.
+//
+// The portrait floats rather than sitting in a grid cell: the Latin block is
+// taller than the circle, so the translation drops to the card's flush-left
+// edge on its own, which is the layout being reproduced.
+
+.quote-card {
+  margin: 2rem 0;
+  padding: 1.25rem 0 0;
+  border-top: 1px solid rgba(0, 0, 0, .18);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  // Contains the float without the clipping `overflow: hidden` would bring.
+  display: flow-root;
+
+  // The portrait is a link to the man himself, so the circle is the anchor
+  // rather than the image inside it — that keeps the float, the ring and the
+  // small-screen centring on one box, and gives the click the whole disc.
+  .quote-portrait {
+    float: left;
+    width: 110px;
+    height: 110px;
+    margin: .2rem 1.5rem .6rem 0;
+    border-radius: 50%;
+    // The engraving is a rectangle of hatching; a hairline ring keeps the
+    // circle reading as a deliberate crop rather than a clipped photo.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  // The theme puts a full `thin solid black` box on every blockquote, plus its
+  // own margins. Both have to go, or the card gets a box inside a rule.
+  blockquote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  .quote-latin   { font-style: italic; margin: 0 0 1.1rem; }
+  // The theme italicises every blockquote, so the translation has to opt back
+  // out — otherwise the Latin and the English read as the same voice.
+  .quote-english { font-style: normal; margin: 0; }
+
+  figcaption {
+    margin-top: 1rem;
+    font-size: .9rem;
+    letter-spacing: .03em;
+    color: rgba(0, 0, 0, .55);
+  }
+}
+
+@media (max-width: 480px) {
+  .quote-card .quote-portrait {
+    float: none;
+    display: block;
+    margin: 0 auto 1rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Core competencies
+// ---------------------------------------------------------------------------
+// A <dl> rather than nested lists: each row really is term-and-definition, and
+// it gives the label/tags split for free. The grid puts the label in a fixed
+// left column on wide viewports and stacks it above on narrow ones.
+
+.competencies {
+  margin: 1rem 0 0;
+
+  dt {
+    font-weight: bold;
+    font-size: .9rem;
+    letter-spacing: .02em;
+    margin-bottom: .45rem;
+  }
+
+  dd {
+    margin: 0 0 1.4rem;
+    &:last-of-type { margin-bottom: 0; }
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      // The theme puts bullets and indentation on every li; both are undone
+      // by the list-style/padding above, but its margins still apply.
+      margin: 0;
+      padding: .12rem .5rem;
+      font-size: .78rem;
+      line-height: 1.5;
+      border: 1px solid rgba(0, 0, 0, .22);
+      border-radius: 2px;
+      white-space: nowrap;
+
+      // Each tag links out to the thing it names. The chip keeps its own
+      // colour rather than the theme's link blue, and the negative margins
+      // let the anchor cover the li's padding so the whole chip is clickable.
+      a, a:visited {
+        display: inline-block;
+        margin: -.12rem -.5rem;
+        padding: .12rem .5rem;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      &:hover { border-color: currentColor; }
+      a:hover { color: inherit; text-decoration: underline; }
+    }
+  }
+}
+
+@media (min-width: 620px) {
+  .competencies {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    column-gap: 1.25rem;
+    row-gap: 1.1rem;
+
+    dt { margin-bottom: 0; padding-top: .18rem; }
+    dd { margin: 0; }
+  }
+}
+
+// Long entries would otherwise force a horizontal scroll on a phone.
+@media (max-width: 380px) {
+  .competencies .tags li { white-space: normal; }
+}
+
+// ---------------------------------------------------------------------------
+// Paper page (thesis)
+// ---------------------------------------------------------------------------
+// A journal-article layout inside the theme's plain column: byline block,
+// set-off abstract, numbered figures, hanging-indent references. Authored in
+// light-mode colours only, for the same reason as the about page above — dark
+// mode is the theme's whole-page inversion. Purple gets its own rules further
+// down.
+
+.paper-meta {
+  margin: 0 0 1.1rem;
+  font-size: .85rem;
+  line-height: 1.7;
+}
+
+.paper-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem .9rem;
+  margin: 0 0 1.6rem;
+  font-size: .85rem;
+}
+
+// The abstract is prose, not a quotation, so it takes a rule on one side
+// rather than the theme's full blockquote box.
+.paper-abstract {
+  margin: 0 0 2rem;
+  padding: .1rem 0 .1rem 1rem;
+  border-left: 2px solid rgba(0, 0, 0, .25);
+  font-size: .95rem;
+  line-height: 1.6;
+
+  p { margin: 0; }
+}
+
+.paper-figure {
+  margin: 1.8rem 0;
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    margin-top: .6rem;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, .6);
+    text-align: center;
+  }
+}
+
+// The dependency graph is roughly 1:2.5, so at full column width it runs well
+// past a screenful. Capping the height keeps the figure inline-sized; the
+// caption's link is how you actually read it.
+.paper-figure--tall img { max-height: 70vh; width: auto; }
+
+// Hanging indent, the way a reference list is normally set: first line flush,
+// continuations indented.
+.paper-refs {
+  font-size: .88rem;
+  line-height: 1.6;
+
+  p {
+    margin: 0 0 .8rem;
+    padding-left: 1.6rem;
+    text-indent: -1.6rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Theme slider
+// ---------------------------------------------------------------------------
+// A fader on a vintage faceplate: a full spectrum band for a dial face, a
+// knurled cursor tracking along it, three notched detents underneath.
+// The control is a real `input[type=range]` with three steps, so dragging,
+// clicking the track and arrow keys all work without any of it being faked.
+//
+// Range styling is the one place vendor pseudo-elements can't be grouped —
+// a selector list containing an unknown one is dropped whole by every engine,
+// so track and thumb are each written out twice from a shared mixin.
+
+$fader-track-h: 15px;
+$fader-thumb-w: 17px;
+$fader-thumb-h: 27px;
+
+// The dial face: the entire hue circle, 0deg to 360deg, laid out left to right.
+// Written as a loop rather than a hand-picked list so no hue can be skipped —
+// a hand-picked list is exactly how a band ends up missing its cyans. The
+// sweep closes back on red at the far end because the circle does; that wrap
+// is what makes it every hue rather than a slice of them.
+//
+// Saturation and lightness sit under full tilt, which is what keeps this a
+// printed radio scale instead of a screen-bright rainbow, and the vertical
+// wash further down carries the band through lighter and darker besides.
+@function fader-spectrum($steps, $sat, $light) {
+  $stops: ();
+  @for $i from 0 through $steps {
+    $stops: append(
+      $stops,
+      hsl(360 * $i / $steps, $sat, $light) percentage($i / $steps),
+      comma
+    );
+  }
+  @return linear-gradient(90deg, $stops);
+}
+
+// 36 steps is a stop every 10deg. Interpolation between neighbours that close
+// is indistinguishable from a continuous sweep at this size.
+$fader-spectrum: fader-spectrum(36, 62%, 52%);
+
+// Vertical scoring over the band, the way an old dial is ruled by its bezel.
+// Kept faint and widely spaced on purpose: any heavier and the ruling reads as
+// a barcode instead of a scale, and the hues underneath stop being legible.
+$fader-grille: repeating-linear-gradient(
+  90deg,
+  rgba(0, 0, 0, .13) 0 1px,
+  rgba(0, 0, 0, 0)   1px 6px
+);
+
+@mixin fader-track {
+  box-sizing: border-box;
+  height: $fader-track-h;
+  border: 1px solid rgba(0, 0, 0, .55);
+  border-radius: 2px;
+  // Sepia wash first, then the ruling, then the spectrum underneath. The wash
+  // is a highlight at the top fading to shade at the bottom, so the band looks
+  // like a curved dial face rather than a flat swatch — kept light, because
+  // past about a third it stops ageing the hues and starts hiding them.
+  background-image:
+    linear-gradient(180deg, rgba(255, 245, 215, .22), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, .24)),
+    $fader-grille,
+    $fader-spectrum;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .65);
+}
+
+// A tuning-window cursor rather than a solid cap: a solid one sits on the band
+// and blanks out whichever hues it covers, which is the one thing this control
+// cannot afford — the band is the point. So the jaws take the top and bottom
+// $fader-jaw of the cursor and the middle is left clear, leaving every hue
+// visible straight through the window with a hairline needle marking the spot.
+$fader-jaw: 6px;
+
+@mixin fader-thumb {
+  box-sizing: border-box;
+  width: $fader-thumb-w;
+  height: $fader-thumb-h;
+  border: 1px solid rgba(20, 20, 15, .9);
+  border-radius: 2px;
+  background-color: transparent;
+  // Top to bottom: the needle, knurling on each jaw, then the jaws themselves.
+  // The knurl layers are sized and pinned to the jaws so the ruling stops at
+  // the glass instead of striping across it.
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) calc(50% - 1px),
+      rgba(20, 20, 15, .8) calc(50% - 1px) calc(50% + 1px),
+      rgba(0, 0, 0, 0) calc(50% + 1px)
+    ),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .28) 0 1px, rgba(0, 0, 0, 0) 1px 5px),
+    linear-gradient(
+      180deg,
+      #f2ead6 0, #b3a992 $fader-jaw,
+      rgba(0, 0, 0, 0) $fader-jaw,
+      rgba(0, 0, 0, 0) calc(100% - #{$fader-jaw}),
+      #b3a992 calc(100% - #{$fader-jaw}), #f2ead6 100%
+    );
+  background-size: auto, 100% $fader-jaw, 100% $fader-jaw, auto;
+  background-position: 0 0, left top, left bottom, 0 0;
+  background-repeat: no-repeat;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+  cursor: grab;
+}
+
+.theme-slider {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 1.4rem;
+}
+
+.theme-slider__panel {
+  width: 212px;
+  padding: .5rem .7rem .35rem;
+  background: $matrix-bg;
+  border: 1px solid rgba(0, 255, 65, .45);
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(0, 255, 65, .12);
+}
+
+.theme-slider__range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  // The input box is the thumb's height so the cap has its full hit area; the
+  // track paints thinner inside it.
+  height: $fader-thumb-h;
+  margin: 0;
+  background: transparent;
+  cursor: pointer;
+
+  &:focus { outline: none; }
+  &:focus-visible { outline: 2px solid $matrix-base; outline-offset: 3px; }
+  &:active { cursor: grabbing; }
+}
+
+.theme-slider__range::-webkit-slider-runnable-track { @include fader-track; }
+.theme-slider__range::-moz-range-track             { @include fader-track; }
+
+.theme-slider__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  @include fader-thumb;
+  // WebKit hangs the thumb off the track's top edge, so it needs centring by
+  // hand; Firefox already centres it.
+  margin-top: ($fader-track-h - $fader-thumb-h) * .5;
+}
+.theme-slider__range::-moz-range-thumb { @include fader-thumb; }
+
+// The scale is inset by half a cap on each side, because that is where the
+// thumb's centre actually travels between — ticks drawn at the panel's edges
+// would sit a cap-width off from the positions they claim to mark.
+.theme-slider__marks {
+  position: relative;
+  height: .95rem;
+  margin: .1rem ($fader-thumb-w * .5) 0;
+  font-size: .62rem;
+  letter-spacing: .06em;
+  color: $matrix-base;
+
+  span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: .45;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -.3rem;
+      left: 50%;
+      width: 1px;
+      height: .24rem;
+      background: currentColor;
+    }
+
+    &.is-on { opacity: 1; font-weight: bold; }
+  }
+
+  span:nth-child(1) { left: 0; }
+  span:nth-child(2) { left: 50%; }
+  span:nth-child(3) { left: 100%; }
+}
+
+// Re-invert so both keep their true colours once <body> flips.
+//
+// This must land on exactly ONE element per block. `.highlight` is on both
+// div.highlight and the pre.highlight nested inside it, so targeting it
+// applied invert twice — which is identity, leaving the body's inversion
+// unopposed and rendering the block white-on-magenta. The outer
+// div.highlighter-rouge wraps each block exactly once, and carries the
+// border and background besides.
+// The slider is in here for the same reason as the code blocks, and gets more
+// out of it: re-inverting keeps the spectrum band showing its authored hues
+// instead of its complement, so the dial face reads the same in both modes.
+body[a="dark"] {
+  div.highlighter-rouge, .theme-slider { filter: invert(1); }
+}
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] {
+    div.highlighter-rouge, .theme-slider { filter: invert(1); }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Purple mode
+// ---------------------------------------------------------------------------
+// Deliberately no `filter` here: the light/dark pair is one palette flipped,
+// but purple is a third palette, so every colour the theme sets has to be
+// restated. The rules below are the full set the theme actually paints.
+
+// The theme paints `html, body { background: white }`. Body covers the
+// viewport, but <html> still shows through the overscroll gutter, so it
+// needs the purple too.
+html:has(body[a="purple"]) { background: $purple-bg; }
+
+body[a="purple"] {
+  background: $purple-bg;
+  color: $purple-pale;
+
+  a, a:visited { color: $purple-base; }
+  a:hover { color: $purple-string; }
+
+  h1, h2, h3, h4, h5, h6 { color: $purple-pale; }
+
+  hr { border-color: rgba(199, 125, 255, .3); }
+
+  // The theme puts a full `thin solid black` box on blockquotes, not a left
+  // rule — so this has to be border-color, or three sides stay black.
+  blockquote {
+    border-color: $purple-op;
+    color: $purple-attr;
+  }
+
+  // Inline code only — the block case is handled by the wrapper below, and
+  // this would otherwise repaint every token inside it. The theme sets
+  // `code { color: white; background: black }`, so the background needs
+  // restating too or inline snippets stay black against the purple page.
+  code { color: $purple-string; background: $purple-code-bg; }
+
+  table, th, td { border-color: rgba(199, 125, 255, .35); }
+
+  div.highlighter-rouge {
+    border-color: rgba(199, 125, 255, .35);
+    background: $purple-code-bg;
+  }
+
+  .highlight {
+    background: $purple-code-bg;
+
+    pre, code { background: $purple-code-bg; color: $purple-base; }
+
+    .c, .cd, .cm, .cp, .cs, .c1  { color: $purple-dim; }
+    .k, .kc, .kd, .kn, .kp, .kr, .kt, .kv { color: $purple-base; }
+    .s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss, .dl { color: $purple-string; }
+    .m, .mb, .mf, .mh, .mi, .mo, .mx, .il { color: $purple-number; }
+    .nf, .fm                     { color: $purple-fn; }
+    .nc, .nn, .no, .ne           { color: $purple-class; }
+    .nb, .bp, .o, .ow            { color: $purple-op; }
+    .nv, .vc, .vg, .vi, .nx, .py { color: $purple-pale; }
+    .nt                          { color: $purple-tag; }
+    .na, .nl, .nd, .ni           { color: $purple-attr; }
+    .p, .pi                      { color: $purple-op; }
+
+    .gd { color: $purple-glitch; }
+    .gi { color: $purple-number; }
+    .gh, .gu { color: $purple-base; }
+    .err { color: $purple-glitch; }
+  }
+
+  // Both of these are exempt from the purple blockquote rule above -- they
+  // carry no box, so only the text colour is inherited, and inherited it is the
+  // attribution colour rather than the page's own.
+  .roll-epigraph {
+    border-top-color: rgba(199, 125, 255, .3);
+    color: $purple-pale;
+
+    cite { color: $purple-dim; }
+  }
+  // The card's blockquote is exempt from the purple blockquote rule above —
+  // it carries no box, so only its text colour is inherited.
+  .quote-card {
+    border-top-color: rgba(199, 125, 255, .3);
+
+    blockquote { color: $purple-pale; border: 0; }
+    .quote-portrait { box-shadow: 0 0 0 1px rgba(199, 125, 255, .45); }
+    figcaption { color: $purple-dim; }
+  }
+
+  .competencies {
+    dt { color: $purple-base; }
+    .tags li { border-color: rgba(199, 125, 255, .35); color: $purple-attr; }
+  }
+
+  .paper-abstract { border-left-color: $purple-op; }
+  .paper-figure figcaption { color: $purple-dim; }
+
+  // The two figures are ink-on-white diagrams, so on the purple page they'd
+  // sit as white slabs. A light knock-back plus a matching frame settles them
+  // into the page without inverting the diagrams into unreadable negatives.
+  .paper-figure img {
+    border: 1px solid rgba(199, 125, 255, .35);
+    opacity: .92;
+  }
+
+  // The resume is a PDF the browser paints itself, so none of the rules above
+  // reach inside it: on the purple page it stayed a white sheet. Dark mode
+  // gets its dark resume for free from the whole-page invert, so purple takes
+  // the same flip and then screens the result over the page — screen leaves
+  // the inverted ink alone while pulling its black ground up to the purple
+  // behind it. The sepia-and-hue turn is what makes it purple rather than grey:
+  // it lands the PDF's blue links near the mode's own violet instead of the
+  // yellow-green the bare invert gives them in dark mode.
+  .resume-embed {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+    // The frame is inverted along with everything else, so the authored black
+    // arrives as a pale rule; left at .25 it glares against the purple.
+    border-color: rgba(0, 0, 0, .12);
+  }
+
+  // The framed xkcd is the same problem in a different box: a page from
+  // another origin, black ink on white, that none of the rules above can
+  // reach into. So it takes the resume's treatment verbatim -- invert to get
+  // a dark comic, tint it violet, then screen the result over the page.
+  .xkcd-embed {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+    border-color: rgba(0, 0, 0, .12);
+  }
+
+  .xkcd-note { color: $purple-dim; }
+
+  // The pictures keep their own colour in purple mode -- they are photographs,
+  // not ink-on-white diagrams, so inverting or tinting them would be vandalism.
+  // Only the hairline needs restating: the authored black is invisible here.
+  .carousel-slide img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
+  .carousel-slide figcaption, .art-note, .unc-note { color: $purple-dim; }
+
+  // The sheets are ink on white, so on the purple page they arrive as slabs.
+  // Same treatment as the thesis figures: a light knock-back and a matching
+  // frame settle them into the page without inverting handwriting into a
+  // negative of itself.
+  .math-trick img {
+    box-shadow: none;
+    border: 1px solid rgba(199, 125, 255, .35);
+    opacity: .92;
+  }
+  .math-trick figcaption, .math-animation figcaption { color: $purple-dim; }
+
+  // Covers are artwork too -- left alone for the same reason the pins are. The
+  // hairline and the note need restating, and the duration badge is authored
+  // for a light page, so on this one it is drawn the other way round.
+  .video-cover img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
+  .video-time { background: rgba(20, 7, 34, .85); color: $purple-pale; }
+  .video-note, .playlist-credit { color: $purple-dim; }
+
+  // The framed speeches are footage, not ink on white, so they are left alone
+  // the way the pins and the covers are -- the invert-and-tint /xkcd/ takes is
+  // for a page of black lines on a white ground, and a negative of a man at a
+  // lectern is just a wrong photograph. Only the hairline and the writing under
+  // it need restating: the authored black is invisible on this ground.
+  .speech-embed { border-color: rgba(199, 125, 255, .3); }
+  .speech figcaption, .speech-note { color: $purple-dim; }
+
+  // Only the faceplate around the dial changes — the spectrum band is the same
+  // band in every mode, since it is the thing being chosen from.
+  .theme-slider__panel {
+    background: $purple-code-bg;
+    border-color: rgba(199, 125, 255, .45);
+    box-shadow: inset 0 1px 0 rgba(199, 125, 255, .12);
+  }
+
+  .theme-slider__marks { color: $purple-base; }
+  .theme-slider__range:focus-visible { outline-color: $purple-base; }
+
+  // The rain is authored in the phosphor green, which is the one colour purple
+  // mode has no way to reach: it sets no filter on the page, so a green band
+  // would simply stay green among the violets. It is re-struck here in this
+  // palette's own colours rather than filtered into them.
+  .matrix-rain {
+    background: $purple-code-bg;
+    border-color: rgba(199, 125, 255, .35);
+  }
+
+  // The fade over the ends of the fall is the ground colour laid back over the
+  // columns, so it has to be restruck whenever the ground changes.
+  .matrix-rain::after {
+    background-image: linear-gradient(to bottom,
+      $purple-code-bg 0%, rgba(20, 7, 34, 0) 16%,
+      rgba(20, 7, 34, 0) 82%, $purple-code-bg 100%);
+  }
+
+  // The skulls are pencil on white, which is the resume's problem and the
+  // xkcd's: ink-on-paper on a page that has no white on it. So they take the
+  // same treatment -- inverted to draw in light, tinted violet, and screened
+  // over the page so the paper they were drawn on drops out entirely.
+  //
+  // On the window rather than on each drawing, which is not a tidying-up: the
+  // window is masked at both ends, and a mask isolates everything inside it
+  // into a group of its own. An image blending inside that group has only the
+  // group's own transparent backdrop to screen against, so the paper stays --
+  // sixteen black cards on a violet page. Written here the blend happens where
+  // the page is, which is the only place the paper can drop out.
+  //
+  // Under .skull-roll rather than on .roll-window, which is the whole reason
+  // the two strips are told apart in the stylesheet at all: the frieze above
+  // is photographs and paintings, and the rule two screens up applies to it
+  // instead -- inverting or tinting a picture is vandalism, in this mode as in
+  // any other.
+  .skull-roll .roll-window {
+    filter: invert(1) sepia(.4) hue-rotate(220deg) saturate(1.3);
+    mix-blend-mode: screen;
+  }
+
+  .matrix-rain span {
+    background-image: linear-gradient(to bottom,
+      rgba(199, 125, 255, 0) 0%,
+      rgba(199, 125, 255, .45) 40%,
+      $purple-base 88%,
+      $purple-string 100%);
+  }
+}
+
+// The resume is a PDF rather than prose, so it gets an inline viewer sized to
+// a page's aspect ratio instead of the paper layout above. Browsers that will
+// not embed a PDF fall back to the download link inside the object.
+.resume-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 8.5 / 11;
+  min-height: 30rem;
+  margin: 0 0 1.6rem;
+  border: 1px solid rgba(0, 0, 0, .25);
+}
+
+// xkcd itself is framed on /xkcd/, and its layout wants more room than this
+// theme's 640px column gives it. So the frame alone steps outside the column,
+// centred on it, at the width xkcd actually lays out at. Dark mode needs no
+// rule here: the theme already re-inverts <iframe> along with <img>, so the
+// comic keeps its true tone the way every other image on the site does.
+//
+// That width is not a taste call. xkcd's own body is `position: absolute;
+// left: 50%; width: 780px; margin-left: -390px` -- a fixed 780px column
+// centred on whatever viewport it is handed. Hand it less and the overflow
+// goes to *both* sides, and the left half of it is unreachable: an absolutely
+// positioned box hanging off the left edge produces no scroll there, so the
+// masthead and the first panel of every comic are simply gone. 50rem is that
+// 780px plus room for the frame's own scrollbar.
+//
+// Below 50rem there is no width left to give, so the frame is scaled instead
+// of squeezed: `zoom` shrinks the box in the flow while the page inside still
+// believes it has the full 800px, which is the one way to fit a fixed layout
+// into a phone without cutting a third of it off. The factor is the ratio of
+// what is available to what is wanted -- tan(atan2(a, b)) is how CSS divides
+// one length by another -- clamped to 1 so a roomy viewport is left alone.
+// A browser too old to do the trigonometry drops the declaration and lands
+// where this page was before: full size, and clipped on a small screen.
+//
+// The calc() around the subtraction is for the compiler, not the browser:
+// this build's Sass evaluates the arguments of functions it does not know,
+// and refuses to take rem from vw itself. Inside calc() it leaves them be.
+.xkcd-embed {
+  display: block;
+  width: 50rem;
+  zoom: clamp(0, tan(atan2(calc(100vw - 2rem), 50rem)), 1);
+  margin: 0 0 1.2rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  height: 80vh;
+  min-height: 30rem;
+  border: 1px solid rgba(0, 0, 0, .25);
+}
+
+.xkcd-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Carousel
+// ---------------------------------------------------------------------------
+// Pictures one at a time, on /art/ and /unc/ alike. The track is a plain
+// horizontal scroll container
+// with scroll-snap on it -- no transform, no translated inner rail, no index
+// held in JS. That is what makes a swipe, a trackpad flick, a keyboard scroll
+// and the arrow buttons all the same gesture: they move scrollLeft, and the
+// snap points decide where it comes to rest.
+//
+// Shared by /art/ and /unc/, which is why the classes are not named for either.
+// The frame steps outside the theme's 640px column the way /xkcd/ does. Both
+// pages are overwhelmingly portrait, and at 640px a whole picture is either
+// postage-stamp small or taller than the viewport; `min()` rather than a media
+// query gives a phone the full width less its gutters and never a horizontal
+// page scroll.
+
+.carousel {
+  width: min(56rem, calc(100vw - 2rem));
+  margin: 1.5rem 0 1rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+.carousel-track {
+  display: flex;
+  // The theme puts list markers and padding on every <ul>; across a row of
+  // slides that is a bullet hanging in the gutter of each one.
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  // Focusable for keyboard scrolling, so it takes a focus ring; the theme
+  // gives it none, and a scroll box with no visible focus is a trap.
+  &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+}
+
+.carousel-slide {
+  // Exactly one slide per view: no basis on flex-grow/shrink, so the width is
+  // the track's and the snap lands whole pictures rather than halves.
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Neither page prints a line under its pictures today, but the include still
+  // takes a caption, so the figure is what the slide centres: picture and any
+  // caption together, as one block, rather than a line hanging off the bottom
+  // of a centred image.
+  figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .45rem;
+  }
+
+  figcaption {
+    font-size: .82rem;
+    line-height: 1.5;
+    color: rgba(0, 0, 0, .6);
+    text-align: center;
+  }
+
+  a {
+    display: block;
+    // The theme underlines every link; across an image that is a rule hanging
+    // off its bottom edge.
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    // These are tall. Without a ceiling a portrait one is taller than the
+    // window and the carousel becomes a scroll-down-to-see-it, which defeats
+    // stepping through them. 66 rather than 70 leaves room under the tallest
+    // of them for the arrows, and for a caption if a slide ever carries one.
+    max-height: 66vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    // The pins are other people's photographs and drawings, on a page that has
+    // no other frame anywhere. A hairline keeps a white-cornered image from
+    // bleeding into the light page without adding a visible box.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+  }
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: .7rem 0 1.4rem;
+  font-size: .85rem;
+
+  button {
+    // The theme styles no buttons at all, so these are drawn from scratch and
+    // deliberately plain: a bordered box in the current text colour, which
+    // means all three modes get them right with no per-mode rule.
+    font: inherit;
+    line-height: 1;
+    color: inherit;
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+    padding: .25rem .7rem;
+    cursor: pointer;
+    opacity: .75;
+
+    &:hover { opacity: 1; }
+    &:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  }
+
+  // Tabular figures so the counter does not jostle the arrows either side of
+  // it as it steps from 9 to 10.
+  .carousel-count { font-variant-numeric: tabular-nums; opacity: .75; }
+}
+
+// The standing line under each carousel: what the pictures are and whose.
+.art-note, .unc-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Math tricks
+// ---------------------------------------------------------------------------
+// A column of sheets, one under the next, rather than the carousel /art/ uses:
+// these are things to read, and reading them side by side is the point. So the
+// figures keep the theme's 640px column instead of breaking wide like the
+// carousel and the music grid -- a sheet of handwriting wider than the text
+// around it is a sheet you scan rather than read.
+//
+// Authored in light-mode colours only, like everything above: dark mode is the
+// theme's whole-page `filter: invert(1)` with `img` inverted back, so the
+// sheets keep true tone. That is deliberate rather than inherited -- the ink on
+// them is blue, red and violet, and the `ioda` opt-out the pencil drawings on
+// the homepage take would turn those three into orange, cyan and green.
+
+.math-trick {
+  margin: 2rem 0;
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    // The hairline is what stops a sheet of white paper from bleeding into a
+    // white page: without it the drawing floats with no edge to it.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+  }
+
+  figcaption {
+    margin-top: .7rem;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, .6);
+  }
+}
+
+// The title line of a caption. A block of its own so the rule under it starts
+// on a line of its own without a <br> to put it there.
+.math-trick-title {
+  display: block;
+  color: rgba(0, 0, 0, .75);
+}
+
+// The rule under the caption is the trick said in words. It is a block of its
+// own rather than a second sentence on the caption line, because it is a
+// paragraph and the title above it is a label.
+.math-trick-rule {
+  display: block;
+  margin-top: .35rem;
+}
+
+// The animation at the head of the page. It is portrait -- 720x1280, the shape
+// the source reel was cut to -- so at the column's full width it would stand
+// well over a screen tall and be scrolled through rather than watched. The cap
+// is on the height and the width follows from it, which is the same call
+// .paper-figure--tall makes about the dependency graph on the thesis page.
+//
+// No dark rule and no purple one: it is a dark-ground animation either way.
+// The theme's whole-page invert re-inverts <video> as it does <img>, so it
+// keeps true tone in all three modes and needs nothing said about it.
+.math-animation {
+  margin: 1.4rem 0 2.4rem;
+
+  video {
+    display: block;
+    max-height: 78vh;
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    margin: 0 auto;
+    // The frame is nearly black on a nearly white page: without an edge it
+    // reads as a hole rather than as a picture.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .15);
+  }
+
+  figcaption {
+    margin-top: .7rem;
+    font-size: .82rem;
+    line-height: 1.6;
+    color: rgba(0, 0, 0, .6);
+  }
+}
+
+// The one place a line break would be a lie: V = [16, 0, 0] broken across two
+// lines reads as two things.
+.math-nowrap { white-space: nowrap; }
+
+// ---------------------------------------------------------------------------
+// Cover grid
+// ---------------------------------------------------------------------------
+// A grid of 16:9 YouTube covers that link out: the whole of /music/, and each
+// playlist on /cybersecurity/. Written once and named for what it is rather
+// than for the first page to use it, because the second page wanted exactly
+// this and nothing about it is about music.
+//
+// A list is shown all at once, unlike /art/ and /unc/. Same escape from the
+// theme's 640px column as the carousel -- a 16:9 cover at column width is
+// either two per row and tiny or one per row and a scroll -- and the same
+// `min()` so a phone gets the viewport less its gutters rather than a
+// horizontal page scroll.
+
+.video-grid {
+  width: min(56rem, calc(100vw - 2rem));
+  margin: 1.5rem 0 1.4rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+
+  // The theme puts a marker and padding on every <ul>; in a grid that is a
+  // bullet in the gutter of every cell.
+  padding: 0;
+  list-style: none;
+
+  display: grid;
+  // `auto-fill` with a floor, rather than a column count per breakpoint: the
+  // number of columns is then a consequence of how wide a cover has to be to
+  // be worth looking at, and there is no breakpoint to keep in step with the
+  // width above.
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.4rem 1.2rem;
+  // Rows size to their own tallest cell, so a two-line title does not stretch
+  // every cover in the row beside it.
+  align-items: start;
+}
+
+.video-item {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  min-width: 0; // a long unbroken title otherwise widens the whole column
+}
+
+.video-cover {
+  position: relative;
+  display: block;
+  // The theme underlines every link; under a cover that is a rule hanging off
+  // its bottom edge.
+  text-decoration: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    // Thumbnails are 16:9 but a handful come back 4:3 from hqdefault, which in
+    // a grid of 16:9 neighbours reads as a broken one. Cropping to the common
+    // shape is the lesser evil: `cover` takes the middle, which is where the
+    // subject of a thumbnail almost always is.
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    // Album art runs to the edge of the frame in every direction, so a
+    // white-cornered cover needs a hairline to keep it off the light page.
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .12);
+  }
+}
+
+// YouTube's own convention, and it earns its place here: half of these are
+// three-hour mixes and half are three-minute singles, which the covers alone
+// do not tell you. Authored dark-on-light because the whole page is inverted
+// in dark mode -- it arrives light-on-dark there, which is also correct.
+.video-time {
+  position: absolute;
+  right: .35rem;
+  bottom: .35rem;
+  padding: .05rem .3rem;
+  background: rgba(255, 255, 255, .82);
+  color: rgba(0, 0, 0, .85);
+  font-size: .72rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.video-title {
+  font-size: .84rem;
+  line-height: 1.35;
+  // Mix titles run to a paragraph -- pipes, emoji, the whole tracklist. Three
+  // lines is enough to tell one from another; the rest is on YouTube.
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.video-channel {
+  font-size: .76rem;
+  line-height: 1.3;
+  opacity: .7;
+}
+
+// The standing line under a grid with nothing in it yet: what fills the page.
+.video-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Playlists
+// ---------------------------------------------------------------------------
+// What sits above each cover grid on /cybersecurity/: the name of the
+// playlist -- or of the shelf of talks that belong to no playlist, which is
+// the same block with a heading that links nowhere -- whose it is and how
+// long it runs, and the line saying why it is here. The grid itself already steps out to 56rem, so these stay in the
+// theme's column -- a heading centred over a wider grid than the text under
+// it reads as two pages, and a note set to 56rem is a line too long to read.
+.playlist,
+.loose {
+  margin: 2.4rem 0 2.8rem;
+}
+
+// Tight to the credit under it, loose from the grid above: the three lines
+// are one block, and the space between blocks has to beat the space inside.
+.playlist-name {
+  margin: 0 0 .2rem;
+  font-size: 1.05rem;
+  line-height: 1.3;
+}
+
+.playlist-credit {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, .6);
+}
+
+.playlist-note {
+  margin: .5rem 0 0;
+  max-width: 40rem;
+  font-size: .86rem;
+  line-height: 1.6;
+}
+
+// ---------------------------------------------------------------------------
+// Speech
+// ---------------------------------------------------------------------------
+// One video player per speech, played whole. The figure steps outside the
+// theme's 640px column the way the carousel and the music grid do, and for a
+// plainer reason than either: a 640px-wide player is a 360px-tall one, and a
+// lectern, a face and a slide deck at that size is a video you listen to
+// rather than watch. `min()` rather than a media query so a phone gets the
+// full width less its gutters and never a horizontal page scroll.
+//
+// Authored in light-mode colours only, like everything above: dark mode is the
+// theme's whole-page invert, and it re-inverts <iframe> along with <img>, so
+// the player keeps its true tone there with no rule of its own.
+.speech {
+  width: min(56rem, calc(100vw - 2rem));
+  margin: 1.6rem 0 2.2rem;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+
+// aspect-ratio rather than the padding-top box the old embeds used: the frame
+// is the only thing in it, so there is nothing to absolutely position and no
+// wrapper to keep in step with it.
+.speech-embed {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(0, 0, 0, .25);
+}
+
+.speech figcaption {
+  margin-top: .6rem;
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// The reason the speech is here, under the credit rather than beside it: they
+// are two different kinds of sentence, and run together they read as one long
+// caption with the citation lost in the middle of it.
+.speech-why {
+  display: block;
+  margin-top: .35rem;
+  max-width: 40rem;
+}
+
+// The standing line at the foot of the page: where the videos are served from
+// and what a blank frame means.
+.speech-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// Menu icons
+// ---------------------------------------------------------------------------
+// The marks in the "elsewhere" list at the foot of the përi page. They sit
+// inside the <a> and paint in currentColor, so they need no per-mode rules at
+// all: dark inverts them along with the text, purple recolours them with the
+// link colour.
+
+.menu-icon {
+  // Sized off the text rather than in pixels, so the mark tracks the list's
+  // font-size and stays the height of a lowercase word beside it.
+  width: 1em;
+  height: 1em;
+  margin-right: .45em;
+  // The glyph box is optically taller than the x-height; this drops it back
+  // onto the baseline instead of riding above it.
+  vertical-align: -.14em;
+}
+
+// The theme underlines links, and across an anchor that opens with a mark the
+// rule runs under the mark and the gap besides — a stray dash ahead of the
+// word. So the anchor drops the underline and the label carries it alone.
+.menu-link {
+  text-decoration: none;
+
+  .menu-label { text-decoration: underline; }
+}
+
+// ---------------------------------------------------------------------------
+// Homepage identity row
+// ---------------------------------------------------------------------------
+// The portrait rides beside the alias rather than above it, so the name still
+// opens the page and the description keeps the full column beneath. It is the
+// same GitHub avatar the përi page uses, and it links back to that account.
+// No dark rules: dark mode is the theme's whole-page `filter: invert(1)`,
+// which re-inverts <img> back to true tone.
+
+.home-id {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+
+// The theme gives h1 top and bottom margin; inside the row the portrait sets
+// the height, so only the bottom margin still has work to do.
+.home-id h1 { margin: 0; }
+
+.home-avatar {
+  flex: 0 0 auto;
+  // The link box is the image, so the inline leading below it would otherwise
+  // push the portrait off-centre against the alias.
+  line-height: 0;
+}
+
+.home-avatar img {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+// Under the column width the alias and tagline stack, so the row would leave
+// the portrait floating against a tall block of text. Centring is dropped and
+// the portrait aligns to the first line instead.
+@media (max-width: 34rem) {
+  .home-id { align-items: flex-start; }
+  .home-avatar img { width: 2.8rem; height: 2.8rem; }
+}
+
+// The alias is a link now, to the song it points at. It keeps the heading's own
+// colour rather than taking the page's link colour: at this size an alias in
+// link blue is the loudest thing on the page and reads as navigation, which is
+// the opposite of what a name is doing at the top of it. The underline is left
+// to carry it.
+//
+// `from-font` rather than a thickness of this file's choosing: the rule scales
+// with the alias, which is around three times the body size, and a fixed
+// hairline under it reads as a rendering fault while a fixed thick one reads as
+// a strikethrough that missed.
+header h1 .home-alias {
+  color: inherit;
+  text-decoration-thickness: from-font;
+  text-underline-offset: .12em;
+}
+
+// The tagline rides on the same line as the alias, at a third of its size so
+// it reads as a subtitle rather than a second title. Colour is inherited and
+// knocked back with opacity, which keeps it correct in all three modes without
+// a per-mode override (dark mode inverts the whole page, purple recolours it).
+header h1 .tagline {
+  font-size: .33em;
+  font-weight: normal;
+  opacity: .6;
+  // The gap is a literal space in the layout rather than generated content, so
+  // the two halves stay separated even if this stylesheet is stale in a cache.
+  // It doubles as the wrap point when the line outruns the column.
+  white-space: nowrap;
+}
+
+// Below the column width the two halves stop fitting side by side, so the
+// tagline drops to its own line instead of forcing a horizontal scroll.
+@media (max-width: 34rem) {
+  header h1 .tagline {
+    display: block;
+    white-space: normal;
+  }
+}
+
+// The creed lines sit directly under the description rather than reading as
+// further paragraphs of it: each pulled up tight against the line above, and
+// knocked back the same way the tagline is so they stay correct in all three
+// modes. The same pull holds one creed to the next, so however many there are
+// they read as one block rather than as a run of separate paragraphs.
+header .creed {
+  margin-top: -.6em;
+  font-size: .9em;
+  opacity: .7;
+}
+
+// A page can hang a short marker off its title -- `marker` in the front
+// matter, rendered by _layouts/page.html. It rides on the heading's own line
+// at half its size, colour inherited and knocked back with opacity, which is
+// what keeps it right in all three modes without a per-mode override.
+h1 .title-marker {
+  font-size: .5em;
+  font-weight: normal;
+  opacity: .55;
+  margin-left: .8em;
+  letter-spacing: .05em;
+}
+
+// ---------------------------------------------------------------------------
+// Homepage collage
+// ---------------------------------------------------------------------------
+// The board at the foot of the homepage. It keeps the column rather than
+// breaking wide like the carousel and the music grid: it is a tall image, and
+// at full-bleed width it would run several screens deep before the page ended.
+// The margin above it is the gap that separates it from the menu, since the
+// figure is the last thing on the page and needs nothing below.
+//
+// No dark rule: the collage sits on a near-white ground, and dark mode is the
+// theme's whole-page `filter: invert(1)` with `img` inverted back, so the
+// picture keeps true tone -- ground included -- the same as every other photo
+// on the site.
+
+.home-collage {
+  margin: 2.5rem 0 0;
+
+  // The containing block for the two clips hung over the board. Without it
+  // they would position themselves against the page instead, and slide off the
+  // picture the moment anything above them changed height.
+  position: relative;
+}
+
+.home-collage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+// A cascade laid over the board rather than floated beside text. The stacks
+// upstairs push the lines next to them aside, which is the one thing a clip on
+// top of a picture must not do -- so the float is dropped here and the box is
+// positioned outright.
+//
+// Where it goes is not in this file. Each box is placed by three custom
+// properties set on it in index.markdown, where the board it is measured
+// against is: percentages of the picture, so the arrangement holds at every
+// width, and so a third clip is another three numbers rather than another rule
+// down here. The height is not among them -- the stack derives that from its
+// own clip's shape, exactly as it does when floated.
+.collage-clip {
+  position: absolute;
+  left: var(--clip-left);
+  top: var(--clip-top);
+  width: var(--clip-width);
+}
+
+// Two classes deep, which is what it takes to outrank the plain `.cascade`
+// rules below -- including the narrow-screen one, which un-floats and re-centres
+// every stack on the page. That is the right move for the two beside the lists
+// and the wrong one here: these are already off the flow, and centring them
+// would only walk them off the tiles they were placed on.
+.collage-clip .cascade {
+  float: none;
+  width: 100%;
+  margin: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Cascades
+// ---------------------------------------------------------------------------
+// Three copies of one clip, stepped down and to the right, floated beside the
+// text next to them: one against the homepage menu, one against the elsewhere
+// list at the foot of the përi page. Each layer is 78% of the box wide and the
+// two behind it are offset 11% twice, so 78 + 22 = 100 and the stack fills the
+// box exactly.
+//
+// The box's shape is not set here. It is the clip's own aspect ratio -- the
+// arithmetic is in _includes/cascade.html, which is where the file's pixel
+// dimensions are known -- handed over as a custom property so a second clip of
+// a different shape needs no second rule. The fallback is the first stack's
+// portrait, for a browser that drops the property rather than the ratio.
+
+.cascade {
+  float: right;
+  position: relative;
+  width: min(46%, 16rem);
+  aspect-ratio: var(--cascade-ratio, 9 / 16);
+  margin: .3rem 0 1rem 1.6rem;
+}
+
+.cascade-layer {
+  position: absolute;
+  width: 78%;
+  height: auto;
+  display: block;
+
+  // The two behind are knocked back rather than merely covered: the clips are
+  // black-on-black, so without a difference in weight the three read as one
+  // smeared shape instead of a stack with a front to it.
+  &:nth-child(1) { left: 0;   top: 0;   opacity: .4; }
+  &:nth-child(2) { left: 11%; top: 11%; opacity: .68; }
+  &:nth-child(3) { left: 22%; top: 22%; opacity: 1; }
+}
+
+// The theme re-inverts <img> and <iframe> under its whole-page `filter:
+// invert(1)` so pictures keep true tone in dark mode -- but not <video>, which
+// predates none of it and simply was not in the list. Left alone these clips
+// would be the only negatives on the page, and a negative of black-and-white
+// footage is exactly as wrong as it sounds. So they take the same treatment
+// <img> already gets, in both places the theme applies it.
+//
+// Purple mode needs no rule: it sets no filter on the page at all, so the
+// video is already showing its own tone there.
+body[a="dark"] .cascade-layer { filter: invert(1); }
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] .cascade-layer { filter: invert(1); }
+}
+
+// The stack that opens the homepage takes no float: there is nothing beside it
+// to push aside, so it takes the middle of its own line at the width the
+// column allows. The include is untouched -- a stack is built the same way
+// wherever it lands, and where it lands is this section's business.
+//
+// The width is capped rather than left at 100% because the layers are drawn at
+// 78% of the box with the two behind offset out to fill the rest: at full
+// column width the front copy would be wider than the collage further down,
+// which would make the opening the biggest thing on a page it only opens.
+.opening {
+  margin: 0 0 2.2rem;
+}
+
+.opening .cascade {
+  float: none;
+  width: min(100%, 30rem);
+  margin: .4rem auto 0;
+}
+
+// The narrow-screen rule below unfloats every stack; this one is already
+// unfloated and would take that rule's narrower width with it, which on a
+// phone is the one place the opening can afford the whole column.
+@media (max-width: 34rem) {
+  .opening .cascade { width: 100%; margin: .4rem auto 0; }
+}
+
+// Below this the column is too narrow to give half of itself away -- the menu
+// entries would wrap a word at a time down the left. So the float is dropped
+// and the stack takes the middle of its own line, which on both counts is
+// where it already sits in the source.
+@media (max-width: 34rem) {
+  .cascade {
+    float: none;
+    width: min(74%, 14rem);
+    margin: 1.4rem auto 1.6rem;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Matrix rain
+// ---------------------------------------------------------------------------
+// The band that closes the homepage. The technique is the one in
+// https://dev.to/tetragius/pure-css-matrix-code-effect-5b6k -- an integer
+// animated in CSS, read back through counters, printed as glyphs -- written out
+// here rather than lifted, because what falls and what it falls in is this
+// page's rather than that article's.
+//
+// Worth doing in counters at all because the alternative is a <canvas> and a
+// rAF loop: a second animation clock on a page that already has five video
+// decoders on it, and one that keeps running when nobody is looking at the tab.
+// This one is style, so the browser drops it on its own terms and it holds
+// still for a reader who has asked for less motion, with no script to make
+// either decision.
+//
+// What falls is older than the film's katakana: hieroglyphs, cuneiform,
+// Phoenician, Old Italic, Linear B, runes and Greek, mixed down each column.
+// A counter prints whatever counter style it is handed, and a counter style is
+// just a list of symbols -- so every script below is the same mechanism as the
+// original's a-b-c, with a different alphabet behind it.
+//
+// The one cost of that: unlike letters, these need a font that carries them.
+// macOS and Windows do; a bare Linux install may not, and the miss shows as
+// boxes rather than as a fallback, so the historic faces are named ahead of
+// monospace and a reader without any of them gets tofu. Nothing here is text
+// anyone is reading, which is the only reason that is an acceptable trade.
+
+// The symbols. Each style is `cyclic`, so it maps any integer onto its list by
+// wrapping -- which is all a counter needs to be an alphabet.
+@counter-style rain-hieroglyph {
+  system: cyclic;
+  // Seated man, walking man, arms raised, the eye of Horus, a crocodile, a
+  // horned viper, an owl, a falcon, water, the ankh, a boat, a jar.
+  symbols: "\13000" "\1301C" "\13045" "\13080" "\130A7" "\13100"
+           "\13124" "\13139" "\13153" "\131CB" "\1325A" "\132F9";
+}
+
+@counter-style rain-cuneiform {
+  system: cyclic;
+  symbols: "\12000" "\1200A" "\12014" "\1202D" "\1203C"
+           "\12050" "\1207A" "\120A0" "\120FB" "\1214E";
+}
+
+@counter-style rain-phoenician {
+  system: cyclic;
+  symbols: "\10900" "\10902" "\10904" "\10906" "\10908"
+           "\1090A" "\1090C" "\1090E" "\10910" "\10912";
+}
+
+@counter-style rain-old-italic {
+  system: cyclic;
+  symbols: "\10300" "\10302" "\10304" "\10306" "\10308"
+           "\1030A" "\1030C" "\1030E" "\10310" "\10312";
+}
+
+@counter-style rain-linear-b {
+  system: cyclic;
+  symbols: "\10000" "\10002" "\10004" "\10006" "\10008"
+           "\1000A" "\1000D" "\10010" "\10012" "\10014";
+}
+
+@counter-style rain-runic {
+  system: cyclic;
+  symbols: "\16A0" "\16A6" "\16AB" "\16B1" "\16B7"
+           "\16BE" "\16C1" "\16C8" "\16D2" "\16DF";
+}
+
+// One animated value per column. Every glyph on the strip is derived from it,
+// so a column is a single running animation rather than a dozen.
+@property --rain-t {
+  syntax: '<integer>';
+  inherits: true;
+  initial-value: 1;
+}
+
+// The strip, top to bottom. Twelve positions, each with the script it is
+// printed in; lower-greek is the one style already in every browser, and the
+// hieroglyphs recur because they are what this was asked for.
+$rain-scripts:
+  rain-hieroglyph, lower-greek, rain-cuneiform, rain-hieroglyph,
+  rain-phoenician, rain-linear-b, rain-hieroglyph, rain-old-italic,
+  lower-greek, rain-hieroglyph, rain-runic, rain-cuneiform;
+$rain-glyphs: length($rain-scripts);
+$rain-turn: 26; // how far the timer walks before it starts over
+
+@for $i from 1 through $rain-glyphs {
+  @property --rain-g#{$i} {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 1;
+  }
+}
+
+.matrix-rain {
+  --rain-height: 15rem;
+
+  display: flex;
+  height: var(--rain-height);
+  margin: 3rem 0 0;
+  overflow: hidden;
+  background: $matrix-bg;
+  border: 1px solid rgba(0, 255, 65, .35); // the edge the code blocks carry
+
+  // For the fade that hides the ends of the fall, which is painted over the
+  // columns rather than into them.
+  position: relative;
+
+  // So the columns can size their glyphs against the band rather than against
+  // the viewport. The band is not the viewport -- it is the text column, which
+  // stops growing at 640px and keeps shrinking below that -- and it is the band
+  // the twenty-six of them have to divide.
+  container-type: inline-size;
+
+  // A counter printing glyphs a dozen times a second is not text anyone is
+  // meant to read, and a cursor dragged down the page should not pick up a
+  // word of it.
+  user-select: none;
+}
+
+// So the strips run past the top and bottom edges instead of appearing and
+// vanishing at them. A mask on the band would have taken the band with it --
+// its black ground fading out to the page at both ends, which turns a box with
+// rain in it into a grey smear. This is the band's own colour laid back over
+// the columns instead, so only the glyphs go and the edges stay square.
+.matrix-rain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(to bottom,
+    $matrix-bg 0%, rgba(0, 0, 0, 0) 16%,
+    rgba(0, 0, 0, 0) 82%, $matrix-bg 100%);
+}
+
+.matrix-rain span {
+  // Every column takes an equal share of whatever width the band has, so the
+  // count in the markup is the count on the page at any size.
+  flex: 1 1 0;
+
+  // What turns a line of glyphs into a column: the inline direction runs
+  // downward, and `upright` keeps each glyph the right way up on the way.
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+
+  // Named ahead of monospace so a system that carries the historic faces uses
+  // them; the browser walks this list per glyph, not per element, so the Greek
+  // and the hieroglyphs can come from different files in the same column.
+  font-family: "Noto Sans Egyptian Hieroglyphs", "Noto Sans Cuneiform",
+               "Noto Sans Phoenician", "Noto Sans Old Italic",
+               "Noto Sans Linear B", "Noto Sans Runic", "Segoe UI Historic",
+               "Aegyptus", monospace;
+  // A glyph is about one em across, and each column has a twenty-sixth of the
+  // band to stand in -- so on a narrow screen the em has to come down or the
+  // columns grow wider than their share and the band overflows the page. Below
+  // roughly 27rem of band the glyph is a fixed fraction of it instead, which
+  // keeps twenty-six columns fitting at any width without a breakpoint or a
+  // second count in the markup.
+  font-size: min(.9rem, 3.4cqw);
+  line-height: 1;
+
+  // The trail. A strip falls head-down, so its last glyph is the leading one:
+  // the gradient runs from nothing at the top to a near-white glyph at the
+  // bottom, painted through the glyphs rather than behind them.
+  background-image: linear-gradient(to bottom,
+    rgba(0, 255, 65, 0) 0%,
+    rgba(0, 255, 65, .45) 40%,
+    $matrix-base 88%,
+    $matrix-string 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+
+  // Pace and head start are per column, handed over from the markup: a dozen
+  // identical columns falling in step is a curtain, not rain.
+  animation: matrix-fall var(--pace) linear var(--lag) infinite,
+             matrix-cycle 2.6s linear var(--lag) infinite;
+
+  // Each glyph is the timer a little further along, wrapped back into the
+  // alphabet -- so the strip reads as twelve glyphs turning over at twelve
+  // different moments rather than one glyph twelve times.
+  @for $i from 1 through $rain-glyphs {
+    --rain-g#{$i}: calc(mod(var(--rain-t) + #{$i}, #{$rain-turn}) + 1);
+  }
+
+  $rain-reset: "";
+  @for $i from 1 through $rain-glyphs {
+    $rain-reset: $rain-reset + "rain-g#{$i} var(--rain-g#{$i}) ";
+  }
+  counter-reset: #{unquote($rain-reset)};
+}
+
+// The scripts are dealt out three ways, one per column in turn, so the same
+// row of scripts does not run straight across the band. The glyphs already
+// differ column to column -- the timers are out of phase -- but the alphabets
+// would have lined up, and a rain with a grain in it reads as a pattern.
+@for $r from 0 through 2 {
+  $rain-print: "";
+  @for $i from 1 through $rain-glyphs {
+    $rain-print: $rain-print +
+      "counter(rain-g#{$i}, #{nth($rain-scripts, (($i + $r) % $rain-glyphs) + 1)}) ";
+  }
+  .matrix-rain span:nth-child(3n + #{$r + 1})::before {
+    content: #{unquote($rain-print)};
+  }
+}
+
+// The fall is the height of the band plus the strip's own, so a column is out
+// of sight at both ends of the pass rather than blinking out.
+@keyframes matrix-fall {
+  from { transform: translateY(-100%); }
+  to   { transform: translateY(var(--rain-height)); }
+}
+
+// And the glyphs turn over under it. One walk of the timer per cycle: the
+// property is an integer, so the tween lands on whole glyphs on its own.
+@keyframes matrix-cycle {
+  from { --rain-t: 1; }
+  to   { --rain-t: #{$rain-turn}; }
+}
+
+// Asked for less motion, the rain stops being rain: each column parks at the
+// offset the markup gives it, which leaves a still, ragged field of glyphs --
+// what a frozen frame of it looks like anyway. Without a resting place they
+// would all sit at the start of the fall, which is above the band and out of
+// sight: a black box and nothing in it.
+@media (prefers-reduced-motion: reduce) {
+  .matrix-rain span {
+    animation: none;
+    transform: translateY(var(--rest));
+  }
+}
+
+// The band is authored black-on-green like the code blocks, so it needs the
+// same exemption from the theme's whole-page invert; without it the band is the
+// one white box on a dark page. Purple mode sets no filter at all and takes its
+// own colours instead, with the rest of that palette.
+body[a="dark"] .matrix-rain { filter: invert(1); }
+@media (prefers-color-scheme: dark) {
+  body[a="auto"] .matrix-rain { filter: invert(1); }
+}
+
+// ---------------------------------------------------------------------------
+// The rolls
+// ---------------------------------------------------------------------------
+// The two strips that follow the rain: ten pictures rolling past the page in
+// one endless strip, and under them sixteen studies of the same skull from
+// sixteen angles doing the same. The markup they share is _includes/roll.html
+// and the mechanism they share is here, written once -- the two rules where
+// the drawings need something the photographs do not are the only places
+// either strip is named by itself.
+//
+// One height, each its own width. The alternative -- a common box with the
+// pictures cropped into it -- would give a tidier strip and a worse one: what
+// is running past is separate things, and a row of identical rectangles says
+// the opposite. A steady top and bottom line is enough order for a strip that
+// never stops moving, and it is the same order the sixteen were trimmed to
+// after they were cut on the gutters of the sheet they came off.
+//
+// The loop is the strip printed twice and walked exactly one pass to the left
+// before it starts over, which lands the copy where the original stood: there
+// is no jump to hide because nothing jumps. The gap between pictures is a
+// margin on each rather than a gap on the track, so a pass is exactly half the
+// strip -- with `gap` it is half a gap more than that, and the seam shows.
+
+.roll {
+  margin: 3rem 0 0;
+}
+
+.roll h2 {
+  // The theme puts 3rem above every h2, which is for headings that break up
+  // prose. This one is a label on the thing directly under it.
+  margin: 0 0 .8rem;
+  font-size: 1rem;
+  letter-spacing: .08em;
+}
+
+.roll figure {
+  margin: 0;
+}
+
+// The window the strip runs through. The fade at both ends is a mask rather
+// than a painted overlay -- unlike the rain, what is behind here is the page
+// itself, whatever colour the mode has made it, so there is nothing to paint
+// back over the pictures with.
+.roll-window {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+
+.roll-track {
+  display: flex;
+  align-items: flex-end;
+  width: max-content;
+  animation: roll 52s linear infinite;
+}
+
+.roll-track img {
+  display: block;
+  height: 9rem;
+  width: auto;
+
+  // Both against the theme, which centres every image in the column and holds
+  // it to the column's width. Here they are a row, and each is as wide as its
+  // own picture.
+  margin: 0 1.2rem 0 0;
+  max-width: none;
+}
+
+// A hovered or focused strip stops, which is the only way to look at one of
+// these for longer than it takes to pass. On the section rather than on the
+// window, so that a hand resting on the caption while it is read stops the
+// thing the caption is about.
+.roll:hover .roll-track,
+.roll:focus-within .roll-track {
+  animation-play-state: paused;
+}
+
+@keyframes roll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+// Asked for less motion, the roll stops and becomes a strip that scrolls by
+// hand: all of them are still there and still all reachable, which a frozen
+// animation on its own would not leave true -- the far end would sit off the
+// edge of the window with no way to bring it back.
+@media (prefers-reduced-motion: reduce) {
+  .roll-window {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .roll-track {
+    animation: none;
+  }
+}
+
+// The line under the skulls. It is about what sixteen goes at one skull are --
+// attempts at a thing none of them settles -- so it is set as an epigraph
+// belonging to the strip rather than as a pull quote of its own: a narrow block
+// under a hairline, the same serif and the same top rule the quote card on
+// /about/ uses.
+//
+// The theme puts a full `thin solid black` box on every blockquote and margins
+// besides. Both have to go, or the line arrives in a box under a rule.
+.roll-epigraph {
+  max-width: 30rem;
+  margin: 1.6rem auto 0;
+  padding: 1rem 0 0;
+  border: 0;
+  border-top: 1px solid rgba(0, 0, 0, .18);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size: .95rem;
+  line-height: 1.6;
+  text-align: center;
+
+  // The passage runs to a paragraph rather than the sentence this slot held
+  // before, and centring a paragraph gives every line a ragged pair of ends to
+  // find. Set flush left so the eye has one edge to return to; the credit under
+  // it is a single short line and stays centred, which is where the block's own
+  // text-align leaves it.
+  p {
+    margin: 0;
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  // The theme italicises every blockquote, which is right for the passage and
+  // wrong for the line naming it -- left alone the two read as one voice.
+  cite {
+    display: block;
+    margin-top: .6rem;
+    font-style: normal;
+    font-size: .8rem;
+    letter-spacing: .03em;
+    color: rgba(0, 0, 0, .55);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The shoal
+// ---------------------------------------------------------------------------
+// Three stop motions laid over each other at the foot of the page: ten stills
+// off one clip each, held about a quarter second and replaced. Why stills
+// rather than the clips is argued in _includes/stopmotion.html, where the
+// markup they share is.
+//
+// The board is the containing block and nothing else. Where each reel sits on
+// it is not in this file -- three percentages set on each slot in
+// index.markdown, where the arrangement is composed, exactly as the clips over
+// the collage are placed on the picture. So a seventh reel is three more
+// numbers there rather than another rule down here, and the crossing holds at
+// every width instead of coming apart as the column narrows.
+//
+// The board needs a ratio of its own because everything on it is out of the
+// flow and contributes no height -- the hill behind them included. 4:3 is what
+// the two of them together ask for. The arrangement wants room across for the
+// arms of an X to clear each other, and the photograph behind it is 16:9, so a
+// squarer board crops more of the hill's sweep away than it is worth: at 4:3,
+// `cover` keeps three quarters of the width and all of the height, which is a
+// gentle crop that leaves the sky on top and the grass under the bottom.
+
+.shoal {
+  margin: 3rem 0 0;
+}
+
+.shoal h2 {
+  // Same as the roll's above: the theme's 3rem is for headings that break up
+  // prose, and this is a label on the thing directly under it.
+  margin: 0 0 .8rem;
+  font-size: 1rem;
+  letter-spacing: .08em;
+}
+
+.shoal figure {
+  margin: 0;
+}
+
+.shoal-board {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  margin-bottom: .8rem;
+}
+
+// The hill behind them. An <img> rather than a background image, which is the
+// whole reason it comes out in true tone: the theme's dark mode is a whole-page
+// `filter: invert(1)` with <img> re-inverted, and a CSS background is not an
+// <img> -- it would be the one thing on the board showing an orange sky. The
+// cascades needed a rule of their own for exactly this, because <video> is not
+// in that list either; being a picture, this needs none.
+//
+// Absolutely positioned, so it sets no height and the board's own ratio is
+// still what shapes it, and `cover` because the photograph is 16:9 and the
+// board is square -- which crops the sides and keeps the full height, so the
+// sky stays at the top and the grass under the bottom.
+.shoal-ground {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  // Against the theme, which centres every image in the column and holds it to
+  // the column's width. This one is a ground rather than a picture in the flow.
+  margin: 0;
+  max-width: none;
+}
+
+.shoal-slot {
+  position: absolute;
+  left: var(--slot-left);
+  top: var(--slot-top);
+  width: var(--slot-width);
+}
+
+// ---------------------------------------------------------------------------
+// Stop motions
+// ---------------------------------------------------------------------------
+// One sequence: a window a frame wide, a reel N windows wide inside it, walked
+// from 0 to -100% of itself. `steps(N)` makes that N discrete stops rather than
+// a slide -- 0, -10%, ... -90% of the reel for ten of them, one window each,
+// landing the last frame last. Nothing tweens, which is the whole of what makes
+// it read as stop motion rather than as a pan across a strip.
+//
+// The count is not in this file. It comes off --frames, set on the reel in
+// index.markdown where the sequence is named, and it is read here twice -- once
+// for how wide the reel is and once for how many stops it takes. Those two have
+// to agree or the sequence drifts, showing halves of two frames at a time, and
+// taking both from one property is what makes that impossible to get wrong. It
+// also means a sequence of six or of twenty needs no rule of its own.
+//
+// The pace comes the same way, and for a second reason besides taste: three of
+// these overlapping at one pace are one animation of three panels, all changing
+// on the same beat. Given three different ones they cross instead.
+
+.stop-motion-window {
+  overflow: hidden;
+  aspect-ratio: 480 / 854;
+
+  // The edge is what makes the crossing legible. These are three dark blue
+  // underwater clips lying on each other, and without a line between them the
+  // overlaps read as one smeared picture rather than as three that cross --
+  // the same problem the cascade solves with opacity, which is no use here
+  // because these are three different animals rather than three copies of one.
+  //
+  // An outline rather than a border: it is drawn outside the box and takes no
+  // part in layout, so the window stays exactly one frame wide and the slot
+  // percentages stay the sizes they say they are. currentColor rather than a
+  // colour of its own, which is what makes it right in all three modes without
+  // a rule for any of them -- dark inverts the whole page, and the text it is
+  // taking its colour from is inverted with it.
+  outline: 2px solid currentColor;
+}
+
+.stop-motion-reel {
+  display: flex;
+  width: calc(var(--frames) * 100%);
+  height: 100%;
+  animation: stop-motion var(--pace) steps(var(--frames)) infinite;
+
+  // After the shorthand, not inside it: `animation` resets every longhand it
+  // does not name, delay included, so a phase written into the shorthand above
+  // would be reset by the very declaration carrying it. The default is no
+  // offset, which is what a reel that is the only copy of its clip wants.
+  animation-delay: var(--phase, 0s);
+}
+
+.stop-motion-reel img {
+  // One Nth of a reel N windows wide is exactly one window. Stated as a flex
+  // basis that cannot shrink, because a row of images is precisely what flex
+  // would otherwise squeeze to fit.
+  flex: 0 0 calc(100% / var(--frames));
+  width: calc(100% / var(--frames));
+  height: 100%;
+  display: block;
+
+  // Both against the theme, which centres every image in the column and holds
+  // it to the column's width. Here they are a reel, and each one is the window.
+  margin: 0;
+  max-width: none;
+}
+
+// A hovered or focused shoal stops -- all three of them, not the one under the
+// pointer. They are one picture, and freezing a third of it is a glitch rather
+// than a pause.
+.shoal:hover .stop-motion-reel,
+.shoal:focus-within .stop-motion-reel {
+  animation-play-state: paused;
+}
+
+@keyframes stop-motion {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+
+// Asked for less motion, the reels stop and each window scrolls by hand -- the
+// same answer the roll above gives, and for the same reason: frozen on the
+// first frame the manta is a speck, and the nine that are the point of the
+// sequence would sit off the edge with no way to bring them back.
+@media (prefers-reduced-motion: reduce) {
+  .stop-motion-window {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .stop-motion-reel {
+    animation: none;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// The cairn
+// ---------------------------------------------------------------------------
+// Three skulls in braille dots, closing the page under the shoal. The picture
+// is 51 glyphs across, and every one of those glyphs is a braille cell -- the
+// blanks included, U+2800 rather than a space -- which is what keeps the
+// columns lined up even where the reader's font has no braille and the block
+// comes from somewhere down the fallback list. Whatever face answers, it
+// answers for all 816 of them at one advance, so the grid holds; only its
+// scale is in doubt.
+//
+// A container so the art can be sized against the text column rather than the
+// viewport. The two are not the same thing here -- the column stops growing at
+// 640px and keeps shrinking below it -- and it is the column the 51 have to
+// divide.
+.cairn {
+  margin: 3rem 0 0;
+
+  container-type: inline-size;
+
+  // The guard for the scale that is in doubt above. If a face turns up whose
+  // braille cell is wider than the factor below assumes, the line runs past
+  // the column; clipped, that costs a column of dots off the right of a
+  // picture, and unclipped it costs the whole page a sideways scrollbar on a
+  // phone. The first is cheaper.
+  overflow: hidden;
+}
+
+.cairn pre {
+  // What makes the picture the width of the column at every size, the way the
+  // collage at the top of the page is: 51 cells have to fit across, so the em
+  // is whatever leaves 51 of them just short of the full width.
+  //
+  // How wide a cell is depends on which face answered, and the two likely
+  // answers disagree: the DejaVu-family monospaces carry the block at about
+  // .6em, and what macOS falls back to draws it at about .68em. The figure
+  // below clears the wider of the two with a little to spare, which costs the
+  // narrower one a margin down each side and is the right way round -- an
+  // unused margin is invisible and an overrun is a clipped skull.
+  --cell: .72;
+  font-size: calc(100cqi / 51 / var(--cell));
+
+  // The dots of a braille cell sit inside roughly the top four fifths of the
+  // em, so lines an em apart leave a white band between every row of the
+  // picture and the theme's 1.4 makes it a comb. This closes it up.
+  line-height: .85;
+
+  // Centred rather than left in the column, since the factor above leaves it
+  // narrower than the column by design. `max-content` is the line the picture
+  // actually draws, not the box it could have had.
+  width: max-content;
+  max-width: 100%;
+  margin: 0 auto;
+}
