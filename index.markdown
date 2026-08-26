@@ -286,22 +286,22 @@ not crop off; the caption under the board says all of it.
 </section>
 
 {%- comment -%}
-The last thing on the page, under the shoal: three skulls in a row, drawn in
+The picture under the shoal: three skulls in a row, drawn in
 braille dots. Fifty-one glyphs to a line and sixteen lines, each glyph a 2x4
 grid of dots, which is 102 by 64 pixels' worth of picture carried as text.
 
 Text rather than a picture file, and that is the whole point of it being here.
-Everything above this is images and video -- a collage, two rolls, five
-cascades, six reels -- and the page ends on the one thing in the list that is
-none of those: an image made of characters, in the same monospace the theme
-sets for the body, that survives being copied out of the page and pasted
-somewhere else. It also costs no request and no bytes beyond the markup, which
-after a megabyte of whale is a joke worth making quietly.
+Everything around it is images and video -- a collage, two rolls, five
+cascades, six reels, and the pair below -- and this is the one thing in the
+list that is none of those: an image made of characters, in the same monospace
+the theme sets for the body, that survives being copied out of the page and
+pasted somewhere else. It also costs no request and no bytes beyond the markup,
+which after a megabyte of whale is a joke worth making quietly.
 
 The third skull on the page, after Searle's sixteen studies of one and the one
-on the collage. That is not a plan, but it is why this sits at the end rather
-than anywhere else: the page has been circling the subject and this is the last
-word on it.
+on the collage. That is not a plan, but it is why this sits here rather than
+anywhere else: the page has been circling the subject and this is the last word
+on it.
 
 `role="img"` with a label, because a screen reader handed the markup reads
 eight hundred braille cells one at a time. The label is what a sighted reader
@@ -324,4 +324,38 @@ gets in a second; the dots are not text and should not be read as text.
 ⠀⠀⢸⣿⣿⣿⣿⣿⣾⣯⣴⣿⣿⢿⣿⣿⡿⠃⠀⠀⠀⠘⢾⣿⡟⡿⠛⠛⠛⢿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠐⠿⠿⣿⢿⡿⢿⣿⣿⣿⣿⣽⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀</pre>
+</section>
+
+{%- comment -%}
+The two pictures that close the page, under the cairn: a portrait of a geisha
+drawn in the manner of a woodblock print, and a katana laid across its stand
+with the scabbard behind it. Neither is mine. Both were saved off the web with
+no name attached, and the filenames they came with say only what they are, so
+what stands under them is the alt text and nothing more -- there is no credit
+to give and inventing one would be worse than the silence.
+
+Plain <img> stacked down the column, rather than a board or a roll. The two
+things this page already does with more than one picture are both here -- the
+collage arranges its tiles and the two strips run theirs past -- and a pair is
+too few for either: a strip of two is a strip you have seen the whole of at a
+glance, and an arrangement of two is a picture with a picture next to it. At
+the column's width, one under the other, they are simply the last two things
+on the page.
+
+Tall first, then wide, which is the order they arrived in and also the better
+one: the portrait is a column and the sword is a line across it, so the second
+answers the shape of the first instead of repeating it.
+
+Neither needs a dark rule, for the reason the collage gives: the theme inverts
+the page whole and inverts <img> back again, so both keep true tone -- the
+portrait's paper ground and the sword's black field included, which is the
+half of this that a CSS background would have got wrong.
+{%- endcomment -%}
+<section class="coda">
+  <img src="{{ site.baseurl }}/images/geisha.jpg"
+       width="1182" height="1920" loading="lazy" decoding="async"
+       alt="A woodblock-style portrait of a geisha in three-quarter view: white face, black hair pinned up with lacquered picks and a white chrysanthemum, wearing a rust kimono patterned with pale blossoms over a blue collar, against a pale ground hung with two columns of calligraphy.">
+  <img src="{{ site.baseurl }}/images/katana.jpg"
+       width="1280" height="853" loading="lazy" decoding="async"
+       alt="A katana drawn from its black scabbard and laid blade-up across a lacquered stand, the scabbard crossed behind it, against a black field. The stand's rail is painted with a gold-faced dragon in green and orange among clouds.">
 </section>

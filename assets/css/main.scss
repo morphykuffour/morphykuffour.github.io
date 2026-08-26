@@ -2198,3 +2198,32 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   max-width: 100%;
   margin: 0 auto;
 }
+
+// ---------------------------------------------------------------------------
+// The coda
+// ---------------------------------------------------------------------------
+// The two pictures under the cairn, stacked down the column. They keep the
+// column rather than breaking wide like the carousel and the music grid, which
+// is the collage's call at the top of the page and made here for the same
+// reason: the portrait is taller than it is wide, and at full-bleed width it
+// would run most of a screen on its own before the sword under it began.
+//
+// No dark rule, again as with the collage. Dark mode is the theme's whole-page
+// `filter: invert(1)` with `img` inverted back, so both pictures keep true tone
+// -- the portrait's paper ground and the sword's black field included.
+.coda {
+  margin: 3rem 0 0;
+}
+
+.coda img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// The space between the two, set on the second rather than as a gap on the
+// section. There is nothing under the pair for a gap to measure against; the
+// only distance this section has to state is the one between its two pictures.
+.coda img + img {
+  margin-top: 1.5rem;
+}
