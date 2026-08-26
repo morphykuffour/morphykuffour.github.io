@@ -76,6 +76,24 @@
     part is attention, and tlookup and zkAttn are where the paper earns its
     keep.
 
+- file: 'silver-alphago-go.png'
+  pdf: 'silver-alphago-go.pdf'
+  link: '/assets/papers/silver-alphago-go.pdf'
+  alt: 'First page of Silver and others, "Mastering the game of Go with deep neural networks and tree search", Nature, January 2016.'
+  caption: 'Mastering the game of Go with deep neural networks and tree search — Silver and others, 2016'
+  title: 'Mastering the game of Go with deep neural networks and tree search'
+  authors: 'David Silver, Aja Huang, Chris J. Maddison and seventeen others'
+  where: 'Nature 529, 484–489, 28 January 2016; doi:10.1038/nature16961'
+  note: >-
+    AlphaGo, and the sentence in the abstract that dates the whole field: a
+    feat previously thought to be at least a decade away. The architecture is
+    two networks and a search — a policy network to narrow the breadth, a value
+    network to truncate the depth, Monte Carlo tree search to spend the
+    compute where it pays — and the training pipeline runs supervised learning
+    on human games into self-play reinforcement learning, which is the move
+    everything since has copied. Worth reading now for how modest it sounds
+    while doing it.
+
 - file: 'pruning-bias-mitigation-llms.png'
   pdf: 'pruning-bias-mitigation-llms.pdf'
   link: '/assets/papers/pruning-bias-mitigation-llms.pdf'
