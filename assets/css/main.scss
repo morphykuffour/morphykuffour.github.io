@@ -448,10 +448,48 @@ $fader-jaw: 6px;
   cursor: grab;
 }
 
-.theme-slider {
+// The top bar: the flags and the theme dial on one line, hard right against
+// the column the page is written in. The bottom margin used to be the dial's
+// own; it belongs to the row now, or the flags would sit on the writing.
+.topbar {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
+  gap: .5rem;
   margin: 0 0 1.4rem;
+}
+
+// One height for every flag and whatever width its own proportions give it:
+// 10:19, 3:5, 2:3 and 1:2 are four different rectangles, and squaring them to
+// a common box would draw four flags none of which is the flag it is.
+//
+// Which makes the height the thing that decides whether the row is one line:
+// the five flags come to 8.57 times their height across, and with the
+// faceplate -- 236px, not the 212 the dial is, since padding and border sit
+// outside that -- and five gaps beside them, the column leaves 364px to divide
+// by 8.57. So 2.5rem lands the row about 20px inside it, and anything taller
+// wraps the last flag onto a line of its own.
+$flag-h: 2.5rem;
+
+.flag {
+  flex: none;
+  height: $flag-h;
+  width: auto;
+  // The theme centres every <img> with `margin: 0 auto`, which in a flex row
+  // is not centring at all -- it is free space handed to the margins, which
+  // pulls the flags apart to fill the line.
+  margin: 0;
+  // The same hairline the faceplate is drawn with, for the same reason the
+  // photographs elsewhere carry one: the white of two of these flags runs
+  // straight into a white page without it. Authored green and re-inverted with
+  // the <img> in dark mode, so it stays this green in both.
+  box-shadow: 0 0 0 1px rgba(0, 255, 65, .45);
+}
+
+.theme-slider {
+  flex: none;
+  display: flex;
 }
 
 .theme-slider__panel {
@@ -527,6 +565,12 @@ $fader-jaw: 6px;
   span:nth-child(1) { left: 0; }
   span:nth-child(2) { left: 50%; }
   span:nth-child(3) { left: 100%; }
+}
+
+// The column narrows before the row does, so the flags come down with it --
+// two lines of two above the dial rather than a row scrolled off the edge.
+@media (max-width: 34rem) {
+  .flag { height: 2rem; }
 }
 
 // Re-invert so both keep their true colours once <body> flips.
@@ -719,6 +763,12 @@ body[a="purple"] {
   }
 
   .theme-slider__marks { color: $purple-base; }
+
+  // The hairline round each flag is struck in the phosphor green, which purple
+  // mode sets no filter to reach -- restated here in this palette the way the
+  // faceplate above it is. The flags themselves are left alone: a national
+  // flag is its colours, and tinting one is not a theme, it is a mistake.
+  .flag { box-shadow: 0 0 0 1px rgba(199, 125, 255, .45); }
   .theme-slider__range:focus-visible { outline-color: $purple-base; }
 
   // The rain is authored in the phosphor green, which is the one colour purple

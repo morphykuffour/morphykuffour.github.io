@@ -18,6 +18,25 @@
 
     <main class="page-content" aria-label="Content">
       <div class="w">
+        {%- comment -%}
+        The top bar: four flags and the theme dial on one line.
+
+        The three before the dial are read left to right in the order
+        _data/flags.yml writes them, and the fourth sits on the far side of it.
+        Which side a flag lands on is that file's business rather than this
+        one's, so the row is reordered by moving a block of YAML.
+
+        The flags are outside .theme-slider, not inside it, and that is not
+        tidiness: dark mode hangs `filter: invert(1)` on .theme-slider to undo
+        the whole-page invert on the dial face, and anything inside it inherits
+        that. A flag needs the invert the theme already gives every <img>, and
+        two of them would cancel to a negative.
+        {%- endcomment -%}
+        <div class="topbar">
+        {%- assign lead_flags = site.data.flags | where: "side", "lead" -%}
+        {%- for flag in lead_flags -%}
+          {%- include flag.html flag=flag -%}
+        {%- endfor -%}
         <div class="theme-slider">
           <div class="theme-slider__panel">
             <input class="theme-slider__range" type="range"
@@ -29,6 +48,11 @@
               <span>dark</span>
             </div>
           </div>
+        </div>
+        {%- assign trail_flags = site.data.flags | where: "side", "trail" -%}
+        {%- for flag in trail_flags -%}
+          {%- include flag.html flag=flag -%}
+        {%- endfor -%}
         </div>
 
         {{ content }}

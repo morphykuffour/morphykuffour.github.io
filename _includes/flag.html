@@ -1,0 +1,18 @@
+{%- comment -%}
+One flag in the top bar, from an entry of _data/flags.yml.
+
+An <img> rather than the SVG inlined, which is the whole reason this works in
+every mode: dark mode inverts the page and then re-inverts <img>, so a flag
+served this way arrives in its own colours without a rule anywhere, exactly as
+the photographs do. Inlined, the same markup would be a group of paths the page
+filter reaches straight into -- a negative of a flag, which is a different flag
+or no flag at all.
+
+No width or height attribute: each file carries its own, in its own ratio, and
+the stylesheet sets the height they are all shown at. Written here they would
+be four numbers to keep in step with one CSS rule.
+{%- endcomment -%}
+<img class="flag"
+     src="{{ site.baseurl }}/images/flags/{{ include.flag.file }}.svg"
+     alt="{{ include.flag.name }}: {{ include.flag.alt | strip_newlines | escape }}"
+     title="{{ include.flag.name }} — {{ include.flag.note | strip_newlines | escape }}">

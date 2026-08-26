@@ -1,0 +1,75 @@
+# The flags along the top of every page, beside the theme dial.
+#
+# Read left to right: the three before the dial in the order they are written
+# here, then the one after it. Order is the file's order, so moving a flag is
+# moving a block, and `side` is the only thing that decides which end of the
+# dial it lands on.
+#
+#   file   the basename in images/flags/. Each is the SVG Wikimedia serves for
+#          that national flag, which is why none of them is redrawn here: a
+#          flag is a specification, and the lion of the Sri Lankan one alone is
+#          nine paths of it.
+#   name   the country, for the alt text.
+#   alt    what the flag looks like, for anyone who is not being shown it.
+#   note   why it is that flag and not a rectangle -- shown on hover, so it is
+#          one sentence and it says something a reader could not see anyway.
+#   side   `lead` sits before the dial, `trail` after it.
+#
+# Each keeps its own official proportions rather than being squared off to a
+# common box: 10:19, 3:5, 2:3 and 1:2 are four different shapes, and a flag
+# drawn to the wrong one is the wrong flag.
+
+- file: vi
+  name: United States Virgin Islands
+  side: lead
+  alt: >-
+    A white field with a yellow eagle between a blue V and I, holding a laurel
+    sprig in one talon and three arrows in the other.
+  note: >-
+    Percival Sparks's design, flown since 17 May 1921: the arms of the United
+    States pared back to the bird, with laurel for victory in one talon and an
+    arrow for each of St Croix, St Thomas and St John in the other.
+
+- file: us
+  name: United States
+  side: lead
+  alt: >-
+    Thirteen red and white stripes with fifty white stars on a blue canton.
+  note: >-
+    Thirteen stripes for the colonies that declared and fifty stars for the
+    states that followed, flown at 10:19.
+
+- file: gb
+  name: United Kingdom
+  side: lead
+  alt: >-
+    The Union Flag: a red cross edged in white over red and white diagonals on
+    blue.
+  note: >-
+    Three crosses in one — St George's for England over St Andrew's saltire
+    for Scotland and St Patrick's for Ireland, the red diagonals set off centre
+    against the white so neither is laid over the other.
+
+- file: gh
+  name: Ghana
+  side: lead
+  alt: >-
+    Red, gold and green bands with a black five-pointed star centred on the
+    gold.
+  note: >-
+    Theodosia Okoh's design, flown from 6 March 1957: red for those who died
+    for independence, gold for the minerals under the ground, green for what
+    grows on it, and the black star — Garvey's Black Star Line — as the
+    lodestar of African freedom.
+
+- file: lk
+  name: Sri Lanka
+  side: trail
+  alt: >-
+    A gold lion holding a sword on dark red, with a bo leaf at each corner and
+    green and orange stripes alongside.
+  note: >-
+    The Lion Flag as settled in 1972: the lion holds a kastane for the island's
+    sovereignty, the four bo leaves are loving kindness, compassion, equanimity
+    and joy, and the two stripes are the Moor and Tamil communities standing
+    beside it.
