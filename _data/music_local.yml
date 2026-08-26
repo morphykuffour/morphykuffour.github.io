@@ -7,6 +7,12 @@
 # a pulled entry pointing at the same video so a track added here does not
 # appear twice once the history catches up with it.
 
+- file: 'ZIF5r4Eb9FY.jpg'
+  title: 'I Wonder - Kanye West (Extended Intro with Orchestrated Outro)'
+  channel: 'yoduhgaming'
+  channel_url: 'https://www.youtube.com/channel/UCiZ_LS2wB6rJfD5ZgKs1elA'
+  duration: '4:20'
+  link: 'https://www.youtube.com/watch?v=ZIF5r4Eb9FY'
 - file: 'fQIJb1h1RkA.jpg'
   title: 'jazz before i reach flow state'
   channel: 'Defunct'
