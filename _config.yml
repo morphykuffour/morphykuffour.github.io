@@ -6,10 +6,11 @@ title: morpheus
 # better as four plain words than as three links and a bare one.
 tagline: skull crusher, head toucher, shadow bender, mind wiper, epistemologically & metaphorically speaking of course
 author: Morpheus
-# The first keyword links out: the Bavarian Illuminati was an Enlightenment
-# society, and the description renders as raw HTML in the homepage <p>.
+# Two keywords link out and the description renders as raw HTML in the homepage
+# <p>: the Bavarian Illuminati was an Enlightenment society, and the ward of CT
+# is the Constitution, so that phrase points at the text itself.
 description: >-
-  <a href="https://en.wikipedia.org/wiki/Age_of_Enlightenment">Illuminati</a>, pragma once, nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming, the plans within plans, the ward of CT within draws
+  <a href="https://en.wikipedia.org/wiki/Age_of_Enlightenment">Illuminati</a>, pragma once, nixos, arch, security, qmk, zmk, vim, emacs, neovim, scripting, keyboards, programming, the plans within plans, <a href="https://constitutioncenter.org/media/files/constitution.pdf">the ward of CT within draws</a>
 
 # Sit under the description, one line each, on the homepage. The list above
 # says what the interests are; the first of these says what they are all in
