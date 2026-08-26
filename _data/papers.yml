@@ -1,0 +1,161 @@
+# Papers worth the afternoon they cost, driven onto /papers/.
+#
+# Every one of these is mirrored into assets/papers/ rather than linked to its
+# publisher, for the reason /art/ mirrors its pins: a link is a promise made by
+# someone else's server. A conference proceedings goes behind a paywall, an
+# author moves university and the PDF on their old faculty page stops
+# answering, an arXiv listing stays put but the version drifts under the same
+# id. The copy here is the one I actually read.
+#
+# The front page of each is rendered to images/papers/<slug>.png and shown in
+# the carousel at the top. That is deliberately the first page and not a cover
+# image of my own making: the title, the authors and the abstract in the
+# paper's own typesetting say more about what it is than any thumbnail would,
+# and it is what you would see if you opened the file.
+#
+#   file     the rendered front page, in images/papers/.
+#   pdf      the mirrored paper, in assets/papers/. Same stem as `file`.
+#   link     where the cover points -- the mirrored PDF, root-relative, since
+#            site.baseurl is empty and every permalink here is written the same
+#            way. It is spelled out rather than built in the page because the
+#            carousel include takes each slide's link ready-made.
+#   alt      what the rendered page shows, for anyone not seeing it.
+#   caption  the line under the cover in the strip: enough to know which paper
+#            is on screen, with the full record in the list underneath.
+#   title    as printed on the paper.
+#   authors  as printed, in the order printed.
+#   where    the venue and date, and the arXiv id where there is one.
+#   note     why it is here. Mine, not the abstract's.
+
+- file: 'gentry-ideal-lattices.png'
+  pdf: 'gentry-ideal-lattices.pdf'
+  link: '/assets/papers/gentry-ideal-lattices.pdf'
+  alt: 'First page of Craig Gentry, "Fully Homomorphic Encryption Using Ideal Lattices", STOC 2009.'
+  caption: 'Fully Homomorphic Encryption Using Ideal Lattices — Gentry, 2009'
+  title: 'Fully Homomorphic Encryption Using Ideal Lattices'
+  authors: 'Craig Gentry'
+  where: "STOC '09, Bethesda, Maryland, May 2009"
+  note: >-
+    The one that turned a thirty-year open question into an engineering
+    problem. The move is bootstrapping, and it is the kind of idea you can hold
+    in your head afterwards: if a scheme can evaluate its own decryption
+    circuit, it can refresh its own ciphertexts, and a scheme that can refresh
+    can compute forever. Everything since is an argument about the constant
+    factors.
+
+- file: 'gentry-lee-fhe-matrix.png'
+  pdf: 'gentry-lee-fhe-matrix.pdf'
+  link: '/assets/papers/gentry-lee-fhe-matrix.pdf'
+  alt: 'First page of Craig Gentry and Yongwoo Lee, "Fully Homomorphic Encryption for Matrix Arithmetic".'
+  caption: 'Fully Homomorphic Encryption for Matrix Arithmetic — Gentry and Lee, 2025'
+  title: 'Fully Homomorphic Encryption for Matrix Arithmetic'
+  authors: 'Craig Gentry and Yongwoo Lee'
+  where: 'Preprint, October 2025'
+  note: >-
+    Sixteen years on from the paper above, the same author on the constant
+    factors. Encrypted matrix multiplication comes down to four multiplications
+    of ciphertext coefficients, with none of the slot-to-coefficient conversion
+    and ring switching that made the operation expensive — which matters
+    because matrix arithmetic is what machine learning is, and encrypted
+    inference is bounded by exactly this.
+
+- file: 'sun-zkllm.png'
+  pdf: 'sun-zkllm.pdf'
+  link: '/assets/papers/sun-zkllm.pdf'
+  alt: 'First page of Sun, Li and Zhang, "zkLLM: Zero Knowledge Proofs for Large Language Models", CCS 2024.'
+  caption: 'zkLLM: Zero Knowledge Proofs for Large Language Models — Sun, Li and Zhang, 2024'
+  title: 'zkLLM: Zero Knowledge Proofs for Large Language Models'
+  authors: 'Haochen Sun, Jason Li and Hongyang Zhang'
+  where: "CCS '24, Salt Lake City, October 2024; arXiv:2404.16109v1"
+  note: >-
+    A proof that a given output came from a given model, without the weights
+    ever leaving the prover. The interesting half is not the cryptography but
+    what it is aimed at: the parameters are the intellectual property and the
+    output is the thing being regulated, and those two facts usually point in
+    opposite directions. This is a construction where they do not. The hard
+    part is attention, and tlookup and zkAttn are where the paper earns its
+    keep.
+
+- file: 'pruning-bias-mitigation-llms.png'
+  pdf: 'pruning-bias-mitigation-llms.pdf'
+  link: '/assets/papers/pruning-bias-mitigation-llms.pdf'
+  alt: 'First page of Rajput and Madisetti, "A Pruning Framework for Bias Mitigation in Large Language Models".'
+  caption: 'A Pruning Framework for Bias Mitigation in Large Language Models — Rajput and Madisetti, 2026'
+  title: 'A Pruning Framework for Bias Mitigation in Large Language Models'
+  authors: 'Amrita Singh Rajput and Vijay K. Madisetti'
+  where: 'Accepted, IEEE Open Journal of the Computer Society; doi:10.1109/OJCS.2026.3701986'
+  note: >-
+    Pruning is a compression technique here turned into a scalpel: rank whole
+    transformer blocks by a score that mixes utility, redundancy and bias
+    attribution, then cut the ones that are all three at once. The claim worth
+    checking is the localisation one — that bias sits in identifiable blocks
+    rather than smeared across the network — and the numbers they report for it
+    are honest about the trade, 0.467 absolute TVD off Qwen2.5-0.5B at no
+    perplexity cost, 0.250 off TinyLlama-1.1B at twelve percent.
+
+- file: 'kimi-k3-open-frontier-intelligence.png'
+  pdf: 'kimi-k3-open-frontier-intelligence.pdf'
+  link: '/assets/papers/kimi-k3-open-frontier-intelligence.pdf'
+  alt: 'First page of the Kimi K3 technical report, "Kimi K3: Open Frontier Intelligence", with the main results chart.'
+  caption: 'Kimi K3: Open Frontier Intelligence — Kimi Team, 2026'
+  title: 'Kimi K3: Open Frontier Intelligence'
+  authors: 'Kimi Team'
+  where: 'Technical report, August 2026; arXiv:2607.24653v2'
+  note: >-
+    Forty-seven pages of a frontier lab showing its working, which is the rare
+    part — a 2.8T mixture of experts with 104B active, sixteen of 896 routed
+    experts per token, a million tokens of context, and the weights released.
+    The half worth the afternoon is not the benchmark table on page one but the
+    infrastructure chapters behind it: the algorithm-and-system co-design for
+    Kimi Delta Attention, expert-parallel training balanced by construction,
+    and agentic RL held together by persistent rollout and sandbox state. It is
+    also candid about trailing the closed models it lists itself against.
+
+- file: 'shaik-lte-attacks.png'
+  pdf: 'shaik-lte-attacks.pdf'
+  link: '/assets/papers/shaik-lte-attacks.pdf'
+  alt: 'First page of Shaik and others, "Practical Attacks Against Privacy and Availability in 4G/LTE Mobile Communication Systems", NDSS 2016.'
+  caption: 'Practical Attacks Against Privacy and Availability in 4G/LTE — Shaik and others, 2016'
+  title: 'Practical Attacks Against Privacy and Availability in 4G/LTE Mobile Communication Systems'
+  authors: 'Altaf Shaik, Ravishankar Borgaonkar, N. Asokan, Valtteri Niemi and Jean-Pierre Seifert'
+  where: "NDSS '16, San Diego, February 2016; arXiv:1510.07563v3"
+  note: >-
+    The paper under the IMSI-catcher detectors people carry now, EFF's
+    Rayhunter among them. It is a careful read of the LTE access network
+    specification followed by a USRP and a bill of materials, and the finding
+    is that a protocol designed to fix 2G's missing mutual authentication still
+    leaks location to a passive listener and can be made to drop a phone back
+    to 2G on command. Downgrade is the attack that never stops working.
+
+- file: 'garfinkel-vmm-transparency.png'
+  pdf: 'garfinkel-vmm-transparency.pdf'
+  link: '/assets/papers/garfinkel-vmm-transparency.pdf'
+  alt: 'First page of Garfinkel and others, "Compatibility is Not Transparency: VMM Detection Myths and Realities", HotOS XI 2007.'
+  caption: 'Compatibility is Not Transparency — Garfinkel and others, 2007'
+  title: 'Compatibility is Not Transparency: VMM Detection Myths and Realities'
+  authors: 'Tal Garfinkel, Keith Adams, Andrew Warfield and Jason Franklin'
+  where: 'HotOS XI, 2007'
+  note: >-
+    Six pages that end an argument. A hypervisor can run the guest's software
+    correctly and still be nothing like the hardware it claims to be, because
+    running it correctly is a statement about semantics and detection is a
+    question about timing, cache, errata and every other place the abstraction
+    is not the machine. The conclusion — that a transparent VMM is
+    infeasible, not merely unbuilt — is the sort a paper is braver for
+    stating plainly.
+
+- file: 'ning-lee-stat-arb-rl.png'
+  pdf: 'ning-lee-stat-arb-rl.pdf'
+  link: '/assets/papers/ning-lee-stat-arb-rl.pdf'
+  alt: 'First page of Boming Ning and Kiseop Lee, "Advanced Statistical Arbitrage with Reinforcement Learning".'
+  caption: 'Advanced Statistical Arbitrage with Reinforcement Learning — Ning and Lee, 2024'
+  title: 'Advanced Statistical Arbitrage with Reinforcement Learning'
+  authors: 'Boming Ning and Kiseop Lee'
+  where: 'Purdue University, March 2024; arXiv:2403.12180v1'
+  note: >-
+    Pairs trading without the Ornstein–Uhlenbeck assumption. Instead of fitting
+    a spread to a process the market has not agreed to follow, they define an
+    empirical mean reversion time and search for the basket that minimises it,
+    then hand the entry and exit to a policy whose state is the recent shape of
+    the move rather than the distance from a long-run mean. Worth reading for
+    the reframing even if you never trade it.

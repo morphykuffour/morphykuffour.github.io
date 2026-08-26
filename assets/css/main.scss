@@ -728,6 +728,18 @@ body[a="purple"] {
   .carousel-slide img { box-shadow: 0 0 0 1px rgba(199, 125, 255, .3); }
   .carousel-slide figcaption, .art-note, .unc-note { color: $purple-dim; }
 
+  // The exception on /papers/. A rendered front page is black type on a white
+  // sheet, not a photograph, so it takes the sheets' treatment two rules down
+  // rather than the pins' -- knocked back a little and framed to match, which
+  // settles it into the page without inverting the typesetting into a
+  // negative of itself.
+  .whitepaper-shelf .carousel-slide img {
+    box-shadow: none;
+    border: 1px solid rgba(199, 125, 255, .35);
+    opacity: .92;
+  }
+  .whitepaper-credit, .whitepaper-none { color: $purple-dim; }
+
   // The sheets are ink on white, so on the purple page they arrive as slabs.
   // Same treatment as the thesis figures: a light knock-back and a matching
   // frame settle them into the page without inverting handwriting into a
@@ -1297,6 +1309,53 @@ body[a="purple"] {
 // The standing line at the foot of the page: where the videos are served from
 // and what a blank frame means.
 .speech-note {
+  font-size: .82rem;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, .6);
+}
+
+// ---------------------------------------------------------------------------
+// White papers
+// ---------------------------------------------------------------------------
+// The list under the carousel on /papers/. The strip above it already steps
+// out to 56rem the way /art/ and /music/ do -- these stay in the theme's
+// column, for the reason the playlist headings do: the notes are prose, and
+// prose set to 56rem is a line too long to read.
+//
+// Authored in light-mode colours only. Dark mode is the theme's whole-page
+// invert and there is nothing here but text, so it comes out right on its own;
+// purple is the third palette and takes the two knocked-back greys below in
+// its own block.
+.whitepaper {
+  margin: 2.2rem 0 2.6rem;
+}
+
+// Tight to the credit under it, loose from the entry above: title, credit and
+// note are one block, and the space between blocks has to beat the space
+// inside. Sized down from the theme's h2 because six of these down a page are
+// a list of papers, not six sections.
+.whitepaper-title {
+  margin: 0 0 .2rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.whitepaper-credit {
+  margin: 0;
+  font-size: .8rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, .6);
+}
+
+.whitepaper-note {
+  margin: .5rem 0 0;
+  max-width: 40rem;
+  font-size: .86rem;
+  line-height: 1.6;
+}
+
+// The standing line when the data file is empty.
+.whitepaper-none {
   font-size: .82rem;
   line-height: 1.6;
   color: rgba(0, 0, 0, .6);
