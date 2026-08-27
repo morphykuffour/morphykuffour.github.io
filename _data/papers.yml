@@ -268,3 +268,21 @@
     strangely is the tone: section 11 works the attacker's odds as a
     Poisson race and concludes with a C snippet, as if the political half of
     the thing were nobody's business. Read it for how little is in it.
+
+- file: 'borde-blockchain-trees.png'
+  pdf: 'borde-blockchain-trees.pdf'
+  link: '/assets/papers/borde-blockchain-trees.pdf'
+  alt: 'Title page of Haitz Sáez de Ocáriz Borde, "An Overview of Trees in Blockchain Technology: Merkle Trees and Merkle Patricia Tries", February 2022.'
+  caption: 'An Overview of Trees in Blockchain Technology — Sáez de Ocáriz Borde, 2022'
+  title: 'An Overview of Trees in Blockchain Technology: Merkle Trees and Merkle Patricia Tries'
+  authors: 'Haitz Sáez de Ocáriz Borde'
+  where: 'Department of Engineering, University of Cambridge, 21 February 2022'
+  note: >-
+    The data structure the paper above waves at, drawn out properly. Bitcoin
+    needs one tree and gets a Merkle tree: hash the transactions in pairs up to
+    a root, and membership costs a logarithmic number of siblings rather than
+    the block. Ethereum needs the tree to hold mutable state as well, and the
+    Merkle Patricia trie is what falls out of wanting a key-value store whose
+    root is a commitment and whose common prefixes are not paid for twice.
+    Short, expository, and the right thing to read before someone tells you a
+    light client is trustless.
