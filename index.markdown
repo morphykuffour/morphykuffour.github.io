@@ -12,11 +12,13 @@ moving at once, and three copies of it a third of a pass apart is that idea
 run again at the level of the whole frame -- the same body in three places,
 which is what the shot is about.
 
-Unfloated, unlike the five stacks elsewhere on the site. Those sit beside a
-list and push it aside; this one has nothing beside it to push, so it takes
-the middle of its own line and the width the column allows. That is a class on
-the section rather than a parameter to the include, because it is a fact about
-where this stack sits, not about how a stack is built.
+Unfloated, unlike the two stacks that stand beside lists a page apart. Those
+push the lines next to them aside; this one has nothing beside it to push, so
+it takes the middle of its own line and the width the column allows. That is a
+class on the section rather than a parameter to the include, because it is a
+fact about where this stack sits, not about how a stack is built -- and it is
+its own class rather than the one the pair above the rain uses, because that
+pair is a row of two and this is a clip alone on a line.
 {%- endcomment -%}
 <section class="opening">
   {%- include cascade.html
@@ -72,9 +74,49 @@ three more tiles on it rather than as something dropped over the pictures.
 </figure>
 
 {%- comment -%}
-The rain that closes the page, under the board. Pure CSS: there is no script
-behind it and no <canvas> -- an integer is animated in the stylesheet, read back
-through counters, and printed as glyphs, after the technique in
+The pair between the board and the rain: two more clips in the same three-copy
+stack, and the last footage on the page.
+
+Side by side rather than one under the other, which is the whole of what makes
+them a pair instead of two more things in the column. The two are cut opposite
+ways -- a tall frame with a line of skydivers strung head to foot down it, a
+squat one with a herd running across -- so in a column they would read as two
+unrelated boxes with a gap between them. On one line they are a portrait and a
+landscape of the same idea: bodies going somewhere fast, once down the frame
+and once across it.
+
+Here rather than anywhere else because of what is under them. The band below is
+the page's one unphotographed thing, twenty-six columns of dead alphabets
+falling; above it the last two clips are men falling through air and horses
+walking into fog until the fog has them. The rain takes the falling over when
+these have finished with it.
+
+The widths are authored here rather than in main.scss, the way the clips over
+the board are placed on it. They are also not a matter of taste: a 9:16 frame
+at 27% of the column and a 5:4 one at 60% come out the same height to within a
+rounding error -- 0.27 x 854/480 and 0.60 x 512/640 are both 0.48 -- so the two
+sit on one line rather than one of them hanging below the other. Being
+percentages, that holds at every width the row survives, and a third clip of
+some third shape is another number here rather than another rule down there.
+{%- endcomment -%}
+<section class="interlude">
+  <div class="interlude-clip" style="--clip-width: 27%">
+    {%- include cascade.html
+          file="divers" width=480 height=854
+          label="A line of ten skydivers in freefall over farmland, strung head to foot down the frame; the shot cycles through a burnt orange, black and white, and a negative in which the divers come up gold against an orange ground." -%}
+  </div>
+  <div class="interlude-clip" style="--clip-width: 60%">
+    {%- include cascade.html
+          file="horses" width=640 height=512
+          label="Grainy black and white footage of a herd of dark horses coming across a field and walking on into fog, until the fog has all but the nearest of them." -%}
+  </div>
+</section>
+
+{%- comment -%}
+The rain that closes the page, under the board and the pair below it. Pure CSS:
+there is no script behind it and no <canvas> -- an integer is animated in the
+stylesheet, read back through counters, and printed as glyphs, after the
+technique in
 https://dev.to/tetragius/pure-css-matrix-code-effect-5b6k. What falls is older
 than the film's katakana; the alphabets are in main.scss, where a counter style
 is just a list of symbols.
@@ -193,7 +235,7 @@ drawing in it.
 The shoal that closes the page: three stop motions -- a manta rising, a humpback
 turning, a whale shark feeding -- crossed over the Windows XP hill. Ten stills
 off a clip each, held about a quarter second and replaced. Stills rather than
-the footage they were cut from, which is the opposite of the call the five
+the footage they were cut from, which is the opposite of the call the seven
 cascades upstairs make; the reasoning is in _includes/stopmotion.html, next to
 the mechanism it explains.
 
@@ -291,7 +333,7 @@ braille dots. Fifty-one glyphs to a line and sixteen lines, each glyph a 2x4
 grid of dots, which is 102 by 64 pixels' worth of picture carried as text.
 
 Text rather than a picture file, and that is the whole point of it being here.
-Everything around it is images and video -- a collage, two rolls, five
+Everything around it is images and video -- a collage, two rolls, seven
 cascades, six reels, and the pair below -- and this is the one thing in the
 list that is none of those: an image made of characters, in the same monospace
 the theme sets for the body, that survives being copied out of the page and

@@ -1812,6 +1812,53 @@ body[a="dark"] .cascade-layer { filter: invert(1); }
   .opening .cascade { width: 100%; margin: .4rem auto 0; }
 }
 
+// The pair above the rain. Two stacks on one line, which is the one thing that
+// separates this from the opening: that one has the line to itself and takes
+// the middle of it, and these two have to read as a pair rather than as two
+// clips that happen to follow each other.
+//
+// A flex row rather than two floats, because a float would let the second clip
+// wrap up beside the first and then let the rain ride up alongside whichever
+// of them is shorter. What is wanted here is a line that holds two boxes and
+// ends, which is what a row is.
+//
+// Neither width is in this file. Each box carries its own as a custom property
+// set in index.markdown, the way the clips over the collage are placed on it:
+// the numbers are a fact about these two clips' shapes -- they are what makes
+// a portrait and a landscape come out the same height -- rather than about how
+// a pair is laid out, and the reasoning is written where they are.
+.interlude {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 1.6rem;
+  margin: 2.4rem 0;
+}
+
+.interlude-clip {
+  width: var(--clip-width);
+}
+
+// Two classes deep, for the same reason the board's clips are: the plain
+// `.cascade` rules float a stack and cap its width, and the narrow-screen one
+// re-centres it narrower still. Neither is right for a box whose width the row
+// above has already settled.
+.interlude-clip .cascade {
+  float: none;
+  width: 100%;
+  margin: 0;
+}
+
+// A phone cannot carry two of these across it: at 27% of a narrow column the
+// portrait is a thumbnail of a thumbnail. So the row becomes a column and each
+// clip takes the whole of it -- the same call the opening makes at this width,
+// and the reason the widths above are overridden here rather than written as
+// clamps up there.
+@media (max-width: 34rem) {
+  .interlude { display: block; }
+  .interlude-clip { width: 100%; margin: 1.4rem auto; }
+}
+
 // Below this the column is too narrow to give half of itself away -- the menu
 // entries would wrap a word at a time down the left. So the float is dropped
 // and the stack takes the middle of its own line, which on both counts is
@@ -1834,7 +1881,7 @@ body[a="dark"] .cascade-layer { filter: invert(1); }
 // page's rather than that article's.
 //
 // Worth doing in counters at all because the alternative is a <canvas> and a
-// rAF loop: a second animation clock on a page that already has five video
+// rAF loop: a second animation clock on a page that already has seven video
 // decoders on it, and one that keeps running when nobody is looking at the tab.
 // This one is style, so the browser drops it on its own terms and it holds
 // still for a reader who has asked for less motion, with no script to make

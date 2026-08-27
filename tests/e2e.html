@@ -822,18 +822,20 @@ function loadNarrow(url, width) {
           menuHrefs.join(' '));
 
     // --- the cascades --------------------------------------------------------
-    // Three copies of one clip stepped down and right of each other. One is
-    // floated against the homepage menu and three are laid over the board at
-    // the foot of that page; the fifth went to the përi page with the elsewhere
-    // list and is driven further down. What is worth asserting is what only a
-    // laid-out page can answer: that each stack is really offset rather than
-    // stacked flat, that it takes the shape of its own clip, that a floated one
-    // really does move the lines beside it, and that the three on the board land
-    // where the markup put them without shifting the picture underneath.
+    // Three copies of one clip stepped down and right of each other. Seven are
+    // on the homepage -- one floated against the menu, one opening the page,
+    // three laid over the board at the foot of it, and a pair on one line
+    // between the board and the rain; the eighth went to the përi page with the
+    // elsewhere list and is driven further down. What is worth asserting is
+    // what only a laid-out page can answer: that each stack is really offset
+    // rather than stacked flat, that it takes the shape of its own clip, that a
+    // floated one really does move the lines beside it, and that the three on
+    // the board land where the markup put them without shifting the picture
+    // underneath.
     localStorage.setItem('appearance', 'light');
     d = await load('/');
     const stacks = Array.from(d.querySelectorAll('.cascade'));
-    check('home: the page carries all four cascades', stacks.length === 4, stacks.length + ' stacks');
+    check('home: the page carries all seven cascades', stacks.length === 7, stacks.length + ' stacks');
 
     // The board the last three are hung over, and the picture inside it. An
     // absolutely positioned box contributes no height, so the figure should
@@ -845,15 +847,21 @@ function loadNarrow(url, width) {
           Math.abs(board.height - boardImg.height) < 1,
           'figure ' + Math.round(board.height) + ' vs img ' + Math.round(boardImg.height));
 
-    // Each stack, the clip it plays, and its file's aspect ratio. A floated one
-    // carries the first line of the list it is floated against; one on the
-    // board carries nothing further -- it is checked against the board itself.
+    // Each stack, the clip it plays, and its file's aspect ratio, in source
+    // order. A floated one carries the first line of the list it is floated
+    // against; one on the board carries `over` and is checked against the board
+    // itself; the rest -- the opening and the pair above the rain -- have
+    // nothing beside them and nothing under them, so the shared cases below are
+    // all there is to say about them here.
     const CASCADES = [
       { name: 'crown',  ratio: 480 / 854,
         neighbour: () => d.querySelector('header ~ ul > li > a') },
+      { name: 'grievous', ratio: 640 / 360 },
       { name: 'riders',  ratio: 640 / 360, over: true },
       { name: 'yinyang', ratio: 480 / 854, over: true },
       { name: 'frogs',   ratio: 480 / 480, over: true },
+      { name: 'divers',  ratio: 480 / 854 },
+      { name: 'horses',  ratio: 640 / 512 },
     ];
 
     for (let n = 0; n < CASCADES.length; n++) {
@@ -899,7 +907,7 @@ function loadNarrow(url, width) {
         check(tag + 'the stack sits beside its list rather than above it',
               line.right <= cbox.left + 1 && line.top < cbox.bottom && line.bottom > cbox.top,
               'line.right=' + Math.round(line.right) + ' stack.left=' + Math.round(cbox.left));
-      } else {
+      } else if (spec.over) {
         // On the board rather than beside anything. Nothing in the markup
         // states where in pixels: the wrapper carries three percentages and the
         // board is meant to be what they are percentages of, so reading the
@@ -942,7 +950,28 @@ function loadNarrow(url, width) {
             layers.map(v => v.poster.split('/').pop()).join(' '));
     }
 
-    // The fifth stack is the përi page's, floated against the elsewhere list at
+    // The pair above the rain. Its claim is arithmetic the markup makes and
+    // only a laid-out page can settle: two clips of opposite shapes, handed
+    // widths picked so that a 9:16 frame and a 5:4 one come out the same
+    // height, sitting on one line between the board and the band. If either
+    // number drifts, one of them hangs below the other and the row stops being
+    // a pair -- which is the whole reason those two numbers are what they are.
+    const pair = Array.from(d.querySelectorAll('.interlude .cascade'))
+      .map(el => el.getBoundingClientRect());
+    check('home/interlude: the two clips sit on one line',
+          pair.length === 2 && pair[0].right <= pair[1].left + 1 &&
+          Math.abs(pair[0].top - pair[1].top) < 1,
+          pair.map(b => Math.round(b.left) + ',' + Math.round(b.top)).join(' | '));
+    check('home/interlude: the two clips come out the same height',
+          pair.length === 2 && Math.abs(pair[0].height - pair[1].height) < 2,
+          pair.map(b => Math.round(b.height)).join(' vs '));
+    const rainTop = d.querySelector('.matrix-rain').getBoundingClientRect().top;
+    check('home/interlude: the row sits between the board and the rain',
+          pair.length === 2 && pair[0].top > board.bottom && pair[0].bottom < rainTop + 1,
+          'row ' + Math.round(pair[0].top) + '-' + Math.round(pair[0].bottom) +
+          ', board ends ' + Math.round(board.bottom) + ', rain @' + Math.round(rainTop));
+
+    // The eighth stack is the përi page's, floated against the elsewhere list at
     // the foot of it. It is authored immediately above that list because a float
     // only moves what follows it in the source, so what says it landed right is
     // that it starts level with the first link rather than below the last one.
@@ -977,7 +1006,7 @@ function loadNarrow(url, width) {
     let filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
     check('home/dark: every cascade is re-inverted back to true tone',
-          filters.length === 12 && filters.every(f => f === 'invert(1)') &&
+          filters.length === 21 && filters.every(f => f === 'invert(1)') &&
           d.defaultView.getComputedStyle(d.body).filter === 'invert(1)',
           filters.join(' '));
     localStorage.setItem('appearance', 'purple');
@@ -985,7 +1014,7 @@ function loadNarrow(url, width) {
     filters = Array.from(d.querySelectorAll('.cascade-layer'))
       .map(v => d.defaultView.getComputedStyle(v).filter);
     check('home/purple: every cascade is left alone',
-          filters.length === 12 && filters.every(f => f === 'none') &&
+          filters.length === 21 && filters.every(f => f === 'none') &&
           d.defaultView.getComputedStyle(d.body).filter === 'none',
           filters.join(' '));
     localStorage.setItem('appearance', 'light');
@@ -996,7 +1025,12 @@ function loadNarrow(url, width) {
     // the përi page's stack is read on the same pass.
     d = await loadNarrow('/', 420);
     const narrowStacks = Array.from(d.querySelectorAll('.cascade'));
-    const narrowFloated = narrowStacks.filter(el => !el.closest('.collage-clip'));
+    // Only the one against the menu is floated at any width. The opening, the
+    // three on the board and the pair above the rain were never floated, so
+    // they are not what this rule is about and are read on their own passes.
+    const narrowFloated = narrowStacks.filter(
+      el => !el.closest('.collage-clip') && !el.closest('.opening') &&
+            !el.closest('.interlude'));
     const centred = (doc, el) => {
       const c = doc.defaultView.getComputedStyle(el);
       return c.float === 'none' && c.marginLeft === c.marginRight &&
@@ -1028,6 +1062,15 @@ function loadNarrow(url, width) {
             const b = el.getBoundingClientRect();
             return ((b.left - narrowBoard.left) / narrowBoard.width * 100).toFixed(1) + '%';
           }).join(' '));
+    // The pair above the rain at the same width. Two of these across a phone
+    // are thumbnails, so the row becomes a column; what says it did is that the
+    // second no longer shares a line with the first.
+    const narrowPair = Array.from(d.querySelectorAll('.interlude .cascade'))
+      .map(el => el.getBoundingClientRect());
+    check('home/narrow: the pair above the rain stacks',
+          narrowPair.length === 2 && narrowPair[1].top >= narrowPair[0].bottom - 1,
+          narrowPair.map(b => Math.round(b.top) + '-' + Math.round(b.bottom)).join(' | '));
+
     check('home/narrow: the page does not scroll sideways',
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
