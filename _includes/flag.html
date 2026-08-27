@@ -11,8 +11,56 @@ or no flag at all.
 No width or height attribute: each file carries its own, in its own ratio, and
 the stylesheet sets the height they are all shown at. Written here they would
 be four numbers to keep in step with one CSS rule.
+
+An entry may also ask for `storm`, which lays the thunder stop motion over the
+flag: see below, and see scripts/thunder-frames.sh for where its two frames
+come from.
 {%- endcomment -%}
+{%- capture flag_img -%}
 <img class="flag"
      src="{{ site.baseurl }}/images/flags/{{ include.flag.file }}.svg"
      alt="{{ include.flag.name }}: {{ include.flag.alt | strip_newlines | escape }}"
      title="{{ include.flag.name }} — {{ include.flag.note | strip_newlines | escape }}">
+{%- endcapture -%}
+{%- unless include.flag.storm -%}{{ flag_img }}{%- else -%}
+{%- comment -%}
+The storm. Two photographs of lightning, flickered by the same stop motion
+include the crown and the shoal use, laid over the flag at the size the flag is
+drawn and lit only in bursts -- so the bar holds a flag for four and a half
+seconds out of five, and a flag crossed by bolts for the rest.
+
+The reel is left with no blend mode and no colour of its own: it is composited
+plainly, at an opacity the stylesheet pulses. That single choice is what makes
+this correct in all three modes without a rule for any of them. Compositing at
+a fraction commutes with inverting -- a sky at seven tenths over an inverted
+flag, inverted again, is the same picture as the sky over the flag -- so dark
+mode, which flips the page and re-inverts every <img> in it, arrives at exactly
+what light mode shows, and purple, which flips nothing, was never in doubt.
+
+Hidden from assistive technology rather than labelled. The flag's own alt text
+already says there is an eagle here, which is the thing on the bar; the weather
+over it is decoration, and a second image announced beside every mention of the
+territory is an interruption for something nobody is being told anything by.
+That is the same call the roll makes for its dozen pictures.
+
+Two <div>s and not two <span>s, because the include emits a <div> and a <span>
+may not hold one. The row is flex either way, which is the only thing the shape
+of these elements is asked to survive.
+{%- endcomment -%}
+<div class="flag-storm">
+  {{ flag_img }}
+  <div class="flag-storm-sky" aria-hidden="true">
+    {%- comment -%}
+    The pace has to be the length of the @keyframes flag-storm cycle in
+    main.scss, and is the one number stated in both places. The reel steps
+    between its two photographs at the halfway mark of whatever it is given, and
+    the strike is written to fall on the far side of that step from the ticks --
+    so the two out of step is not a slower flicker, it is the same bolts twice.
+    {%- endcomment -%}
+    {%- include stopmotion.html
+          dir="thunder" count=2
+          width=180 height=120 pace="3.2s"
+          label="Forked lightning crossing a night sky." -%}
+  </div>
+</div>
+{%- endunless -%}

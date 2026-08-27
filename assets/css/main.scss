@@ -487,6 +487,113 @@ $flag-h: 2.5rem;
   box-shadow: 0 0 0 1px rgba(0, 255, 65, .45);
 }
 
+// ---------------------------------------------------------------------------
+// The storm over the eagle
+// ---------------------------------------------------------------------------
+// Two photographs of lightning, flickered by the stop motion include and laid
+// over the Virgin Islands flag at the size that flag is drawn. The frames come
+// off the GIF in scripts/thunder-frames.sh; which flag stands in them is set in
+// _data/flags.yml; and everything about *when* is here, because the whole point
+// of cutting the GIF up was to take the timing out of the file and put it where
+// it could be written.
+//
+// The wrapper is the flex item the bare <img> used to be, and has to say so:
+// `flex: none` and the flag's own height, or the row treats it as growable
+// content and the storm arrives with the flag stretched under it.
+
+.flag-storm {
+  flex: none;
+  position: relative;
+  display: flex;
+  height: $flag-h;
+}
+
+// The sky. Absolutely placed over the flag and out of the way of the pointer,
+// so the flag's own title tooltip -- who designed it, and when it was first
+// flown -- still answers on hover, which it would not through a box laid on
+// top of it.
+//
+// No blend mode and no filter: it is composited plainly at an opacity this
+// animation pulses, and that is what makes it right in all three modes at once.
+// Compositing at a fraction commutes with inverting, so dark mode -- which
+// flips the page and re-inverts every <img> in it, the flag and these frames
+// alike -- lands on exactly the picture light mode shows. Given `screen` here
+// instead, the same markup would need the opposite operator in dark mode and a
+// third answer for purple.
+.flag-storm-sky {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  animation: flag-storm 3.2s linear infinite;
+}
+
+// The include sizes its window from the frames' own ratio, which is the flag's;
+// here it is being asked to fill a box that is already that shape, so it is
+// given the box instead. Both dimensions definite, which is what puts the
+// aspect-ratio it carries out of the running.
+.flag-storm-sky .stop-motion-window {
+  width: 100%;
+  height: 100%;
+}
+
+// Two seconds of nothing and then a strike, in a 3.2s cycle the reel below
+// shares. The percentages are that cycle in thirty-seconds of a second: 40% is
+// 1.28s, 56% is 1.79s.
+//
+// This was five seconds and a fifth as bright, and it was a storm nobody caught
+// -- half a second of weather in every five, over a flag sixty pixels wide, is
+// something you have to already know about to ever see. So the quiet was cut to
+// about two seconds and the strike given most of a second, which is the range
+// where it is still weather rather than a strobe: something you notice from the
+// corner of the eye while reading, and can then look up at and watch happen.
+//
+// The shape of it is a stutter and then the bolt -- two short ticks a
+// sixteenth of a second apart, a beat of dark, then the full strike with a tail
+// on it. The tail is the only wide edge in here. Every rise is under fifty
+// milliseconds, which at this length is a cut with three frames of a sixty
+// hertz screen in it: lightning has no fade-in, and one given a comfortable
+// ramp stops being a strike and becomes a lamp being turned up. Timed `linear`
+// for the same reason -- the default ease would put its slow part at exactly
+// the two ends where the sharpness is.
+//
+// The strike is nearly opaque. At seven tenths the bolts sat behind a flag
+// rather than across it, and the thin forks -- which are most of what makes a
+// photograph of lightning read as lightning -- were under a pixel and half
+// faded besides. At nine the sky is the sky for a moment and the eagle is in
+// it, which is the picture; the eagle is not lost, because the frames were
+// crushed to black in scripts/thunder-frames.sh and a nearly black sky is one
+// the flag reads straight through.
+//
+// Where the reel's two frames change hands is the other half of the timing.
+// steps(2) over the same 3.2s swaps them at the midpoint -- 50%, which is why
+// the ticks are written before it and the strike after, with the dark beat laid
+// over the join. So the ticks are one photograph and the strike is the other,
+// and the swap itself is never seen: the bolts are simply not the same bolts
+// the second time, which is what lightning does and what a two frame GIF
+// flickering at ten a second cannot.
+@keyframes flag-storm {
+  0%,   38%   { opacity: 0; }
+  40%         { opacity: .78; }
+  42%         { opacity: .06; }
+  44%         { opacity: .58; }
+  46%, 54%    { opacity: 0; }
+  56%         { opacity: .9; }
+  64%         { opacity: .32; }
+  70%         { opacity: .08; }
+  74%, 100%   { opacity: 0; }
+}
+
+// Asked for less motion, the weather clears. The shoal and the crown answer
+// that setting by holding a frame and letting the reader scroll the rest by
+// hand, because there the sequence *is* the picture; here the picture is a
+// flag, and the storm is something that happens to it. Frozen on a frame it
+// would be a bolt parked over the eagle for good, and the scroll handle that
+// comes with the include's own reduced-motion rule would be a scrollbar in a
+// sixty pixel box. So it is taken off the flag entirely, which leaves the flag.
+@media (prefers-reduced-motion: reduce) {
+  .flag-storm-sky { display: none; }
+}
+
 .theme-slider {
   flex: none;
   display: flex;
@@ -570,7 +677,10 @@ $flag-h: 2.5rem;
 // The column narrows before the row does, so the flags come down with it --
 // two lines of two above the dial rather than a row scrolled off the edge.
 @media (max-width: 34rem) {
-  .flag { height: 2rem; }
+  // The wrapper as well as the flag: it is the box the storm is placed against,
+  // so a height left behind here is a sky hanging off the bottom of a flag that
+  // has come down with the column.
+  .flag, .flag-storm { height: 2rem; }
 }
 
 // Re-invert so both keep their true colours once <body> flips.

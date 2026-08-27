@@ -14,6 +14,11 @@
 #   note   why it is that flag and not a rectangle -- shown on hover, so it is
 #          one sentence and it says something a reader could not see anyway.
 #   side   `lead` sits before the dial, `trail` after it.
+#   storm  optional: lay the thunder stop motion over this flag. On the
+#          Virgin Islands one alone, and that is the reason it is a field
+#          here rather than a class written into the layout -- which flag
+#          stands in weather is a fact about the flag, and this file is
+#          where the facts about them are kept. See _includes/flag.html.
 #
 # Each keeps its own official proportions rather than being squared off to a
 # common box: 10:19, 3:5, 2:3 and 1:2 are four different shapes, and a flag
@@ -29,6 +34,11 @@
     Percival Sparks's design, flown since 17 May 1921: the arms of the United
     States pared back to the bird, with laurel for victory in one talon and an
     arrow for each of St Croix, St Thomas and St John in the other.
+  # The three arrows are lightning everywhere else the eagle is drawn holding
+  # them, and this is the one flag on the bar whose ground is bare white -- so
+  # it is the one with room for weather. Every five seconds a storm crosses it
+  # and goes.
+  storm: true
 
 - file: us
   name: United States
