@@ -53,6 +53,27 @@
         {%- for flag in trail_flags -%}
           {%- include flag.html flag=flag -%}
         {%- endfor -%}
+        {%- comment -%}
+        The cat that closes the bar, and the reason the storm at the other end
+        of it is on the flag it is: the eagle stands in weather, and this is
+        what the weather is called.
+
+        Not a flag and not in _data/flags.yml, which is a file about flags --
+        it has an `alt` for what a flag looks like and a `note` for who designed
+        it and when it was first flown, and neither has an answer here. So it is
+        authored in the layout, at the end of the row, where a thing that is one
+        of a kind belongs.
+
+        An <img> like the flags beside it, and for the same reason: dark mode
+        flips the page and re-inverts <img>, so the disc arrives red in every
+        mode without a rule anywhere. Its ground is transparent rather than
+        white, which is what lets it sit on three different page colours -- see
+        scripts/thundercats-mark.sh, which trims it to the disc.
+        {%- endcomment -%}
+        <img class="topbar-mark"
+             src="{{ site.baseurl }}/images/thundercats/emblem.png"
+             alt="The ThunderCats emblem: a cat's head in profile, cut out of a red disc."
+             title="ThunderCats — Thunder, thunder, thunder, ThunderCats, ho!">
         </div>
 
         {{ content }}

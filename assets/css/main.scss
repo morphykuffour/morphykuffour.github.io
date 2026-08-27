@@ -464,13 +464,20 @@ $fader-jaw: 6px;
 // 10:19, 3:5, 2:3 and 1:2 are four different rectangles, and squaring them to
 // a common box would draw four flags none of which is the flag it is.
 //
-// Which makes the height the thing that decides whether the row is one line:
-// the five flags come to 8.57 times their height across, and with the
-// faceplate -- 236px, not the 212 the dial is, since padding and border sit
-// outside that -- and five gaps beside them, the column leaves 364px to divide
-// by 8.57. So 2.5rem lands the row about 20px inside it, and anything taller
-// wraps the last flag onto a line of its own.
-$flag-h: 2.5rem;
+// Which makes the height the thing that decides whether the row is one line.
+// The five flags come to 8.57 times their height across and the cat that
+// closes the row is square, so the seven items are 9.57 heights of picture,
+// the dial's faceplate -- 236px, not the 212 the dial is, since padding and
+// border sit outside that -- and six gaps. Against the column's 640px that
+// leaves 356px to divide by 9.57, and 2.25rem lands the row about 12px inside
+// it.
+//
+// It was 2.5rem while the bar was five flags and the dial, which fitted with
+// 20px to spare; the cat is 40 more than that with its gap. Rather than let it
+// wrap onto a line of its own, everything on the row came down a quarter of a
+// rem together -- which is the same trade the row has made once already, and
+// the reason this is one number rather than a size per picture.
+$flag-h: 2.25rem;
 
 .flag {
   flex: none;
@@ -594,6 +601,22 @@ $flag-h: 2.5rem;
   .flag-storm-sky { display: none; }
 }
 
+// The cat, sized off the same number as the flags so the row is one band of
+// pictures rather than a flag row with an ornament after it. Square, so the
+// height is the whole of it; `margin: 0` against the theme's `margin: 0 auto`
+// on every <img>, which in a flex row hands the free space to the margins and
+// pushes the row apart, exactly as it does to the flags.
+//
+// No hairline of its own. The flags carry one because two of them run white
+// into a white page; this is a disc with a dark rim already drawn round it, and
+// a square ruled outside a circle is a box round a badge.
+.topbar-mark {
+  flex: none;
+  height: $flag-h;
+  width: auto;
+  margin: 0;
+}
+
 .theme-slider {
   flex: none;
   display: flex;
@@ -680,7 +703,7 @@ $flag-h: 2.5rem;
   // The wrapper as well as the flag: it is the box the storm is placed against,
   // so a height left behind here is a sky hanging off the bottom of a flag that
   // has come down with the column.
-  .flag, .flag-storm { height: 2rem; }
+  .flag, .flag-storm, .topbar-mark { height: 2rem; }
 }
 
 // Re-invert so both keep their true colours once <body> flips.
