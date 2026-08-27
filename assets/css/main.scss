@@ -2407,9 +2407,14 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 // A hovered or focused shoal stops -- all three of them, not the one under the
 // pointer. They are one picture, and freezing a third of it is a glitch rather
 // than a pause.
+//
+// The reel closing the page takes the same pause on its own hover rather than
+// the section's: the coda is three things down a column, and a pointer resting
+// on the geisha is not a reader asking the sculpture to hold still.
 .shoal:hover .stop-motion-reel,
 .shoal:focus-within .stop-motion-reel,
-.home-crown:hover .stop-motion-reel {
+.home-crown:hover .stop-motion-reel,
+.coda .stop-motion:hover .stop-motion-reel {
   animation-play-state: paused;
 }
 
@@ -2491,20 +2496,31 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 // ---------------------------------------------------------------------------
 // The coda
 // ---------------------------------------------------------------------------
-// The two pictures under the cairn, stacked down the column. They keep the
-// column rather than breaking wide like the carousel and the music grid, which
-// is the collage's call at the top of the page and made here for the same
-// reason: the portrait is taller than it is wide, and at full-bleed width it
-// would run most of a screen on its own before the sword under it began.
+// The two pictures and the two reels under the cairn, stacked down the column.
+// They keep the column rather than breaking wide like the carousel and the
+// music grid, which is the collage's call at the top of the page and made here
+// for the same reason: the portrait is taller than it is wide, and at full-bleed
+// width it would run most of a screen on its own before the sword under it
+// began.
 //
 // No dark rule, again as with the collage. Dark mode is the theme's whole-page
-// `filter: invert(1)` with `img` inverted back, so both pictures keep true tone
-// -- the portrait's paper ground and the sword's black field included.
+// `filter: invert(1)` with `img` inverted back, so all four keep true tone --
+// the portrait's paper ground, the sword's black field, the gallery's white
+// wall and the ride's blue night included. The reels are in that for free
+// because a reel is <img>, which is half of why the last two things here are
+// stills rather than the clips they came off.
 .coda {
   margin: 3rem 0 0;
 }
 
-.coda img {
+// The direct child, not any <img> in the section. The last thing down here is a
+// reel, and a reel is eighteen <img> in a row, each one eighteenth of it wide;
+// `.coda img` would reach inside and set every one of them to the full column,
+// which is one frame filling the window and seventeen shoved off the end of it.
+// The stop motion's own rules already say the right thing, and they say it in
+// this file above this one -- so what matters here is not outranking them,
+// which a rule that does not select them cannot do.
+.coda > img {
   display: block;
   width: 100%;
   height: auto;
@@ -2512,8 +2528,12 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 
 // The space between them, set on each after the first rather than as a gap on
 // the section. There is nothing under the run for a gap to measure against; the
-// only distance this section has to state is the one between one picture and
-// the next, which is why a third arriving needed no rule of its own.
-.coda img + img {
+// only distance this section has to state is the one between one thing and the
+// next.
+//
+// Against the children rather than against <img>, for the same reason the rule
+// above narrowed: the reel is a <div> and wants the gap, and the frames inside
+// it want no gap at all.
+.coda > * + * {
   margin-top: 1.5rem;
 }

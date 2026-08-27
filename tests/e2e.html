@@ -1674,6 +1674,81 @@ function loadNarrow(url, width) {
           d.documentElement.scrollWidth - d.defaultView.innerWidth <= 0,
           'scrollWidth ' + d.documentElement.scrollWidth + ' vs ' + d.defaultView.innerWidth);
     document.getElementById('f').style.width = '1100px';
+
+    // --- the coda ------------------------------------------------------------
+    // Two pictures and two reels closing the page. The reels are the reason
+    // there is anything here to test: `.coda img` used to set every image in the
+    // section to the full column, which is right for the two pictures and
+    // ruinous for a reel, whose frames are each one Nth of it. Both rules are in
+    // the same file and the coda's is the later one, so the narrowing to
+    // `.coda > img` is what decides it -- a question about the cascade, which
+    // cannot be answered by reading either rule alone.
+    d = await load('/');
+    const coda = d.querySelector('.coda');
+    const codaFlips = coda ? Array.from(coda.querySelectorAll('.stop-motion')) : [];
+    check('home/coda: two pictures and two reels, in that order',
+          !!coda && coda.children.length === 4 &&
+          coda.children[0].tagName === 'IMG' && coda.children[1].tagName === 'IMG' &&
+          coda.children[2] === codaFlips[0] && coda.children[3] === codaFlips[1],
+          coda ? Array.from(coda.children).map(el => el.tagName + '.' + el.className).join(' ') : 'no coda');
+
+    // Each reel, the sequence it holds and the shape of one still. The gallery
+    // is boomeranged -- ten stills out and eight back, with neither turning
+    // frame written twice, since the tenth is not followed by itself and the
+    // first is reached by the loop. The ride is not: it is already a cut
+    // sequence, so it runs its twenty once and starts over.
+    const CODA_REELS = [
+      { name: 'slats', ratio: 720 / 1280,
+        order: '01 02 03 04 05 06 07 08 09 10 09 08 07 06 05 04 03 02' },
+      { name: 'torches', ratio: 720 / 540,
+        order: '01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20' },
+    ];
+
+    for (let n = 0; n < CODA_REELS.length; n++) {
+      const spec = CODA_REELS[n], tag = 'home/coda/' + spec.name + ': ';
+      const flip = codaFlips[n];
+      const win = flip.querySelector('.stop-motion-window');
+      const reel = flip.querySelector('.stop-motion-reel');
+      const frames = Array.from(reel.querySelectorAll('img'));
+
+      // Read off the reel because it is the include that builds the order, and
+      // --frames has to be the length of what it built or the window shows
+      // halves of two stills at a time.
+      const order = frames.map(i => i.src.replace(/^.*-/, '').replace(/\.jpg$/, ''));
+      check(tag + 'the reel holds the sequence it says it does, in order',
+            order.join(' ') === spec.order, order.join(' '));
+      check(tag + 'the frame count is what the reel actually holds',
+            Number(flip.style.getPropertyValue('--frames')) === frames.length,
+            flip.style.getPropertyValue('--frames') + ' vs ' + frames.length);
+
+      // The cascade question itself: one frame is one window, not one column.
+      const winBox = win.getBoundingClientRect();
+      check(tag + 'the section rule does not reach into the reel',
+            Math.abs(frames[0].getBoundingClientRect().width - winBox.width) < 1 &&
+            Math.abs(reel.getBoundingClientRect().width -
+                     frames.length * winBox.width) < 2,
+            'frame ' + Math.round(frames[0].getBoundingClientRect().width) +
+            ', window ' + Math.round(winBox.width) +
+            ', reel ' + Math.round(reel.getBoundingClientRect().width));
+      check(tag + 'the window takes one still\'s shape',
+            Math.abs(winBox.width / winBox.height - spec.ratio) < 0.01,
+            (winBox.width / winBox.height).toFixed(3) + ' vs ' + spec.ratio.toFixed(3));
+
+      // The gap is written against the children rather than against <img>, which
+      // is what reaches a reel at all; written the old way each would have closed
+      // up against the thing above it.
+      const above = coda.children[n + 1].getBoundingClientRect();
+      check(tag + 'the reel is spaced off the thing above it',
+            flip.getBoundingClientRect().top - above.bottom > 8,
+            Math.round(flip.getBoundingClientRect().top - above.bottom) + 'px');
+    }
+
+    // The two are deliberately out of step: in step they would tick together and
+    // read as one clock driving two boxes, which is the shoal's reasoning at the
+    // other end of the page.
+    const codaPaces = codaFlips.map(f => f.style.getPropertyValue('--pace').trim());
+    check('home/coda: the two reels do not step on the same beat',
+          codaPaces[0] !== codaPaces[1], codaPaces.join(' '));
   } catch (e) {
     results.push('FAIL harness threw: ' + e.message);
   }

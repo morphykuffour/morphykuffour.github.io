@@ -334,7 +334,7 @@ grid of dots, which is 102 by 64 pixels' worth of picture carried as text.
 
 Text rather than a picture file, and that is the whole point of it being here.
 Everything around it is images and video -- a collage, two rolls, seven
-cascades, six reels, and the pair below -- and this is the one thing in the
+cascades, eight reels, and the pair below -- and this is the one thing in the
 list that is none of those: an image made of characters, in the same monospace
 the theme sets for the body, that survives being copied out of the page and
 pasted somewhere else. It also costs no request and no bytes beyond the markup,
@@ -369,40 +369,67 @@ gets in a second; the dots are not text and should not be read as text.
 </section>
 
 {%- comment -%}
-The three pictures that close the page, under the cairn: a portrait of a geisha
+The four things that close the page, under the cairn: a portrait of a geisha
 drawn in the manner of a woodblock print, a katana laid across its stand with
-the scabbard behind it, and a starter pack of new year's resolutions. None is
-mine. All three were saved off the web with no name attached -- the last one
-carries two handles in its own bottom corner and nothing else, and the other
-two came with filenames that say only what they are. So what stands under them
-is the alt text and nothing more: there is no credit to give and inventing one
-would be worse than the silence.
+the scabbard behind it, a walk past a head cut out of green slats, and a night
+ride under torches. None is mine. All four were saved off the web with no name
+attached -- the two pictures came with filenames that say only what they are,
+and the two clips with nothing at all -- so what stands under them is the alt
+text and nothing more: there is no credit to give and inventing one would be
+worse than the silence.
 
-Plain <img> stacked down the column, rather than a board or a roll. The two
-things this page already does with more than one picture are both here -- the
-collage arranges its tiles and the two strips run theirs past -- and three is
-still too few for either: a strip of three is a strip you have seen the whole
-of at a glance, and an arrangement of three is a picture with two pictures next
-to it. At the column's width, one under the other, they are simply the last
-three things on the page.
+The two pictures are plain <img> stacked down the column, rather than a board
+or a roll. The two things this page already does with more than one picture are
+both here -- the collage arranges its tiles and the two strips run theirs past
+-- and two is far too few for either. At the column's width, one under the
+other, they are simply the last two pictures on the page.
 
-Tall, then wide, then tall again, which is the order they arrived in and also
-the better one: the portrait is a column, the sword is a line across it, and
-the starter pack is a column again -- so no shape follows itself, and the sword
-is the rule between the two pages of type either side of it.
+Tall, wide, tall, wide, which is the order they arrived in and also the better
+one: the portrait is a column, the sword is a line across it, the gallery is a
+column again and the ride is a line across that -- so no shape follows itself
+all the way down.
 
-The last is the odd one, and it is the reason it is last rather than tucked
-into the collage upstairs. The tiles up there are things I like; this is a list
-of instructions, and read after the skulls it is either the answer to them or
-the joke about the answer -- twenty-odd things to do about mortality, laid out
-with the confidence of a supplement label. The page has spent itself on what I
-am interested in. This is what one is supposed to *do*.
+The last two move, and that is why they are last rather than tiles in the
+collage upstairs. Everything from the board down has been still: two strips
+that only slide, a braille skull that is text, and two photographs. These are
+the page picking the motion back up on the way out, and picking it up in the
+one form it has not used yet at this size -- the cascades upstairs play footage
+and the shoal is six reels at a quarter of a board, and neither of those is a
+sequence given the whole column to run in.
 
-None of the three needs a dark rule, for the reason the collage gives: the
-theme inverts the page whole and inverts <img> back again, so all keep true
-tone -- the portrait's paper ground, the sword's black field, and the starter
-pack's white sheet of type included, which is the half of this that a CSS
-background would have got wrong.
+Stills rather than the clips they came from, which is the call the shoal makes
+and not the one the seven cascades make; the reasoning is in
+_includes/stopmotion.html, next to the mechanism it explains.
+
+The gallery is ten even steps across the first sixteen and a half seconds of
+its clip, which is as far as the camera actually travels -- the file sits on
+the finished wide shot for its last three, and two stills of a camera that has
+stopped are one still shown twice. It is boomeranged, which is that parameter's
+own case rather than a flourish: forward, the camera crosses the room, comes up
+on the relief, swings round to the edge of it and pulls back out. Looped
+plainly, the far end of that walk cuts to the near end in a single frame, and
+the walk is the whole of what there is to see. Run backward after forward and
+the reader is walked out the way they came in.
+
+The ride is twenty steps across the whole of its own six seconds and is not
+boomeranged, because it is already a cut sequence -- torches, a banner, a wall
+of mist, lightning -- and the seam at the loop is one more cut among the cuts it
+already has. Run backward it would be those cuts in reverse, which reads as a
+rewind rather than as a ride.
+
+Their two paces are the one place the pair are deliberately out of step.
+Eighteen stops at 4.5s and twenty at 6s are a quarter-second a frame and three
+tenths, which is the shoal's reasoning at the other end of the page: in step
+they would tick together and read as one clock driving two boxes. The 6s is not
+only that, though -- twenty stills over six seconds is the ride at its own
+speed, the clip being six seconds long.
+
+None of the four needs a dark rule, for the reason the collage gives: the theme
+inverts the page whole and inverts <img> back again, so all keep true tone --
+the portrait's paper ground, the sword's black field, the gallery's white wall
+and the ride's blue night included. That the reels get it too is the other half
+of why they are stills: they are <img>, and two <video> here would have been
+the only things on the page coming out in negative.
 {%- endcomment -%}
 <section class="coda">
   <img src="{{ site.baseurl }}/images/geisha.jpg"
@@ -411,7 +438,10 @@ background would have got wrong.
   <img src="{{ site.baseurl }}/images/katana.jpg"
        width="1280" height="853" loading="lazy" decoding="async"
        alt="A katana drawn from its black scabbard and laid blade-up across a lacquered stand, the scabbard crossed behind it, against a black field. The stand's rail is painted with a gold-faced dragon in green and orange among clouds.">
-  <img src="{{ site.baseurl }}/images/unrecognizable.jpg"
-       width="595" height="742" loading="lazy" decoding="async"
-       alt="A poster headed 'Become Unrecognizable in 2026 — Your New Year's Resolution Starter Pack': two dozen cut-out pictures crowded on a white sheet, each labelled in serif type. Lift 3x weekly, face your fears, meditate 10 min daily, no more weed, no screens 1 hr before bed, 10K steps daily, let God lead the way, control your breath, limit alcohol, liver and oysters 1x weekly, 3 nutrient-dense meals daily, ground 15 min daily, 100g protein daily, forgive others and yourself, 30 min AM sunlight, practice gratitude, dry brush before showers, no more porn, seek the truth, no more doomscrolling, sex 3x weekly, stay hydrated, coffee enema 1x weekly, sauna 3x weekly. The pictures are a kettlebell, a spider, a woman's face with a third eye, a footprint, a lit figure seen from behind, a slab of liver and an oyster, a whisky glass, a tree with a figure inside it, a steak, an anatomical heart, a bowl of fruit and eggs, a sun's face, a dry brush, an eye in an open palm, a phone, and a bag of dark liquid. Signed in the corner @alexorton.nd and @kolbyourada.">
+  {%- include stopmotion.html
+        dir="slats" count=10 width=720 height=1280 pace="4.5s" boomerang=true
+        label="Ten frames of a walk past a gallery wall: a scowling head standing out of a panel of green vertical slats, seen first from across the room with a chair beside it, then close from either side as the slats break the face into stripes, then edge-on as a profile, and finally from across the room again." -%}
+  {%- include stopmotion.html
+        dir="torches" count=20 width=720 height=540 pace="6s"
+        label="Twenty frames of a night ride: hooded riders on dark horses moving through mist and shallow water, one carrying a burning torch and another a black banner, lit blue by the storm and whited out for an instant by lightning." -%}
 </section>
