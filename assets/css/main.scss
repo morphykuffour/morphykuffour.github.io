@@ -2463,9 +2463,10 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
   height: auto;
 }
 
-// The space between the two, set on the second rather than as a gap on the
-// section. There is nothing under the pair for a gap to measure against; the
-// only distance this section has to state is the one between its two pictures.
+// The space between them, set on each after the first rather than as a gap on
+// the section. There is nothing under the run for a gap to measure against; the
+// only distance this section has to state is the one between one picture and
+// the next, which is why a third arriving needed no rule of its own.
 .coda img + img {
   margin-top: 1.5rem;
 }

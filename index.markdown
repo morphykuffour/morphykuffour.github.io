@@ -327,29 +327,40 @@ gets in a second; the dots are not text and should not be read as text.
 </section>
 
 {%- comment -%}
-The two pictures that close the page, under the cairn: a portrait of a geisha
-drawn in the manner of a woodblock print, and a katana laid across its stand
-with the scabbard behind it. Neither is mine. Both were saved off the web with
-no name attached, and the filenames they came with say only what they are, so
-what stands under them is the alt text and nothing more -- there is no credit
-to give and inventing one would be worse than the silence.
+The three pictures that close the page, under the cairn: a portrait of a geisha
+drawn in the manner of a woodblock print, a katana laid across its stand with
+the scabbard behind it, and a starter pack of new year's resolutions. None is
+mine. All three were saved off the web with no name attached -- the last one
+carries two handles in its own bottom corner and nothing else, and the other
+two came with filenames that say only what they are. So what stands under them
+is the alt text and nothing more: there is no credit to give and inventing one
+would be worse than the silence.
 
 Plain <img> stacked down the column, rather than a board or a roll. The two
 things this page already does with more than one picture are both here -- the
-collage arranges its tiles and the two strips run theirs past -- and a pair is
-too few for either: a strip of two is a strip you have seen the whole of at a
-glance, and an arrangement of two is a picture with a picture next to it. At
-the column's width, one under the other, they are simply the last two things
-on the page.
+collage arranges its tiles and the two strips run theirs past -- and three is
+still too few for either: a strip of three is a strip you have seen the whole
+of at a glance, and an arrangement of three is a picture with two pictures next
+to it. At the column's width, one under the other, they are simply the last
+three things on the page.
 
-Tall first, then wide, which is the order they arrived in and also the better
-one: the portrait is a column and the sword is a line across it, so the second
-answers the shape of the first instead of repeating it.
+Tall, then wide, then tall again, which is the order they arrived in and also
+the better one: the portrait is a column, the sword is a line across it, and
+the starter pack is a column again -- so no shape follows itself, and the sword
+is the rule between the two pages of type either side of it.
 
-Neither needs a dark rule, for the reason the collage gives: the theme inverts
-the page whole and inverts <img> back again, so both keep true tone -- the
-portrait's paper ground and the sword's black field included, which is the
-half of this that a CSS background would have got wrong.
+The last is the odd one, and it is the reason it is last rather than tucked
+into the collage upstairs. The tiles up there are things I like; this is a list
+of instructions, and read after the skulls it is either the answer to them or
+the joke about the answer -- twenty-odd things to do about mortality, laid out
+with the confidence of a supplement label. The page has spent itself on what I
+am interested in. This is what one is supposed to *do*.
+
+None of the three needs a dark rule, for the reason the collage gives: the
+theme inverts the page whole and inverts <img> back again, so all keep true
+tone -- the portrait's paper ground, the sword's black field, and the starter
+pack's white sheet of type included, which is the half of this that a CSS
+background would have got wrong.
 {%- endcomment -%}
 <section class="coda">
   <img src="{{ site.baseurl }}/images/geisha.jpg"
@@ -358,4 +369,7 @@ half of this that a CSS background would have got wrong.
   <img src="{{ site.baseurl }}/images/katana.jpg"
        width="1280" height="853" loading="lazy" decoding="async"
        alt="A katana drawn from its black scabbard and laid blade-up across a lacquered stand, the scabbard crossed behind it, against a black field. The stand's rail is painted with a gold-faced dragon in green and orange among clouds.">
+  <img src="{{ site.baseurl }}/images/unrecognizable.jpg"
+       width="595" height="742" loading="lazy" decoding="async"
+       alt="A poster headed 'Become Unrecognizable in 2026 — Your New Year's Resolution Starter Pack': two dozen cut-out pictures crowded on a white sheet, each labelled in serif type. Lift 3x weekly, face your fears, meditate 10 min daily, no more weed, no screens 1 hr before bed, 10K steps daily, let God lead the way, control your breath, limit alcohol, liver and oysters 1x weekly, 3 nutrient-dense meals daily, ground 15 min daily, 100g protein daily, forgive others and yourself, 30 min AM sunlight, practice gratitude, dry brush before showers, no more porn, seek the truth, no more doomscrolling, sex 3x weekly, stay hydrated, coffee enema 1x weekly, sauna 3x weekly. The pictures are a kettlebell, a spider, a woman's face with a third eye, a footprint, a lit figure seen from behind, a slab of liver and an oyster, a whisky glass, a tree with a figure inside it, a steak, an anatomical heart, a bowl of fruit and eggs, a sun's face, a dry brush, an eye in an open palm, a phone, and a bag of dark liquid. Signed in the corner @alexorton.nd and @kolbyourada.">
 </section>
