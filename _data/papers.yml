@@ -177,3 +177,94 @@
     then hand the entry and exit to a policy whose state is the recent shape of
     the move rather than the distance from a long-run mean. Worth reading for
     the reframing even if you never trade it.
+
+- file: 'mirsky-kitsune-nids.png'
+  pdf: 'mirsky-kitsune-nids.pdf'
+  link: '/assets/papers/mirsky-kitsune-nids.pdf'
+  alt: 'First page of Mirsky and others, "Kitsune: An Ensemble of Autoencoders for Online Network Intrusion Detection", NDSS 2018.'
+  caption: 'Kitsune: An Ensemble of Autoencoders for Online Network Intrusion Detection — Mirsky and others, 2018'
+  title: 'Kitsune: An Ensemble of Autoencoders for Online Network Intrusion Detection'
+  authors: 'Yisroel Mirsky, Tomer Doitshman, Yuval Elovici and Asaf Shabtai'
+  where: "NDSS '18, San Diego, February 2018; arXiv:1802.09089v2"
+  note: >-
+    An intrusion detector that fits on a Raspberry Pi, which is the whole
+    argument: a NIDS is only useful where the traffic is, and the traffic is at
+    the gateway you cannot afford to put a GPU behind. The construction is an
+    ensemble of small autoencoders over a feature map that keeps incremental
+    statistics per channel, each one reconstructing its own slice and the
+    reconstruction error doing the alerting — unsupervised, so nobody has to
+    label a network, and online, so nobody has to retrain it. The dataset it
+    came with has outlived the paper.
+
+- file: 'du-nix-hpc-ai-stack.png'
+  pdf: 'du-nix-hpc-ai-stack.pdf'
+  link: '/assets/papers/du-nix-hpc-ai-stack.pdf'
+  alt: 'First page of Du, Gratien, Gayno and Raffin, "Nix to the Rescue for a Reproducible HPC-AI Software Stack".'
+  caption: 'Nix to the Rescue for a Reproducible HPC-AI Software Stack — Du and others, 2026'
+  title: 'Nix to the Rescue for a Reproducible HPC-AI Software Stack'
+  authors: 'Wenke Du, Jean-Marc Gratien, Raphael Gayno and Bruno Raffin'
+  where: 'Preprint, Inria and IFP Énergies-Nouvelles, July 2026; arXiv:2607.26688v1'
+  note: >-
+    A field report rather than a proposal, and better for it. The setup is the
+    one everybody actually has — a C++/Fortran solver on MPI and CUDA coupled
+    to a Python neural network, environment modules holding up one half and
+    Conda the other — and the failures are the ordinary ones: CMAKE_PREFIX_PATH
+    set by hand, Conda's isolation leaking system packages, a container that
+    reproduces until you have to change one dependency. What Nix buys them is
+    that the environment specification and the deployed artifact are the same
+    document. Read it for the account of a supercomputer with no root and no
+    internet, which is the constraint the whole design has to survive.
+
+- file: 'genewein-agi-to-asi.png'
+  pdf: 'genewein-agi-to-asi.pdf'
+  link: '/assets/papers/genewein-agi-to-asi.pdf'
+  alt: 'First page of the Google DeepMind report "From AGI to ASI", Genewein and others, June 2026.'
+  caption: 'From AGI to ASI — Genewein and others, Google DeepMind, 2026'
+  title: 'From AGI to ASI'
+  authors: 'Tim Genewein, Matija Franklin, Alexander Lerchner, Laurent Orseau, Samuel Albanie, Adam Bales, Cole Wyeth, Stephanie Chan, Iason Gabriel, Joel Z. Leibo, Allan Dafoe, Marcus Hutter, Thore Graepel and Shane Legg'
+  where: 'Google DeepMind report, 10 June 2026; arXiv:2606.12683v1'
+  note: >-
+    A lab that has said it is building AGI, writing down what it thinks happens
+    the day after. The spine is Universal AI as the far end of the continuum,
+    which gives the argument a formal object to point at instead of a mood, and
+    the four pathways it lays out — scaling, paradigm shift, recursive
+    improvement, and intelligence emerging from multi-agent collectives —
+    are treated as things that could each be slow for boring reasons. That is
+    the useful half: the frictions and bottlenecks, and the open questions
+    that fall out of not knowing which bind. Its own conclusion is against the
+    single step change, in favour of a series of them.
+
+- file: 'monir-vectorsearch.png'
+  pdf: 'monir-vectorsearch.pdf'
+  link: '/assets/papers/monir-vectorsearch.pdf'
+  alt: 'First page of Monir, Lau, Yang and Zhao, "VectorSearch: Enhancing Document Retrieval with Semantic Embeddings and Optimized Search".'
+  caption: 'VectorSearch: Enhancing Document Retrieval with Semantic Embeddings and Optimized Search — Monir and others, 2024'
+  title: 'VectorSearch: Enhancing Document Retrieval with Semantic Embeddings and Optimized Search'
+  authors: 'Solmaz Seyed Monir, Irene Lau, Shubing Yang and Dongfang Zhao'
+  where: 'University of Washington, September 2024; arXiv:2409.17383v1'
+  note: >-
+    The retrieval half of RAG taken seriously as a systems problem rather than
+    a library call. The complaints it opens with are the ones you hit in
+    practice — vector stores tuned for single-vector similarity on a static
+    corpus, reindexing cost when the corpus is not static, multi-vector queries
+    poorly served — and the answer is hybrid indexing with the embedding and
+    the search treated as one design instead of two. Worth reading next to
+    whatever database you are about to pick.
+
+- file: 'nakamoto-bitcoin.png'
+  pdf: 'nakamoto-bitcoin.pdf'
+  link: '/assets/papers/nakamoto-bitcoin.pdf'
+  alt: 'First page of Satoshi Nakamoto, "Bitcoin: A Peer-to-Peer Electronic Cash System".'
+  caption: 'Bitcoin: A Peer-to-Peer Electronic Cash System — Nakamoto, 2008'
+  title: 'Bitcoin: A Peer-to-Peer Electronic Cash System'
+  authors: 'Satoshi Nakamoto'
+  where: 'Self-published, 31 October 2008; the bitcoin.org PDF, dated March 2009'
+  note: >-
+    Nine pages, no institution, no references worth the name, and the entire
+    thing is an argument about what a timestamp is. The double-spend problem
+    had always been solved by asking someone, and the move here is to replace
+    the someone with an ordering that is expensive to rewrite — proof-of-work
+    not as a lottery but as a way of making history costly. What still reads
+    strangely is the tone: section 11 works the attacker's odds as a
+    Poisson race and concludes with a C snippet, as if the political half of
+    the thing were nobody's business. Read it for how little is in it.
