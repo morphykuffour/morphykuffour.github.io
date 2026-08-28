@@ -286,3 +286,23 @@
     root is a commitment and whose common prefixes are not paid for twice.
     Short, expository, and the right thing to read before someone tells you a
     light client is trustless.
+
+- file: 'song-hou-group-theory.png'
+  pdf: 'song-hou-group-theory.pdf'
+  link: '/assets/papers/song-hou-group-theory.pdf'
+  alt: 'Title page of Jaeyi Song and Sophia Hou, "Group Theory", MIT PRIMES Circle, May 2022.'
+  caption: 'Group Theory — Song and Hou, 2022'
+  title: 'Group Theory'
+  authors: 'Jaeyi Song and Sophia Hou'
+  where: 'MIT PRIMES Circle, Spring 2022; 25 May 2022'
+  note: >-
+    Sixteen pages by two high-schoolers reading Gallian, and the first three
+    sections are what you would expect: groups, cyclic groups, quotients,
+    homomorphisms, worked slowly. The reason it is on the shelf is section 5.
+    Impose on the free group of the 26 letters every relation that two English
+    homophones give you — by = bye, so e = 1; knot = not, so k = 1 — and the
+    whole alphabet collapses except v, leaving Z. Then a chain looped round n
+    poles that falls off the moment any one pole is pulled, which is the
+    fundamental group of the plane minus n points and an iterated commutator.
+    Two problems that sound like riddles and are answered, honestly, by a
+    presentation.
