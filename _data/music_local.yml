@@ -7,6 +7,12 @@
 # a pulled entry pointing at the same video so a track added here does not
 # appear twice once the history catches up with it.
 
+- file: 'HPbPg7JT0bM.jpg'
+  title: 'Symphony No. 2 / Sergei Rachmaninoff / Vasily Petrenko / Oslo Philharmonic'
+  channel: 'Oslo Philharmonic'
+  channel_url: 'https://www.youtube.com/channel/UCPUB5D0J_TStRlg399Mfc8A'
+  duration: '1:01:21'
+  link: 'https://www.youtube.com/watch?v=HPbPg7JT0bM'
 - file: 'jOofzffyDSA.jpg'
   title: 'Dvořák: 9. Sinfonie (»Aus der Neuen Welt«) ∙ hr-Sinfonieorchester ∙ Andrés Orozco-Estrada'
   channel: 'hr-Sinfonieorchester – Frankfurt Radio Symphony'
