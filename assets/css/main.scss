@@ -2527,8 +2527,8 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 }
 
 // The space between them, set on each after the first rather than as a gap on
-// the section. There is nothing under the run for a gap to measure against; the
-// only distance this section has to state is the one between one thing and the
+// the section. What follows the section brings its own top margin, so the only
+// distance this section has to state is the one between one thing in it and the
 // next.
 //
 // Against the children rather than against <img>, for the same reason the rule
@@ -2536,4 +2536,31 @@ body[a="dark"] .matrix-rain { filter: invert(1); }
 // it want no gap at all.
 .coda > * + * {
   margin-top: 1.5rem;
+}
+
+// ---------------------------------------------------------------------------
+// The starter pack
+// ---------------------------------------------------------------------------
+// The one sheet under the coda, and the last thing on the page. Why it is its
+// own section rather than a fifth thing in that run is argued in index.markdown,
+// next to the markup; what is left for here is that a section holding one
+// picture still needs the two rules any picture in this column needs -- the
+// column's width, and air above it.
+//
+// The gap is the section's own top margin rather than something the coda states
+// on its way out. The coda sets its spacing on each of its children after the
+// first, which is a rule about the distance between two things inside it; the
+// distance to whatever follows the section is not the section's to name.
+//
+// No dark rule, as with the collage and the coda above it: the theme inverts the
+// page whole and inverts <img> back again, so the sheet keeps its white ground
+// and its cut-outs keep their colour.
+.starter-pack {
+  margin: 3rem 0 0;
+}
+
+.starter-pack > img {
+  display: block;
+  width: 100%;
+  height: auto;
 }

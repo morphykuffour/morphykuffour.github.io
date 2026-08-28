@@ -369,7 +369,7 @@ gets in a second; the dots are not text and should not be read as text.
 </section>
 
 {%- comment -%}
-The four things that close the page, under the cairn: a portrait of a geisha
+The four things under the cairn: a portrait of a geisha
 drawn in the manner of a woodblock print, a katana laid across its stand with
 the scabbard behind it, a walk past a head cut out of green slats, and a night
 ride under torches. None is mine. All four were saved off the web with no name
@@ -389,8 +389,8 @@ one: the portrait is a column, the sword is a line across it, the gallery is a
 column again and the ride is a line across that -- so no shape follows itself
 all the way down.
 
-The last two move, and that is why they are last rather than tiles in the
-collage upstairs. Everything from the board down has been still: two strips
+The last two move, and that is why they end the run rather than sitting as
+tiles in the collage upstairs. Everything from the board down has been still: two strips
 that only slide, a braille skull that is text, and two photographs. These are
 the page picking the motion back up on the way out, and picking it up in the
 one form it has not used yet at this size -- the cascades upstairs play footage
@@ -444,4 +444,42 @@ the only things on the page coming out in negative.
   {%- include stopmotion.html
         dir="torches" count=20 width=720 height=540 pace="6s"
         label="Twenty frames of a night ride: hooded riders on dark horses moving through mist and shallow water, one carrying a burning torch and another a black banner, lit blue by the storm and whited out for an instant by lightning." -%}
+</section>
+
+{%- comment -%}
+The board pinned under the coda, and the last thing on the page: a New Year's
+resolution starter pack, saved off the web. Thirty-odd cut-outs overlapping down
+one sheet -- a kettlebell, a spider, a steak, an anatomical heart, a sun with a
+face -- each labelled with the habit it stands for, under a headline promising
+the reader will be unrecognizable by the end of the year.
+
+Its own section rather than a fifth thing in the coda, and the reasons are all
+in what the coda is. Those four are unattributed pictures in a tall-wide-tall-
+wide run that ends on motion; this is signed in its own bottom right corner, it
+is as much text as picture, and it is still. Set at the end of that run it would
+break the alternation, stop the motion the run was built to end on, and arrive
+with a credit the run has no way to carry.
+
+Which is also why nothing is written under it. The two handles are burnt into
+the picture where the makers put them, the way the shoal's clips carry their
+maker's line, and a caption repeating what the image already says in its own
+corner is a caption saying nothing.
+
+Last because of what it is rather than where it came from. Everything above is
+pictures to look at; this is a list of instructions, and a dated one -- it says
+2026 on it, and a year from now it is a note that has been up too long. The page
+ends on the one thing on it with an expiry date.
+
+Saved as a JPEG at the sheet's own resolution rather than the 2.5MB PNG it
+arrived as, which is the collage's call at the top of the page. Kept at a higher
+quality than that one, though, and for a reason the collage does not have: half
+of this picture is small text, and text is what a JPEG gives up first.
+
+No dark rule, as with the collage and the coda: the theme inverts the page whole
+and inverts <img> back, so the sheet keeps its white ground.
+{%- endcomment -%}
+<section class="starter-pack">
+  <img src="{{ site.baseurl }}/images/starter-pack-2026.jpg"
+       width="1206" height="1506" loading="lazy" decoding="async"
+       alt="A dense collage headed &ldquo;Become Unrecognizable in 2026: Your New Year's Resolution Starter Pack&rdquo;. Cut-out images overlap down the sheet, each labelled with a habit: a kettlebell for lifting three times weekly, a spider for facing your fears, a woman's face with a third eye for meditating, a crossed-out joint, boot prints for ten thousand steps, a figure in light for letting God lead the way, liver and oysters, a steak for a hundred grams of protein, a tree for grounding, a tumbler for limiting alcohol, a sun for morning light, a dry brush, an anatomical heart for forgiveness, a plate of meat and fruit, an eye in an open palm for seeking the truth, a crossed-out phone, a hand of steel gripping a head for doomscrolling, and a figure in red heat for the sauna. Signed in the lower right with the handles @alexorton.nd and @kolbyourada.">
 </section>
