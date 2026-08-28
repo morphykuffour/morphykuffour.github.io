@@ -7,6 +7,12 @@
 # a pulled entry pointing at the same video so a track added here does not
 # appear twice once the history catches up with it.
 
+- file: 'ddc5FGyOtIM.jpg'
+  title: 'Tschaikowsky: 6. Sinfonie (»Pathétique«) ∙ hr-Sinfonieorchester ∙ Andris Poga'
+  channel: 'hr-Sinfonieorchester – Frankfurt Radio Symphony'
+  channel_url: 'https://www.youtube.com/channel/UCiyuYC0D4-AO0AonCfMifPQ'
+  duration: '48:23'
+  link: 'https://www.youtube.com/watch?v=ddc5FGyOtIM'
 - file: '1QS9jbvlEU8.jpg'
   title: '"Where love feels expensive, New York" - Jazz House Mix | FOR COFFEE MIX, Chill set for Golden Hours'
   channel: 'Summerbpm'
