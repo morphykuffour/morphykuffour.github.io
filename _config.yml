@@ -23,9 +23,9 @@ creed:
  - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
 
 # baseurl: "" # the subpath of your site, e.g. /blog
-domain: morphykuffour.github.io
-url: https://morphykuffour.github.io
-github_username: morph-k
+## domain: morphykuffour.github.io
+## url: https://morphykuffour.github.io
+## github_username: morph-k
 
 # The resume is built and published by the morph-k/resume repository, which
 # compiles its LaTeX and commits the PDF to its own GitHub Pages site. /resume/
