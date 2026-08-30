@@ -17,10 +17,10 @@ author: Morpheus
 # says what the interests are; the first of these says what they are all in
 # service of, the second says where the alias itself comes from.
 
-# creed:
+creed:
 #  - I love solving extremely difficult problems, fiduciary responsibility and legal obligation to non-binding abstract entities and clients
 # 
-#  - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
+ - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
 
 # baseurl: "" # the subpath of your site, e.g. /blog
 domain: morphykuffour.github.io
