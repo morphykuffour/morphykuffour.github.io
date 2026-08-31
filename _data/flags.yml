@@ -62,7 +62,7 @@
 
 - file: gh
   name: Ghana
-  side: lead
+  side: trail
   alt: >-
     Red, gold and green bands with a black five-pointed star centred on the
     gold.
@@ -71,6 +71,8 @@
     for independence, gold for the minerals under the ground, green for what
     grows on it, and the black star — Garvey's Black Star Line — as the
     lodestar of African freedom.
+
+# tailwinds
 
 - file: lk
   name: Sri Lanka
