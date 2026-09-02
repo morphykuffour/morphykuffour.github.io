@@ -15,7 +15,8 @@ be four numbers to keep in step with one CSS rule.
 An entry may also ask for `storm`, which lays the thunder stop motion over the
 flag: see below, and see scripts/thunder-frames.sh for where its two frames
 come from.
-{%- endcomment -%}
+
+
 {%- capture flag_img -%}
 <img class="flag"
      src="{{ site.baseurl }}/images/flags/{{ include.flag.file }}.svg"
@@ -64,3 +65,5 @@ of these elements is asked to survive.
   </div>
 </div>
 {%- endunless -%}
+
+{%- endcomment -%}
