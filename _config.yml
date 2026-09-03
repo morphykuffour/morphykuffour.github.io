@@ -6,7 +6,9 @@ description: >-
   <a href="https://en.wikipedia.org/wiki/Big_Bang">Bang</a> <a href="https://en.wikipedia.org/wiki/Universe">Universe</a> <a href="https://en.wikipedia.org/wiki/Sun">Sun</a> <a href="https://en.wikipedia.org/wiki/Age_of_Enlightenment">Illuminati</a> <a href="https://en.wikipedia.org/wiki/Memento_mori">Memento Mori</a> <a href="https://en.wikipedia.org/wiki/Chaos_theory">Chaos Theory</a> <a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a>
 
 creed:
- - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
+ - Ars longa, vita brevis, occasio praeceps, experimentum periculosum, iudicium difficile.
+
+ # - Morpheus — Μορφεύς. God of dreams, who appears to sleepers in human form. Best known from Ovid’s Metamorphoses.
 
 # baseurl: "" # the subpath of your site, e.g. /blog
 domain: morphykuffour.github.io
