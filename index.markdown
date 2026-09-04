@@ -20,6 +20,8 @@ fact about where this stack sits, not about how a stack is built -- and it is
 its own class rather than the one the pair above the rain uses, because that
 pair is a row of two and this is a clip alone on a line.
 
+{%- endcomment -%}
+
 <section class="opening">
   {%- include cascade.html
         file="grievous" width=640 height=360
@@ -27,4 +29,3 @@ pair is a row of two and this is a clip alone on a line.
 </section>
 
 
-{%- endcomment -%}
