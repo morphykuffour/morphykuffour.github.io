@@ -258,7 +258,7 @@ all hail hydra
     <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
            alt="all hail hydra">
     </figure>
-    <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job
+    <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job&rdquo;</p>
   </blockquote>
 </section>
 
