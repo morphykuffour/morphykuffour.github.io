@@ -235,3 +235,13 @@ drawing in it.
          rel="noopener">Dialectics, part 3</a></cite>
   </blockquote>
 </section>
+
+{%- comment -%}
+all hail hydra
+{%- endcomment -%}
+
+<figure class="hydra">
+<img src="{{ site.baseurl }}/images/hydra.jpg"
+       alt="all hail hydra">
+</figure>
+
