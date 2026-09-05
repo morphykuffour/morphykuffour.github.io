@@ -30,4 +30,5 @@ You should now have Wi-Fi access on a machine that did not come with a Wi-Fi car
 Important urls
 
 [Arch AUR git repo](https://aur.archlinux.org/packages/rtl88x2bu-dkms-git/)
+
 [Khan's Setup on Ubuntu](https://web.archive.org/web/20201015122532/https://waynekhan.github.io/2020/05/30/asus-usb-ac53-nano-ubuntu.html)
