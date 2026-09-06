@@ -280,6 +280,10 @@ all hail hydra
 
 <section class="french kiss ;)">
   <figure>
+    {%- include roll.html data=site.data.alchemy_symbols dir="alchemy" ioda=true -%}
+  </figure>
+
+  <figure>
     {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
   </figure>
 
