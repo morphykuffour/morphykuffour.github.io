@@ -262,3 +262,21 @@ all hail hydra
   </blockquote>
 </section>
 
+
+<section class="dance of death">
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+
+  {%- comment -%}
+  Dance of Death
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="polyxena">
+    <img src="{{ site.baseurl }}/images/Charles_Le_Brun_-_The_Sacrifice_of_Polyxena.jpg"
+           alt="the end of the trojan war">
+    </figure>
+    <p>&ldquo;The Sacrifice of Polyxena, 1647, by Charles Le Brun, Metropolitan Museum of Art&rdquo;</p>
+    <p>&ldquo;Some claimed Polyxena committed suicide after Achilles' death out of guilt.[6] According to Euripides, however, in his plays The Trojan Women and Hecuba, Polyxena's famous death was caused at the end of the Trojan War. Achilles' ghost had come back to the Greeks to demand the human sacrifice of Polyxena so as to appease the wind needed to set sail back to Hellas.&rdquo;</p>
+  </blockquote>
+</section>
