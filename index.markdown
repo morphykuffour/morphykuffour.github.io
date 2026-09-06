@@ -278,6 +278,7 @@ all hail hydra
 </section>
 
 
+{%- comment -%}
 <section class="french kiss ;)">
   <figure>
     {%- include roll.html data=site.data.alchemy_symbols dir="alchemy" ioda=true -%}
@@ -298,3 +299,4 @@ all hail hydra
     <p>&ldquo;Give generously to the Wadsworth Atheneum Museum of Art&rdquo;</p>
   </blockquote>
 </section>
+{%- endcomment -%}
