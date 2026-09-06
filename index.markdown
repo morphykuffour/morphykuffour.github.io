@@ -295,6 +295,34 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
   </blockquote>
 </section>
 
+<section class="Mexico: 6+10">
+  {%- comment -%}
+  Natasha Gelman
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/natasha.png"
+           alt="">
+    </figure>
+    <p>&ldquo;
+    Diego Rivera (Mexican, 1886–1957). Portrait of Natasha Gelman, 1943. Oil on canvas, 45 1/4 x 60 1/4 in. The Jacques and Natasha Gelman Collection of 20th Century Mexican Art and the Vergel Foundation. 2019 Banco de México Diego Rivera Frida Kahlo Museums Trust, Mexico City / Artists Rights Society (ARS), New York &rdquo;</p>
+  </blockquote>
+</section>
+
+<section class="Mexico: 2-2-3 +1: Aman">
+  {%- comment -%}
+  Frida Kahlo
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/fridyay.png"
+           alt="">
+    </figure>
+    <p>&ldquo;
+    Frida Kahlo (Mexican, 1907–1954). Self-Portrait with Monkeys, 1943. Oil on canvas, 32 1/8 x 24 3/4 in. The Jacques and Natasha Gelman Collection of 20th Century Mexican Art and the Vergel Foundation. 2019 Banco de México Diego Rivera Frida Kahlo Museums Trust, Mexico City / Artists Rights Society (ARS), New York &rdquo;</p>
+  </blockquote>
+</section>
+
 {%- comment -%}
 <section class="french kiss ;)">
   <figure>
