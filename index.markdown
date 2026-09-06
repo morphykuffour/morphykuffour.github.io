@@ -276,3 +276,21 @@ all hail hydra
     <p>&ldquo;Some claimed Polyxena committed suicide after Achilles' death out of guilt.[6] According to Euripides, however, in his plays The Trojan Women and Hecuba, Polyxena's famous death was caused at the end of the Trojan War. Achilles' ghost had come back to the Greeks to demand the human sacrifice of Polyxena so as to appease the wind needed to set sail back to Hellas.&rdquo;</p>
   </blockquote>
 </section>
+
+
+<section class="french kiss ;)">
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+
+  {%- comment -%}
+  french kiss but dutch 
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/art_french.png"
+           alt="">
+    </figure>
+    <p>&ldquo;Give generously to the Wadsworth Atheneum Museum of Art&rdquo;</p>
+  </blockquote>
+</section>
