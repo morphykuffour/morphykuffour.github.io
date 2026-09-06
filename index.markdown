@@ -263,11 +263,7 @@ all hail hydra
 </section>
 
 
-<section class="dance of death">
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
-
+<section class="polyglot">
   {%- comment -%}
   Dance of Death
   {%- endcomment -%}
