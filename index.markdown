@@ -277,6 +277,23 @@ all hail hydra
   </blockquote>
 </section>
 
+<section class="french kiss ;)">
+  {%- comment -%}
+  Katana: Taira Takada in Koshirae
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/katana.png"
+           alt="">
+    </figure>
+    <p>&ldquo;Historical context&rdquo;</p>
+    <p>&ldquo;The Muromachi period (1392 to 1573)
+
+The Ashikaga shoguns ruled from the Muromachi district of Kyōto, patrons of an astonishing cultural flowering, the Golden Pavilion, noh drama, the tea ceremony, and of a political order that slowly lost its grip. In 1467 the Ōnin War burned the capital and broke the system; the century that followed, the Sengoku or Warring States era, put nearly every province in Japan under arms.
+
+For the sword trade these were transforming times. Fighting on foot in massed formations favored the uchigatana, worn edge-up through the sash, the ancestor of the katana and of the paired daishō; war on a Sengoku scale demanded quantity, and the great centers at Osafune in Bizen and Seki in Mino organized what can fairly be called industries, producing bundle swords for the ranks alongside custom orders for commanders. Overseas, the official trade with Ming China carried Japanese blades abroad by the tens of thousands, one of early Japan’s signature exports. The period rewards a discriminating eye: routine work exists in quantity, and beside it stand custom blades as fine as anything their houses ever made. &rdquo;</p>
+  </blockquote>
+</section>
 
 {%- comment -%}
 <section class="french kiss ;)">
