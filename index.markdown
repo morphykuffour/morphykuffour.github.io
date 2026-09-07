@@ -22,6 +22,19 @@ pair is a row of two and this is a clip alone on a line.
 
 {%- endcomment -%}
 
+<section class="Lannisters">
+  {%- comment -%}
+  The 3 lions
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/lannister.jpg"
+           alt="">
+    </figure>
+    <p>&ldquo;Hear Me Roar.&rdquo;</p>
+  </blockquote>
+</section>
+
 <section class="opening">
   {%- include cascade.html
         file="grievous" width=640 height=360
@@ -369,6 +382,6 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <img src="{{ site.baseurl }}/images/john_snow_kb_winter.png"
            alt="">
     </figure>
-    <p>&ldquo;You have break necks if you catch my drift.&rdquo;</p>
+    <p>&ldquo;Winter is Coming&rdquo;</p>
   </blockquote>
 </section>
