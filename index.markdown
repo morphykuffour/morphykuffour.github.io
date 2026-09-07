@@ -382,7 +382,7 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <img src="{{ site.baseurl }}/images/war_ye_peace.png"
            alt="">
     </figure>
-    <p>&ldquo;The name Ghana comes from Wagadu, an empire in west Africa from the 3rd to 12th centuries; Wagadu was termed Ghana by Arab traders involved in the trans-Saharan trade.&rdquo;</p>
+    <p>&ldquo;The name Ghana comes from Wagadu AKA Wakanda (ECOWAS), an empire in west Africa from the 3rd to 12th centuries; Wagadu was termed Ghana by Arab traders involved in the trans-Saharan trade.&rdquo;</p>
   </blockquote>
 </section>
 
