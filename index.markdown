@@ -22,6 +22,20 @@ pair is a row of two and this is a clip alone on a line.
 
 {%- endcomment -%}
 
+<section class="3 eyed Raven">
+  {%- comment -%}
+  Devil is in the Details (On Plymouth Fucking Rock)
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/knight_king.png"
+           alt="">
+    </figure>
+    <p>&ldquo;"The true enemy won't wait out the storm. He brings the storm." ― Jonh Snow(The Bastard of Winterfell) regarding the Night King&rdquo;</p>
+  </blockquote>
+</section>
+
+
 <section class="Lannisters">
   {%- comment -%}
   The 3 lions
