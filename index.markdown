@@ -412,7 +412,11 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
            alt="all hail hydra">
     </figure>
-    <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job&rdquo;</p>
+    <p>&ldquo;Dance of Death  Representing the universality of death regardless of class or job&rdquo;</p>
+    <figure class="hydra">
+    <img src="{{ site.baseurl }}/images/art/pulp_fiction.png"
+           alt="dancing with the devil">
+    </figure>
   </blockquote>
 </section>
 
