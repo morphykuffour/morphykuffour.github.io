@@ -261,6 +261,7 @@ all hail hydra
        alt="all hail hydra">
 </figure>
 
+<p>&ldquo; - Hads — ᾍδης (Háidēs). Eldest son of Cronus; King of the Underworld and lord of the dead and of the riches beneath the earth. His Roman equivalent is Pluto.&rdquo;</p>
 
 <section class="polyglot">
   {%- comment -%}
