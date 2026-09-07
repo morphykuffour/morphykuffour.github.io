@@ -258,23 +258,6 @@ all hail hydra
        alt="all hail hydra">
 </figure>
 
-<section class="dance of death">
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
-
-  {%- comment -%}
-  Dance of Death
-  {%- endcomment -%}
-  <blockquote class="roll-epigraph">
-    <figure class="hydra">
-    <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
-           alt="all hail hydra">
-    </figure>
-    <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job&rdquo;</p>
-  </blockquote>
-</section>
-
 
 <section class="polyglot">
   {%- comment -%}
@@ -411,3 +394,26 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <p>&ldquo;The name Ghana comes from Wagadu, an empire in west Africa from the 3rd to 12th centuries; Wagadu was termed Ghana by Arab traders involved in the trans-Saharan trade.&rdquo;</p>
   </blockquote>
 </section>
+
+
+<section class="dance of death">
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+
+  {%- comment -%}
+  Dance of Death
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="hydra">
+    <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
+           alt="all hail hydra">
+    </figure>
+    <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job&rdquo;</p>
+  </blockquote>
+
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+</section>
+
