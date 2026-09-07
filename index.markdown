@@ -411,10 +411,6 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     </figure>
     <p>&ldquo;Dance of Death (replica of 15th-century fresco; National Gallery of Slovenia); Representing the universality of death regardless of class or job&rdquo;</p>
   </blockquote>
-
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
 </section>
 
 <section class="Hell Raiser">
@@ -428,10 +424,6 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     </figure>
     <p>&ldquo;Fallen angels in Hell&rdquo;</p>
   </blockquote>
-
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
 </section>
 
 
@@ -457,9 +449,5 @@ No!
 
 (Gunshots)&rdquo;</p>
   </blockquote>
-
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
 </section>
 
