@@ -417,3 +417,49 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
   </figure>
 </section>
 
+<section class="Hell Raiser">
+  {%- comment -%}
+  Death is the final Out(Religious Art)
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="hydra">
+    <img src="{{ site.baseurl }}/images/John_Martin_002.jpg"
+           alt="John Martin">
+    </figure>
+    <p>&ldquo;Fallen angels in Hell&rdquo;</p>
+  </blockquote>
+
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+</section>
+
+
+<section class="Hell Raiser">
+  {%- comment -%}
+  Ezekiel 25:17 (Dialogue) - Samuel L. Jackson
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="hydra">
+    <img src="{{ site.baseurl }}/images/The-Sword-of-Archangel-Michael-1-4116186590.jpg"
+           alt="John Martin">
+    </figure>
+    <p>&ldquo;[JULES]
+Ezekiel 25:17?
+
+The path of the righteous man is beset on all sides by the inequities of the selfish and the tyranny of evil men.
+Blessed is he who, in the name of charity and good will, shepherds the weak through the valley of darkness, for he is truly his brother's keeper and the finder of lost children.
+And I will strike down upon thee with great vengeance and furious anger those who attempt to poison and destroy my brothers.
+And you will know my name is the Lord, when I lay my vengeance upon thee.
+
+[BRETT]
+No!
+
+(Gunshots)&rdquo;</p>
+  </blockquote>
+
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+</section>
+
