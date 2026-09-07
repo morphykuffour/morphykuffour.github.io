@@ -41,6 +41,7 @@ pair is a row of two and this is a clip alone on a line.
         label="Black and white footage of General Grievous, four lightsabers lit, turning in the middle of a battle." -%}
 </section>
 
+<p>&ldquo;Your lightsabers will make a fine addition to my collection!.&rdquo;</p>
 
 {%- comment -%}
 The board that closes the page. It is one flattened image rather than a grid of
