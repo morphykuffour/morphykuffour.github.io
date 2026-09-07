@@ -47,10 +47,6 @@
   title: 'Anders Zorn nude on white sheets, 1908, with a red-haired painted head laid over it as an inset'
   width: 1020
   height: 1016
-- file: 'kith-mets-wool-cap.png'
-  title: 'Cream wool Mets cap with a royal blue NY monogram and a bandana-print brim -- Kith'
-  width: 761
-  height: 764
 - file: 'ald-corduroy-cap.png'
   title: 'Cream corduroy cap with a script logo and a grey suede brim -- Aimé Leon Dore'
   width: 690
@@ -83,10 +79,6 @@
   title: 'Junghans Max Bill chronoscope caseback, the Dessau Bauhaus building etched on it'
   width: 685
   height: 842
-- file: 'reverso-enamel-monet.png'
-  title: 'Jaeger-LeCoultre Reverso in rose gold on a green strap, its back enamelled with a Monet view of Venice, held in a gloved hand'
-  width: 603
-  height: 750
 - file: 'JLC-Reverso-Hybris-Mechanica-2021-2_2048x2048.webp'
   title: 'reverse'
   width: 2048
@@ -115,3 +107,11 @@
   title: 'nice one there'
   width: 736
   height: 1236
+- file: 'reverso-enamel-monet.png'
+  title: 'Jaeger-LeCoultre Reverso in rose gold on a green strap, its back enamelled with a Monet view of Venice, held in a gloved hand'
+  width: 603
+  height: 750
+- file: 'kith-mets-wool-cap.png'
+  title: 'Cream wool Mets cap with a royal blue NY monogram and a bandana-print brim -- Kith'
+  width: 761
+  height: 764
