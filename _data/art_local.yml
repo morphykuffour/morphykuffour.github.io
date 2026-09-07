@@ -63,10 +63,6 @@
   title: 'Reclining nude in wire-rimmed glasses on a white fur throw, a pink satin cushion beside her, oil on canvas'
   width: 1130
   height: 900
-- file: 'nomos-ludwig-roman.png'
-  title: 'Nomos Glashütte Ludwig with Roman numerals and blued hands, on black leather over oak'
-  width: 653
-  height: 859
 - file: 'watch-roll-trio.png'
   title: 'Three watches on a black leather roll -- Seiko panda chronograph, Cartier Tank, Tissot PRX Powermatic 80'
   width: 667
@@ -95,10 +91,14 @@
   title: 'reverse'
   width: 2048
   height: 2048
-- file: 'alexander-achilles-graphite.png'
-  title: 'Alexander in a plumed helmet and a head of Achilles, graphite, over the Gnomologium Vaticanum passage in Greek and English -- P-S Lindblom, 2026'
-  width: 1020
-  height: 1228
+- file: 'david-head-construction.png'
+  title: 'david head'
+  width: 643
+  height: 936
+- file: 'nomos-ludwig-roman.png'
+  title: 'Nomos Glashütte Ludwig with Roman numerals and blued hands, on black leather over oak'
+  width: 653
+  height: 859
 - file: 'achilles.png'
   title: 'Achilles Statue'
   width: 2000
