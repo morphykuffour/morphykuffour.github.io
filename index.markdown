@@ -464,7 +464,7 @@ No!
   {%- endcomment -%}
   <blockquote class="roll-epigraph">
     <figure class="">
-    <img src="{{ site.baseurl }}/images/divine_comedy.jpg"
+    <img src="{{ site.baseurl }}/images/divine-comedy.jpg"
            alt="">
     </figure>
     <p>&ldquo;Inferno (Italian: [iɱˈfɛrno]; Italian for 'Hell') is the first part of the Italian writer Dante Alighieri's 14th-century narrative poem the Divine Comedy, followed by Purgatorio and Paradiso.&rdquo;</p>
