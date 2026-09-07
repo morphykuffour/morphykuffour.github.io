@@ -400,23 +400,22 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
 
 
 <section class="dance of death">
-  <figure>
-    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
-  </figure>
-
   {%- comment -%}
   Dance of Death
   {%- endcomment -%}
   <blockquote class="roll-epigraph">
     <figure class="hydra">
+    <img src="{{ site.baseurl }}/images/art/pulp_fiction.png"
+           alt="dancing with the devil">
+    </figure>
+    <figure class="hydra">
     <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
            alt="all hail hydra">
     </figure>
     <p>&ldquo;Dance of Death  Representing the universality of death regardless of class or job&rdquo;</p>
-    <figure class="hydra">
-    <img src="{{ site.baseurl }}/images/art/pulp_fiction.png"
-           alt="dancing with the devil">
-    </figure>
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
   </blockquote>
 </section>
 
