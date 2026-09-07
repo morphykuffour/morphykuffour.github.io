@@ -359,3 +359,16 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <p>&ldquo;Heartsbane has been passed down for centuries to the heir of House Tarly of Horn Hill. Prior to the events of A Song of Ice and Fire, the only mention of Heartsbane was of Savage Sam Tarly using it during the time of Aenys I Targaryen. At that time, the Targaryen kings were trying to take over Dorne, and Savage Sam used Heartsbane to slay several Dornishmen in a campaign called the Vulture Hunt.&rdquo;</p>
   </blockquote>
 </section>
+
+<section class="Winterfell">
+  {%- comment -%}
+  The Bastard of Winterfell
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/john_snow_kb_winter.png"
+           alt="">
+    </figure>
+    <p>&ldquo;You have break necks if you catch my drift.&rdquo;</p>
+  </blockquote>
+</section>
