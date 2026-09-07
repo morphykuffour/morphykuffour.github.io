@@ -398,3 +398,16 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <p>&ldquo;It was reforged from Ned Stark's sword. You'll use it to defend Ned Stark's daughter. ―Jaime Lannister to Brienne of Tarth. Oathkeeper is one of two Valyrian steel longswords made from Ice, the greatsword of House Stark. Its sister blade is Widow's Wail. &rdquo;</p>
   </blockquote>
 </section>
+
+<section class="Homeland">
+  {%- comment -%}
+  War dan peace
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/war_ye_peace.png"
+           alt="">
+    </figure>
+    <p>&ldquo;The name Ghana comes from Wagadu, an empire in west Africa from the 3rd to 12th centuries; Wagadu was termed Ghana by Arab traders involved in the trans-Saharan trade.&rdquo;</p>
+  </blockquote>
+</section>
