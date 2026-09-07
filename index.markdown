@@ -90,6 +90,8 @@ three more tiles on it rather than as something dropped over the pictures.
   </div>
 </figure>
 
+<p>&ldquo;Psalm: 91:1 He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty.&rdquo;</p>
+
 {%- comment -%}
 The pair between the board and the rain: two more clips in the same three-copy
 stack, and the last footage on the page.
@@ -452,3 +454,4 @@ No!
   </blockquote>
 </section>
 
+<p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
