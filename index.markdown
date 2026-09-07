@@ -411,7 +411,7 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
     <img src="{{ site.baseurl }}/images/dance_of_death.jpg"
            alt="all hail hydra">
     </figure>
-    <p>&ldquo;Dance of Death  Representing the universality of death regardless of class or job&rdquo;</p>
+    <p>&ldquo;Dance of Death Representing the universality of death&rdquo;</p>
   <figure>
     {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
   </figure>
