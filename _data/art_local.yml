@@ -11,6 +11,10 @@
   title: 'Mario Balotelli in shades and wired headphones, mohawk bleached blond'
   width: 1206
   height: 1508
+- file: 'omega-speedmaster-38.png'
+  title: 'Omega Speedmaster 38 with a silver dial and steel bracelet, on a tooled leather book cover'
+  width: 650
+  height: 718
 - file: 'Ghost_in_the_shell.jpeg'
   title: 'matrix'
   width: 736
@@ -67,6 +71,10 @@
   title: 'Three watches on a black leather roll -- Seiko panda chronograph, Cartier Tank, Tissot PRX Powermatic 80'
   width: 667
   height: 622
+- file: 'david-head-construction.png'
+  title: 'Three-step construction of Michelangelo''s David''s head -- sphere in a square, blocked-in planes, finished drawing -- Aladdin_draws'
+  width: 643
+  height: 936
 - file: 'patek-5970-dial.png'
   title: 'Patek Philippe 5970 perpetual calendar chronograph in yellow gold, resting on an old French book'
   width: 635
@@ -75,10 +83,6 @@
   title: 'Caseback of the Patek Philippe 5970, its chronograph movement open over the certificate of origin'
   width: 621
   height: 831
-- file: 'omega-speedmaster-38.png'
-  title: 'Omega Speedmaster 38 with a silver dial and steel bracelet, on a tooled leather book cover'
-  width: 650
-  height: 718
 - file: 'junghans-max-bill-caseback.png'
   title: 'Junghans Max Bill chronoscope caseback, the Dessau Bauhaus building etched on it'
   width: 685
@@ -95,11 +99,19 @@
   title: 'Alexander in a plumed helmet and a head of Achilles, graphite, over the Gnomologium Vaticanum passage in Greek and English -- P-S Lindblom, 2026'
   width: 1020
   height: 1228
+- file: 'achilles.png'
+  title: 'Achilles Statue'
+  width: 2000
+  height: 3008
 - file: 'JLC-Reverso-Amelia-Earhart-2_2048x2048.webp'
   title: 'ReverseInPeace'
   width: 2048
   height: 2048
-- file: 'david-head-construction.png'
-  title: 'Three-step construction of Michelangelo''s David''s head -- sphere in a square, blocked-in planes, finished drawing -- Aladdin_draws'
-  width: 643
-  height: 936
+- file: 'david.jpg'
+  title: 'david - Michelangelo'
+  width: 960
+  height: 1440
+- file: 'batwoman.jpeg'
+  title: 'nice one there'
+  width: 736
+  height: 1236
