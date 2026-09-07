@@ -359,19 +359,6 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
   </blockquote>
 </section>
 
-<section class="Winterfell">
-  {%- comment -%}
-  The Bastard of Winterfell
-  {%- endcomment -%}
-  <blockquote class="roll-epigraph">
-    <figure class="">
-    <img src="{{ site.baseurl }}/images/john_snow_kb_winter.png"
-           alt="">
-    </figure>
-    <p>&ldquo;Winter is Coming&rdquo;</p>
-  </blockquote>
-</section>
-
 <section class="House Tarly of Horn">
   {%- comment -%}
   Brienne of Tarth: The Oathkeeper
@@ -457,7 +444,20 @@ No!
   </blockquote>
 </section>
 
+<section class="Winterfell">
+  {%- comment -%}
+  The Bastard of Winterfell
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/john_snow_kb_winter.png"
+           alt="">
+    </figure>
+    <p>&ldquo;Winter is Coming&rdquo;</p>
+  </blockquote>
+</section>
+
 {%- comment -%}
 Ezekiel 25:17 (Dialogue) - Samuel L. Jackson
-<p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
 {%- endcomment -%}
+<p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
