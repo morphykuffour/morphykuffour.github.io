@@ -458,7 +458,20 @@ No!
   </blockquote>
 </section>
 
+<section class="Dante's Inferno">
+  {%- comment -%}
+  Hell Raiser
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/divine_comedy.jpg"
+           alt="">
+    </figure>
+    <p>&ldquo;Inferno (Italian: [iɱˈfɛrno]; Italian for 'Hell') is the first part of the Italian writer Dante Alighieri's 14th-century narrative poem the Divine Comedy, followed by Purgatorio and Paradiso.&rdquo;</p>
+  </blockquote>
+</section>
+
 {%- comment -%}
-Ezekiel 25:17 (Dialogue) - Samuel L. Jackson
+NULL
 {%- endcomment -%}
 <p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
