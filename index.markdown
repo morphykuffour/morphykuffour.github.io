@@ -35,19 +35,6 @@ pair is a row of two and this is a clip alone on a line.
   </blockquote>
 </section>
 
-<section class="House Tarly of Horn">
-  {%- comment -%}
-  Brienne of Tarth: The Oathkeeper
-  {%- endcomment -%}
-  <blockquote class="roll-epigraph">
-    <figure class="">
-    <img src="{{ site.baseurl }}/images/oathkeeper.webp"
-           alt="">
-    </figure>
-    <p>&ldquo;It was reforged from Ned Stark's sword. You'll use it to defend Ned Stark's daughter. ―Jaime Lannister to Brienne of Tarth. Oathkeeper is one of two Valyrian steel longswords made from Ice, the greatsword of House Stark. Its sister blade is Widow's Wail. &rdquo;</p>
-  </blockquote>
-</section>
-
 <section class="opening">
   {%- include cascade.html
         file="grievous" width=640 height=360
@@ -396,5 +383,18 @@ For the sword trade these were transforming times. Fighting on foot in massed fo
            alt="">
     </figure>
     <p>&ldquo;Winter is Coming&rdquo;</p>
+  </blockquote>
+</section>
+
+<section class="House Tarly of Horn">
+  {%- comment -%}
+  Brienne of Tarth: The Oathkeeper
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/oathkeeper.webp"
+           alt="">
+    </figure>
+    <p>&ldquo;It was reforged from Ned Stark's sword. You'll use it to defend Ned Stark's daughter. ―Jaime Lannister to Brienne of Tarth. Oathkeeper is one of two Valyrian steel longswords made from Ice, the greatsword of House Stark. Its sister blade is Widow's Wail. &rdquo;</p>
   </blockquote>
 </section>
