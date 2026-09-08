@@ -499,6 +499,10 @@ No!
     {%- comment -%}
     NULL
     {%- endcomment -%}
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/the-spear.jpg"
+           alt="">
+    </figure>
   <p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
   <figure>
     {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
