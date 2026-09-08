@@ -482,7 +482,25 @@ No!
   </blockquote>
 </section>
 
-{%- comment -%}
-NULL
-<p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
-{%- endcomment -%}
+<section class="Hellboy">
+  {%- comment -%}
+  Hell Raiser
+  {%- endcomment -%}
+  <blockquote class="roll-epigraph">
+    <figure class="">
+    <img src="{{ site.baseurl }}/images/hellboy.jpg"
+           alt="">
+    </figure>
+    <p>&ldquo;Professor Trevor 'Broom' Bruttenholm: 1937: Hitler joins the Thule Society, a group of German aristocrats obsessed with the occult. In 1938, he acquired the spear of Longinus, which pierced the side of Christ. He who holds it becomes invincible. Hitler's power increases tenfold. 1943: President Roosevelt decides to fight back. The Bureau of Paranormal Research and Defense is born. 1958: the Occult Wars finally come to an end with the death of Adolf Hitler.</br> John Myers: 1945, you mean. Hitler died in '45. </br>Professor Trevor 'Broom' Bruttenholm: [amused] Did he now?&rdquo;</p>
+  </blockquote>
+</section>
+
+<section class="Hellboy">
+    {%- comment -%}
+    NULL
+    {%- endcomment -%}
+  <p>&ldquo;Psalm: 91:16 With long life will I satisfy him, and shew him my salvation .&rdquo;</p>
+  <figure>
+    {%- include roll.html data=site.data.skulls dir="skulls" ioda=true -%}
+  </figure>
+</section>
