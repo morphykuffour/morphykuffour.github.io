@@ -488,10 +488,10 @@ No!
   {%- endcomment -%}
   <blockquote class="roll-epigraph">
     <figure class="">
-    <img src="{{ site.baseurl }}/images/hellboy.jpg"
+    <img src="{{ site.baseurl }}/images/hellboy.png"
            alt="">
     </figure>
-    <p>&ldquo;Professor Trevor 'Broom' Bruttenholm: 1937: Hitler joins the Thule Society, a group of German aristocrats obsessed with the occult. In 1938, he acquired the spear of Longinus, which pierced the side of Christ. He who holds it becomes invincible. Hitler's power increases tenfold. 1943: President Roosevelt decides to fight back. The Bureau of Paranormal Research and Defense is born. 1958: the Occult Wars finally come to an end with the death of Adolf Hitler.</br> John Myers: 1945, you mean. Hitler died in '45. </br>Professor Trevor 'Broom' Bruttenholm: [amused] Did he now?&rdquo;</p>
+    <p>&ldquo;Professor Trevor 'Broom' Bruttenholm: 1937: Hitler joins the Thule Society, a group of German aristocrats obsessed with the occult. In 1938, he acquired the spear of Longinus, which pierced the side of Christ. He who holds it becomes invincible. Hitler's power increases tenfold. 1943: President Roosevelt decides to fight back. The Bureau of Paranormal Research and Defense is born. 1958: the Occult Wars finally come to an end with the death of Adolf Hitler.<br /> John Myers: 1945, you mean. Hitler died in '45. <br />Professor Trevor 'Broom' Bruttenholm: [amused] Did he now?&rdquo;</p>
   </blockquote>
 </section>
 
